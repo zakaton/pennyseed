@@ -3,8 +3,7 @@ import Head from 'next/head'
 const Home = () => (
   <div className="px-8 mt-10">
     <Head>
-      <title>Article Preview Component</title>
-      <link rel="icon" href="/favicon.ico" />
+      <title>Pennyseed</title>
     </Head>
     <div className="mx-auto lg:w-3/5 lg:flex lg:flex-row lg:h-auto">
       <div className="bg-white p-8 rounded-bl-md rounded-br-md lg:rounded-bl-none lg:rounded-tr-md">
