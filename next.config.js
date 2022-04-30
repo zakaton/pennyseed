@@ -7,13 +7,12 @@ const nextConfig = withPWA({
     dest: "public",
     register: true,
     skipWaiting: true,
-
-    //disable: process.env.NODE_ENV === "development",
+    disable: process.env.NODE_ENV === "development",
   },
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
-  }
-})
+  },
+});
 
-module.exports = nextConfig
+module.exports = nextConfig;
