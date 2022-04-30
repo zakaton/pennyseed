@@ -5,8 +5,6 @@ const Home = () => (
     <Head>
       <title>Pennyseed</title>
     </Head>
-    <button className="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800"></button>
-
     <div className="mx-auto lg:w-3/5 lg:flex lg:flex-row lg:h-auto">
       <div className="bg-white p-8 rounded-bl-md rounded-br-md lg:rounded-bl-none lg:rounded-tr-md">
         <h2 className="text-gray-700 font-semibold">
