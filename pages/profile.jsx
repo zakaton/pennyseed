@@ -19,11 +19,18 @@ export default function Profile() {
     fetchProfile();
   }, []);
 
+  async function signOut() {
+    await supabase.auth.signOut();
+    router.push('/sign-in');
+  }
   if (!profile) return null;
-
   return (
     <div>
-      <h1>{profile.name}</h1>
+      <h1>Hello, {profile.name}</h1>
+      <p>User ID: {profile.id}</p>
+      <button type="button" onClick={signOut}>
+        Sign Out
+      </button>
     </div>
   );
 }
