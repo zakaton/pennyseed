@@ -2,7 +2,7 @@ import Head from 'next/head';
 
 function Custom404() {
   return (
-    <div className="px-8 mt-10">
+    <div className="mt-10 px-8">
       <Head>
         <title>404</title>
       </Head>
