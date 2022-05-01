@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient';
+import { supabase } from '../utils/supabase-client';
 
 export default function Profile({ user }) {
   console.log(user);

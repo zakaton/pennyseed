@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../utils/supabase-client';
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);

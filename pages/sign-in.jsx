@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../utils/supabase-client';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -9,10 +9,12 @@ export default function SignIn() {
       return;
     }
 
+    // eslint-disable-next-line no-unused-vars
     const { error, data } = await supabase.auth.signIn({
       email,
     });
     if (error) {
+      // eslint-disable-next-line no-console
       console.log({ error });
     } else {
       setSubmitted(true);

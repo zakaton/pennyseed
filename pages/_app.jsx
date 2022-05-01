@@ -1,11 +1,12 @@
 import '../styles/index.css';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../utils/supabase-client';
 
 import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }) {
+  // eslint-disable-next-line no-unused-vars
   const [authenticatedState, setAuthenticatedState] =
     useState('not-authenticated');
   const router = useRouter();
