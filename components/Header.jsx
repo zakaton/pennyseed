@@ -1,14 +1,21 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
-import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+const navigation = [
+  { name: 'About', href: '/about' },
+  { name: 'FAQ', href: '/faq' },
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Example() {
+export default function Header() {
+  const { pathname } = useRouter();
+
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -27,43 +34,70 @@ export default function Example() {
                 </Disclosure.Button>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
-                  <img
-                    className="block h-8 w-auto lg:hidden"
-                    src="/images/icon.svg"
-                    alt="Pennyseed"
-                  />
-                  <img
-                    className="hidden h-8 w-auto lg:block"
-                    src="/images/icon.svg"
-                    alt="Pennyseed"
-                  />
-                </div>
+                <Link href="/">
+                  <a className="flex flex-shrink-0 items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      className="h-6 w-auto"
+                      src="/images/icon.svg"
+                      alt="Pennyseed"
+                    />
+                    <span className="px-2 text-xl font-bold">Pennyseed</span>
+                  </a>
+                </Link>
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                  {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                  <a
-                    href="/about"
-                    className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
-                  >
-                    About
-                  </a>
-                  <a
-                    href="/faq"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                  >
-                    FAQ
-                  </a>
+                  {navigation.map(({ name, href }) => (
+                    <Link href={href} key={name}>
+                      <a
+                        className={classNames(
+                          pathname.startsWith(href)
+                            ? 'border-indigo-500 text-gray-900'
+                            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                          'text-md inline-flex items-center border-b-2 px-1 pt-1 font-medium '
+                        )}
+                      >
+                        {name}
+                      </a>
+                    </Link>
+                  ))}
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  type="button"
-                  className="relative inline-block rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <span className="absolute bottom-0 right-0 block h-3.5 w-3.5 rounded-full bg-red-400 ring-2 ring-white" />
-                  <BellIcon className="h-8 w-8" aria-hidden="true" />
-                </button>
+                {/* Notifications dropdown */}
+                <Menu as="div" className="relative z-10 ml-3">
+                  <div>
+                    <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      <span className="sr-only">View notifications</span>
+                      <span className="absolute top-0 right-0 block h-3.5 w-3.5 rounded-full bg-red-400 ring-2 ring-white" />
+                      <BellIcon className="h-8 w-8" aria-hidden="true" />
+                    </Menu.Button>
+                  </div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-200"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            href="#"
+                            className={classNames(
+                              active ? 'bg-gray-100' : '',
+                              'block px-4 py-2 text-sm text-gray-700'
+                            )}
+                          >
+                            Notifications
+                          </a>
+                        )}
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative z-10 ml-3">
@@ -94,7 +128,7 @@ export default function Example() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/"
                             className={classNames(
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-700'
@@ -107,7 +141,7 @@ export default function Example() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/about"
                             className={classNames(
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-700'
@@ -126,21 +160,21 @@ export default function Example() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pt-2 pb-4">
-              {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-              <Disclosure.Button
-                as="a"
-                href="/about"
-                className="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700"
-              >
-                About
-              </Disclosure.Button>
-              <Disclosure.Button
-                as="a"
-                href="/faq"
-                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
-              >
-                FAQ
-              </Disclosure.Button>
+              {navigation.map(({ name, href }) => (
+                <Disclosure.Button
+                  as="a"
+                  key={name}
+                  href={href}
+                  className={classNames(
+                    pathname.startsWith(href)
+                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                      : 'border-transparent  text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
+                    'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
+                  )}
+                >
+                  {name}
+                </Disclosure.Button>
+              ))}
             </div>
           </Disclosure.Panel>
         </>

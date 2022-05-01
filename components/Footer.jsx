@@ -1,13 +1,11 @@
+import { MailIcon } from '@heroicons/react/outline';
+
 /* This example requires Tailwind CSS v2.0+ */
 const navigation = {
   main: [
     { name: 'About', href: '/about' },
     { name: 'Terms of Service', href: '/terms' },
     { name: 'Privacy Policy', href: '/privacy' },
-    {
-      name: 'Contact',
-      href: 'mailto:contact@pennyseed.fund?subject=Pennyseed',
-    },
   ],
   social: [
     {
@@ -58,6 +56,17 @@ const navigation = {
         </svg>
       ),
     },
+    {
+      name: 'Email',
+      href: 'mailto:contact@pennyseed.fund?subject=Pennyseed',
+      icon: (props) => (
+        <MailIcon
+          className="h-6 w-6 text-gray-400"
+          aria-hidden="true"
+          {...props}
+        />
+      ),
+    },
   ],
 };
 
@@ -85,20 +94,22 @@ export default function Footer() {
             <a
               key={item.name}
               href={item.href}
-              className="text-gray-400 hover:text-gray-500"
+              className="text-gray-500 hover:text-gray-900"
+              target="_blank"
+              rel="noreferrer"
             >
               <span className="sr-only">{item.name}</span>
               <item.icon className="h-6 w-6" aria-hidden="true" />
             </a>
           ))}
         </div>
-        <p className="mt-8 text-center text-base text-gray-400">
+        <p className="mt-8 text-center text-base text-gray-600">
           Pennyseed is created by{' '}
           <a
             href="https://www.ukaton.com/"
             target="_blank"
             rel="noreferrer"
-            className="text-base text-gray-500 underline hover:text-gray-900"
+            className="text-base text-gray-600 underline hover:text-gray-900"
           >
             Ukaton Inc
           </a>
