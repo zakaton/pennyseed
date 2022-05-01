@@ -1,18 +1,9 @@
 import '../styles/index.css';
-import { useEffect, useState, Fragment } from 'react';
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Popover, Transition } from '@headlessui/react';
-import { MenuIcon, XIcon } from '@heroicons/react/outline';
-import Image from 'next/image';
 import { supabase } from '../supabaseClient';
 
-const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
-];
+import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }) {
   const [authenticatedState, setAuthenticatedState] =
@@ -54,6 +45,13 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
+
+  /*
+  return (
     <div>
       <nav>
         <Link href="/">
@@ -74,6 +72,7 @@ function MyApp({ Component, pageProps }) {
       <Component {...pageProps} />
     </div>
   );
+  */
 }
 
 export default MyApp;
