@@ -20,7 +20,7 @@ class MyDocument extends Document {
             content="Pennyseed - A simple crowdfunding platform where the funding goal is divided by the number of pledgers"
           />
         </Head>
-        <body className="bg-gray-200">
+        <body>
           <Main />
           <NextScript />
         </body>

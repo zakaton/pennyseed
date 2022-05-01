@@ -1,8 +1,18 @@
 import '../styles/index.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Popover, Transition } from '@headlessui/react';
+import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import Image from 'next/image';
 import { supabase } from '../supabaseClient';
+
+const navigation = [
+  { name: 'Product', href: '#' },
+  { name: 'Features', href: '#' },
+  { name: 'Marketplace', href: '#' },
+  { name: 'Company', href: '#' },
+];
 
 function MyApp({ Component, pageProps }) {
   const [authenticatedState, setAuthenticatedState] =
@@ -42,6 +52,7 @@ function MyApp({ Component, pageProps }) {
       authListener.unsubscribe();
     };
   }, []);
+
   return (
     <div>
       <nav>
