@@ -1,12 +1,13 @@
 /* This example requires Tailwind CSS v2.0+ */
 const navigation = {
   main: [
-    { name: 'About', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Jobs', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Accessibility', href: '#' },
-    { name: 'Partners', href: '#' },
+    { name: 'About', href: '/about' },
+    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Privacy Policy', href: '/privacy' },
+    {
+      name: 'Contact',
+      href: 'mailto:contact@pennyseed.fund?subject=Pennyseed',
+    },
   ],
   social: [
     {
@@ -93,7 +94,12 @@ export default function Footer() {
         </div>
         <p className="mt-8 text-center text-base text-gray-400">
           Pennyseed is created by{' '}
-          <a href="https://www.ukaton.com/" target="_blank" rel="noreferrer">
+          <a
+            href="https://www.ukaton.com/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-base text-gray-500 underline hover:text-gray-900"
+          >
             Ukaton Inc
           </a>
         </p>
