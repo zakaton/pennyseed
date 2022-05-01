@@ -38,11 +38,13 @@ export default function Header() {
                   <a className="flex flex-shrink-0 items-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      className="h-6 w-auto"
+                      className="hidden h-6 w-auto xxs:block"
                       src="/images/icon.svg"
                       alt="Pennyseed"
                     />
-                    <span className="px-2 text-xl font-bold">Pennyseed</span>
+                    <span className="hidden px-2 text-xl font-bold xs:block">
+                      Pennyseed
+                    </span>
                   </a>
                 </Link>
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { supabase } from '../utils/supabase-client';
 
 export default function Profile() {
@@ -25,12 +26,17 @@ export default function Profile() {
   }
   if (!profile) return null;
   return (
-    <div>
-      <h1>Hello, {profile.name}</h1>
-      <p>User ID: {profile.id}</p>
-      <button type="button" onClick={signOut}>
-        Sign Out
-      </button>
-    </div>
+    <>
+      <Head>
+        <title>My Account | Pennyseed</title>
+      </Head>
+      <div>
+        <h1>Hello, {profile.name}</h1>
+        <p>User ID: {profile.id}</p>
+        <button type="button" onClick={signOut}>
+          Sign Out
+        </button>
+      </div>
+    </>
   );
 }
