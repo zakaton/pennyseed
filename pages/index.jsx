@@ -49,8 +49,8 @@ export default function Home() {
             Stripe processing fees
           </a>{' '}
           (2.9% + $0.30) so the campaigner gets exactly how much they ask for.
-          (so instead of paying $1 you'll actually be paying $1.34, which will
-          be $1.00 after the $0.34 processing fee)
+          (so instead of paying $1 you&apos;ll actually be paying $1.34, which
+          will be $1.00 after the $0.34 processing fee)
         </p>
 
         <p>

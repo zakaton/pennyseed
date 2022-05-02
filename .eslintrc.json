@@ -38,6 +38,22 @@
           "some": ["nesting", "id"]
         }
       }
-    ]
+    ],
+    "react/no-unescaped-entities": [
+      "error",
+      {
+        "forbid": [
+          {
+            "char": "\"",
+            "alternatives": ["&quot;"]
+          },
+          {
+            "char": "'",
+            "alternatives": ["&apos;"]
+          }
+        ]
+      }
+    ],
+    "jsx-a11y/no-redundant-roles": "off"
   }
 }

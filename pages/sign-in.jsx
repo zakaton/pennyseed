@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import { supabase } from '../utils/supabase-client';
 
 export default function SignIn() {
@@ -48,7 +49,7 @@ export default function SignIn() {
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            We'll send a link to your email - no password required
+            We&apos;ll send a link to your email - no password required
           </p>
         </div>
         <form className="mt-8 space-y-6" action="#" method="POST">
@@ -85,8 +86,8 @@ export default function SignIn() {
                 htmlFor="agree"
                 className="ml-2 block text-sm text-gray-900"
               >
-                By signing in you agree to the <a href="/terms">terms of use</a>
-                .
+                By signing in you agree to the{' '}
+                <Link href="/terms">terms of use</Link>.
               </label>
             </div>
           </div>

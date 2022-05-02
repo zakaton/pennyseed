@@ -18,7 +18,7 @@ export default function Privacy() {
         <p>
           We store the following data on{' '}
           <a href="https://supabase.com/" target="_blank" rel="noreferrer">
-            Supabase's database
+            Supabase&apos;s database
           </a>
           :
         </p>
@@ -31,8 +31,8 @@ export default function Privacy() {
             Stripe account information (for receiving payments for your
             campaigns)
           </li>
-          <li>campaigns you've created</li>
-          <li>campaigns you've pledged to</li>
+          <li>campaigns you&apos;ve created</li>
+          <li>campaigns you&apos;ve pledged to</li>
         </ul>
 
         <p>
@@ -47,7 +47,7 @@ export default function Privacy() {
         </p>
 
         <p>
-          We only use this information to make this site work, and we don't
+          We only use this information to make this site work, and we don&apos;t
           share it with any third parties
         </p>
 
@@ -67,14 +67,14 @@ export default function Privacy() {
             receiving payments)
           </li>
           <li>
-            deletes all campaigns you've created (and cancels any pending
-            campaigns). It does not refund any successful campaigns you've
+            deletes all campaigns you&apos;ve created (and cancels any pending
+            campaigns). It does not refund any successful campaigns you&apos;ve
             created to in the past.
           </li>
           <li>
-            deletes all pledges you've created (and cancels any pledges for any
-            pending campaigns). It does not refund any successful campaigns
-            you've pledged to in the past.
+            deletes all pledges you&apos;ve created (and cancels any pledges for
+            any pending campaigns). It does not refund any successful campaigns
+            you&apos;ve pledged to in the past.
           </li>
         </ul>
       </div>

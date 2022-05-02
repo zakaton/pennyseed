@@ -19,8 +19,8 @@ export default function Terms() {
         <ul>
           <li>
             we can delete your account at any time, canceling (and refunding if
-            applicable) any campaigns or pledges you've made in the process,
-            successful or pending
+            applicable) any campaigns or pledges you&apos;ve made in the
+            process, successful or pending
           </li>
         </ul>
 
@@ -38,7 +38,7 @@ export default function Terms() {
               target="_blank"
               rel="noreferrer"
             >
-              Stripe's age requirement
+              Stripe&apos;s age requirement
             </a>
             ) living in the United States
           </li>
@@ -48,12 +48,12 @@ export default function Terms() {
           </li>
           <li>
             we can delete your Stripe Connect Account at any time, canceling any
-            campaigns you've made in the process, as well as refunding any
+            campaigns you&apos;ve made in the process, as well as refunding any
             successful campaigns
           </li>
           <li>
-            we can approve, deny, refund, or delete any campaigns you've made at
-            any time
+            we can approve, deny, refund, or delete any campaigns you&apos;ve
+            made at any time
           </li>
         </ul>
 
@@ -64,7 +64,7 @@ export default function Terms() {
             we can delete your Stripe Customer Account, cancelling any pending
             pledges in the process
           </li>
-          <li>we can cancel or refund any pledges you've made</li>
+          <li>we can cancel or refund any pledges you&apos;ve made</li>
           <li>
             as a pledger of a successful campaign (a campaign that has passed
             the minimum number of pledgers) you agree to pay (up to and
@@ -74,8 +74,8 @@ export default function Terms() {
           </li>
           <li>
             all charged pledges are final - make sure you read the campaign
-            description carefully to see how much you'll be paying (ranging from
-            (funding goal)/(minimum number of pledgers) to $0.50 before
+            description carefully to see how much you&apos;ll be paying (ranging
+            from (funding goal)/(minimum number of pledgers) to $0.50 before
             processing fees), and that the campaigner can be trusted (beware of
             scams and people pretending to be others)
           </li>
