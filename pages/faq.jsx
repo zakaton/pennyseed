@@ -4,24 +4,29 @@ import Head from 'next/head';
 
 const faqs = [
   {
-    id: 1,
     question: 'Can anyone make a campaign?',
     answer: () => (
-      <p>
-        This is an experiment and is limited to people in the United States. Any
-        campaigns you create must be approved by us before the deadline for any
-        charges to occcur.
-      </p>
+      <>
+        <p>
+          This is an experiment and is limited to persons 13 years and older in
+          the United States. Any campaigns you create must be approved by us.
+        </p>
+        <p>
+          However, even before we approve your campaign, you are still free to
+          share your campaign with others, whom can pledge at anytime. Charges
+          will only be made if we have approved the campaign before the
+          deadline, as well as whether the minimum number of pledgers are met.
+        </p>
+      </>
     ),
   },
   {
-    id: 2,
     question: 'Can I edit my campaign after I create one?',
     answer: () => (
       <>
         <p>
-          After you create a campaign, you cannot edit it, including the title,
-          description, funding goal, min/max number of pledgers, and the
+          No. After you create a campaign, you cannot edit it, including the
+          title, description, funding goal, min/max number of pledgers, and the
           deadline. This is to ensure the pledgers know what they're going to
           pay and when.
         </p>
@@ -35,7 +40,44 @@ const faqs = [
     ),
   },
   {
-    id: 3,
+    question: 'Is there a directory of all campaigns I can look through?',
+    answer: () => (
+      <>
+        <p>
+          No. We think it's better to allow users to create a campaign and share
+          the public link on their existing social networks. We just want to be
+          a way for people to pay creators whose content they enjoy, nothing
+          more.
+        </p>
+        <p>
+          If we added a way to search and discover campaigns, then we'd have to
+          moderate which users and campaigns are created since they'd be seen by
+          anyone visiting this site. Plus we'd have to deal with malicious users
+          impersonating popular creators and would need to add stuff like
+          account verification. We'd prefer to have users make campaigns and
+          share the direct link to the campaign on their existing social media
+          accounts, leveraging the trust of those networks.
+        </p>
+      </>
+    ),
+  },
+  {
+    question: 'Can I set a username or profile picture?',
+    answer: () => (
+      <>
+        <p>
+          No. When you create an account, you can only create campaigns or
+          pledge to other campaigns.
+        </p>
+        <p>
+          Campaigns do not display any information about the campaigner, because
+          if we did then malicious users can impersonate popular creators not on
+          this website and trick people into pledging to them.
+        </p>
+      </>
+    ),
+  },
+  {
     question:
       "What if someone creates a campaign for $1,000 and I'm the only pledger? I don't wanna end up paying $1,000!",
     answer: () => (
@@ -55,7 +97,6 @@ const faqs = [
     ),
   },
   {
-    id: 4,
     question: 'How much of the campaign funding goal does Pennyseed take?',
     answer: () => (
       <>
@@ -83,7 +124,6 @@ const faqs = [
     ),
   },
   {
-    id: 5,
     question: "What's the lowest amount a pledger can pay?",
     answer: () => (
       <>
@@ -111,7 +151,6 @@ const faqs = [
     ),
   },
   {
-    id: 6,
     question: 'Is my pledge visible to others?',
     answer: () => (
       <p>
@@ -121,7 +160,6 @@ const faqs = [
     ),
   },
   {
-    id: 7,
     question:
       "If I get a lot of pledgers, won't a lot of the pledge amount just be processing fees?",
     answer: () => (
@@ -167,7 +205,6 @@ const faqs = [
     ),
   },
   {
-    id: 8,
     question:
       "What if I'm not willing to pledge the maximum possible pledge amount?",
     answer: () => (
@@ -199,7 +236,6 @@ const faqs = [
     ),
   },
   {
-    id: 9,
     question: 'What incentives do people get for pledging?',
     answer: () => (
       <>
@@ -228,6 +264,11 @@ const faqs = [
     ),
   },
 ];
+
+faqs.forEach((item, index) => {
+  // eslint-disable-next-line no-param-reassign
+  item.id = index + 1;
+});
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
