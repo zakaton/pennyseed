@@ -4,7 +4,7 @@ export default function Privacy() {
   return (
     <>
       <Head>
-        <title>Privacy Policy | Pennyseed</title>
+        <title>Privacy Policy - Pennyseed</title>
       </Head>
       <div className="mx-auto max-w-prose text-lg">
         <h1>

@@ -28,7 +28,7 @@ export default function Profile() {
   return (
     <>
       <Head>
-        <title>My Account | Pennyseed</title>
+        <title>My Account - Pennyseed</title>
       </Head>
       <div>
         <h1>Hello, {profile.name}</h1>

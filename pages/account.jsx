@@ -13,7 +13,7 @@ export default function Account({ user }) {
   return (
     <>
       <Head>
-        <title>Account | Pennyseed</title>
+        <title>Account - Pennyseed</title>
       </Head>
       <div className="mx-auto max-w-prose text-lg">
         <h1>

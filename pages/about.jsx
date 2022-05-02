@@ -4,7 +4,7 @@ export default function About() {
   return (
     <>
       <Head>
-        <title>About | Pennyseed</title>
+        <title>About - Pennyseed</title>
       </Head>
       <div className="mx-auto max-w-prose text-lg">
         <h1>

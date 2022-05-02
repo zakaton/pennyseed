@@ -4,7 +4,7 @@ export default function Terms() {
   return (
     <>
       <Head>
-        <title>Terms of Service | Pennyseed</title>
+        <title>Terms of Service - Pennyseed</title>
       </Head>
       <div className="mx-auto max-w-prose text-lg">
         <h1>

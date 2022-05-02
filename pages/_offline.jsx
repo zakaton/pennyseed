@@ -4,7 +4,7 @@ export default function Offline() {
   return (
     <>
       <Head>
-        <title>Offline | Pennyseed</title>
+        <title>Offline - Pennyseed</title>
       </Head>
 
       <div className="flex min-h-full flex-col bg-white pt-16 pb-12">
