@@ -6,7 +6,7 @@ export default function About() {
       <Head>
         <title>About - Pennyseed</title>
       </Head>
-      <div className="mx-auto max-w-prose text-lg">
+      <div className="style-links mx-auto max-w-prose text-lg">
         <h1>
           <span className="mt-2 block text-center text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
             About
@@ -19,7 +19,7 @@ export default function About() {
           Eleifend egestas fringilla sapien.
         </p>
       </div>
-      <div className="prose prose-lg prose-yellow mx-auto mt-6 text-gray-500">
+      <div className="style-links prose prose-lg mx-auto mt-6 text-gray-500">
         <p>
           Faucibus commodo massa rhoncus, volutpat. <strong>Dignissim</strong>{' '}
           sed <strong>eget risus enim</strong>. Mattis mauris semper sed amet
@@ -28,7 +28,7 @@ export default function About() {
           rhoncus, volutpat. Dignissim sed eget risus enim.{' '}
           <a href="#">Mattis mauris semper</a> sed amet vitae sed turpis id.
         </p>
-        <ul>
+        <ul role="list">
           <li>Quis elit egestas venenatis mattis dignissim.</li>
           <li>Cras cras lobortis vitae vivamus ultricies facilisis tempus.</li>
           <li>Orci in sit morbi dignissim metus diam arcu pretium.</li>

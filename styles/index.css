@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  .style-links a {
+    @apply text-yellow-600 underline;
+  }
+  .style-links a:hover {
+    @apply text-yellow-500;
+  }
+  .style-links a:visited {
+    @apply text-yellow-700;
+  }
+}
