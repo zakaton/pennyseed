@@ -13,7 +13,7 @@ export default function Home() {
           </span>
         </h1>
       </div>
-      <div className="prose prose-lg prose-yellow mx-auto mt-6 text-gray-500">
+      <div className="prose prose-lg prose-yellow mx-auto mt-6 text-xl text-gray-500">
         <p>
           PennySeed is a crowdfunding platform where the funding goal is divided
           by the number of pledgers.
