@@ -85,10 +85,7 @@ export default function SignIn() {
                 htmlFor="agree"
                 className="ml-2 block text-sm text-gray-900"
               >
-                By signing in you agree to the{' '}
-                <a href="/terms" target="_blank">
-                  terms of use
-                </a>
+                By signing in you agree to the <a href="/terms">terms of use</a>
                 .
               </label>
             </div>
