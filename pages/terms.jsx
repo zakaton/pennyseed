@@ -4,77 +4,80 @@ export default function Terms() {
   return (
     <>
       <Head>
-        <title>Terms of Service - Pennyseed</title>
+        <title>Terms of Use - Pennyseed</title>
       </Head>
       <div className="prose mx-auto max-w-prose text-lg">
         <h1>
           <span className="mt-2 block text-center text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-            Terms of Service
+            Terms of Use
           </span>
         </h1>
       </div>
       <div className="prose prose-lg prose-yellow mx-auto mt-6 text-gray-500">
-        <h3>User Data</h3>
-        <p>
-          We store the following data on{' '}
-          <a href="https://supabase.com/" target="_blank" rel="noreferrer">
-            Supabase's database
-          </a>
-          :
-        </p>
+        <h3>Your Account</h3>
+        <p>By signing in you agree to the following:</p>
         <ul>
-          <li>email address</li>
           <li>
-            Stripe customer information (for making payments to campaigns)
+            we can delete your account at any time, canceling (and refunding if
+            applicable) any campaigns or pledges you've made in the process,
+            successful or pending
           </li>
-          <li>
-            Stripe account information (for receiving payments for your
-            campaigns)
-          </li>
-          <li>campaigns you've created</li>
-          <li>campaigns you've pledged to</li>
         </ul>
 
+        <h3>Your Campaigns</h3>
         <p>
-          You can see how we store user information{' '}
-          <a
-            href="https://github.com/zakaton/pennyseed"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here
-          </a>
-        </p>
-
-        <p>
-          We only use this information to make this site work, and we don't
-          share it with any third parties
-        </p>
-
-        <h3>Deleting your Account</h3>
-        <p>
-          When you delete your account we delete all of this information as we
-          perform the following:
+          By creating a connected Stripe Account with us you agree to the
+          following:
         </p>
         <ul>
-          <li>delete your user data stored in the database</li>
           <li>
-            delete your stripe customer data (which stores card information for
-            making payments)
+            campaigns can only be created by valid Stripe connect accounts for
+            persons 13 and over (as per{' '}
+            <a
+              href="https://support.stripe.com/questions/age-requirement-to-create-a-stripe-account"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Stripe's age requirement
+            </a>
+            ) living in the United States
           </li>
           <li>
-            delete your stripe account data (which stores card/bank info for
-            receiving payments)
+            campaigns can only be made for legal, authorized, and acceptable
+            purposes
           </li>
           <li>
-            deletes all campaigns you've created (and cancels any pending
-            campaigns). It does not refund any successful campaigns you've
-            created to in the past.
+            we can delete your Stripe Connect Account at any time, canceling any
+            campaigns you've made in the process, as well as refunding any
+            successful campaigns
           </li>
           <li>
-            deletes all pledges you've created (and cancels any pledges for any
-            pending campaigns). It does not refund any successful campaigns
-            you've pledged to in the past.
+            we can approve, deny, refund, or delete any campaigns you've made at
+            any time
+          </li>
+        </ul>
+
+        <h3>Your Pledges</h3>
+        <p>By signing in you agree to the following:</p>
+        <ul>
+          <li>
+            we can delete your Stripe Customer Account, cancelling any pending
+            pledges in the process
+          </li>
+          <li>we can cancel or refund any pledges you've made</li>
+          <li>
+            as a pledger of a successful campaign (a campaign that has passed
+            the minimum number of pledgers) you agree to pay (up to and
+            including) the <i>Maximum Possible Pledge Amount</i> as stated in
+            the campaign (funding goal)/(minimum number of pledgers) once the
+            deadline has passed
+          </li>
+          <li>
+            all charged pledges are final - make sure you read the campaign
+            description carefully to see how much you'll be paying (ranging from
+            (funding goal)/(minimum number of pledgers) to $0.50 before
+            processing fees), and that the campaigner can be trusted (beware of
+            scams and people pretending to be others)
           </li>
         </ul>
       </div>

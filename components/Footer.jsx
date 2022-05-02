@@ -4,7 +4,7 @@ import { MailIcon } from '@heroicons/react/outline';
 const navigation = {
   main: [
     { name: 'About', href: '/about' },
-    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Terms of Use', href: '/terms' },
     { name: 'Privacy Policy', href: '/privacy' },
   ],
   social: [

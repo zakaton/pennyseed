@@ -3,9 +3,11 @@ import { supabase } from '../utils/supabase-client';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
+  const [agree, setAgree] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
   async function signIn() {
-    if (!email) {
+    if (!(email && agree)) {
       return;
     }
 
@@ -39,7 +41,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="style-links flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -66,6 +68,28 @@ export default function SignIn() {
                 placeholder="Email address"
                 onInput={(e) => setEmail(e.target.value)}
               />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="agree"
+                name="agree"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                onInput={(e) => setAgree(e.target.checked)}
+              />
+              <label
+                htmlFor="agree"
+                className="ml-2 block text-sm text-gray-900"
+              >
+                By signing in you agree to the{' '}
+                <a href="/terms" target="_blank">
+                  terms of use
+                </a>
+                .
+              </label>
             </div>
           </div>
 

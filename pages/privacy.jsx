@@ -6,62 +6,77 @@ export default function Privacy() {
       <Head>
         <title>Privacy Policy - Pennyseed</title>
       </Head>
-      <div className="mx-auto max-w-prose text-lg">
+      <div className="prose mx-auto max-w-prose text-lg">
         <h1>
           <span className="mt-2 block text-center text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
             Privacy Policy
           </span>
         </h1>
-        <p className="mt-8 text-xl leading-8 text-gray-500">
-          Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At
-          arcu, sit dui mi, nibh dui, diam eget aliquam. Quisque id at vitae
-          feugiat egestas ac. Diam nulla orci at in viverra scelerisque eget.
-          Eleifend egestas fringilla sapien.
-        </p>
       </div>
       <div className="prose prose-lg prose-yellow mx-auto mt-6 text-gray-500">
+        <h3>User Data</h3>
         <p>
-          Faucibus commodo massa rhoncus, volutpat. <strong>Dignissim</strong>{' '}
-          sed <strong>eget risus enim</strong>. Mattis mauris semper sed amet
-          vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus
-          viverra tellus varius sit neque erat velit. Faucibus commodo massa
-          rhoncus, volutpat. Dignissim sed eget risus enim.{' '}
-          <a href="#">Mattis mauris semper</a> sed amet vitae sed turpis id.
+          We store the following data on{' '}
+          <a href="https://supabase.com/" target="_blank" rel="noreferrer">
+            Supabase's database
+          </a>
+          :
         </p>
-        <ul role="list">
-          <li>Quis elit egestas venenatis mattis dignissim.</li>
-          <li>Cras cras lobortis vitae vivamus ultricies facilisis tempus.</li>
-          <li>Orci in sit morbi dignissim metus diam arcu pretium.</li>
+        <ul>
+          <li>email address</li>
+          <li>
+            Stripe customer information (for making payments to campaigns)
+          </li>
+          <li>
+            Stripe account information (for receiving payments for your
+            campaigns)
+          </li>
+          <li>campaigns you've created</li>
+          <li>campaigns you've pledged to</li>
         </ul>
+
         <p>
-          Quis semper vulputate aliquam venenatis egestas sagittis quisque orci.
-          Donec commodo sit viverra aliquam porttitor ultrices gravida eu.
-          Tincidunt leo, elementum mattis elementum ut nisl, justo, amet,
-          mattis. Nunc purus, diam commodo tincidunt turpis. Amet, duis sed elit
-          interdum dignissim.
+          You can see how we store user information{' '}
+          <a
+            href="https://github.com/zakaton/pennyseed"
+            target="_blank"
+            rel="noreferrer"
+          >
+            here
+          </a>
         </p>
-        <h2>From beginner to expert in 30 days</h2>
+
         <p>
-          Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat
-          in. Convallis arcu ipsum urna nibh. Pharetra, euismod vitae interdum
-          mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed
-          tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi.
-          Pellentesque nam sed nullam sed diam turpis ipsum eu a sed convallis
-          diam.
+          We only use this information to make this site work, and we don't
+          share it with any third parties
         </p>
-        <blockquote>
-          <p>
-            Sagittis scelerisque nulla cursus in enim consectetur quam. Dictum
-            urna sed consectetur neque tristique pellentesque. Blandit amet, sed
-            aenean erat arcu morbi.
-          </p>
-        </blockquote>
+
+        <h3>Deleting your Account</h3>
         <p>
-          Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus
-          enim. Mattis mauris semper sed amet vitae sed turpis id. Id dolor
-          praesent donec est. Odio penatibus risus viverra tellus varius sit
-          neque erat velit.
+          When you delete your account we delete all of this information as we
+          perform the following:
         </p>
+        <ul>
+          <li>delete your user data stored in the database</li>
+          <li>
+            delete your stripe customer data (which stores card information for
+            making payments)
+          </li>
+          <li>
+            delete your stripe account data (which stores card/bank info for
+            receiving payments)
+          </li>
+          <li>
+            deletes all campaigns you've created (and cancels any pending
+            campaigns). It does not refund any successful campaigns you've
+            created to in the past.
+          </li>
+          <li>
+            deletes all pledges you've created (and cancels any pledges for any
+            pending campaigns). It does not refund any successful campaigns
+            you've pledged to in the past.
+          </li>
+        </ul>
       </div>
     </>
   );
