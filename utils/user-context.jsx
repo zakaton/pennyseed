@@ -7,15 +7,15 @@ export function UserContextProvider(props) {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    const currentSession = supabase.auth.session();
-    setSession(currentSession);
+    const session = supabase.auth.session();
+    setSession(session);
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, newSession) => {
-        setSession(newSession);
+      async (event, session) => {
+        setSession(session);
         await fetch('/api/auth', {
           method: 'POST',
-          body: JSON.stringify({ event, session: newSession }),
+          body: JSON.stringify({ event, session }),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -28,9 +28,12 @@ export function UserContextProvider(props) {
     };
   }, []);
 
-  const value = {
-    session,
-  };
+  const value = useMemo(
+    () => ({
+      session,
+    }),
+    [session]
+  );
 
   return <UserContext.Provider value={value} {...props} />;
 }

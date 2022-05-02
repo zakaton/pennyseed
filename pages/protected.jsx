@@ -1,7 +1,6 @@
 import { supabase } from '../utils/supabase-client';
 
 export default function Profile({ user }) {
-  console.log(user);
   return (
     <div>
       <h2>Hello from protected route</h2>
