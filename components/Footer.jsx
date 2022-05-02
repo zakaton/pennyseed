@@ -1,4 +1,5 @@
 import { MailIcon } from '@heroicons/react/outline';
+import { useRouter } from 'next/router';
 
 /* This example requires Tailwind CSS v2.0+ */
 const navigation = {
@@ -71,7 +72,13 @@ const navigation = {
   ],
 };
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function Footer() {
+  const router = useRouter();
+
   return (
     <footer className="bg-white">
       <div className="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
@@ -83,7 +90,10 @@ export default function Footer() {
             <div key={item.name} className="px-5 py-2">
               <a
                 href={item.href}
-                className="text-base text-gray-500 hover:text-gray-900"
+                className={classNames(
+                  router.pathname.startsWith(item.href) ? 'underline' : '',
+                  'text-base text-gray-500 hover:text-gray-900'
+                )}
               >
                 {item.name}
               </a>
