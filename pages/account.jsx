@@ -18,7 +18,7 @@ export default function Account({ user }) {
       <div className="mx-auto max-w-prose text-lg">
         <h1>
           <span className="mt-2 block text-center text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-            About
+            Account
           </span>
         </h1>
         <p className="mt-8 text-xl leading-8 text-gray-500">
