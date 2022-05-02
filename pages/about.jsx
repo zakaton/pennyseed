@@ -1,5 +1,7 @@
 import Head from 'next/head';
 
+// pros/cons
+
 export default function About() {
   return (
     <>
@@ -14,7 +16,14 @@ export default function About() {
         </h1>
       </div>
       <div className="style-links prose prose-lg mx-auto mt-6 text-gray-500">
-        <h3>Hello</h3>
+        <h3>
+          Why another crowdfunding platform? There&apos;s already Patreon,
+          Kickstarter, Gofundme, Gumroad...
+        </h3>
+        <p>
+          Though there are several ways for people to monetize online, each have
+          their pros and cons:
+        </p>
       </div>
     </>
   );

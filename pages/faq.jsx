@@ -40,6 +40,24 @@ const faqs = [
     ),
   },
   {
+    question: 'Do I need to create an account to pledge?',
+    answer: () => (
+      <>
+        <p>
+          Yes. We thought about allowing people to pledge without an account by
+          putting in their card information, but what if they change their mind
+          before the deadline? By having pledgers creating an account they can
+          choose to cancel their pledges at any time before the deadline comes.
+        </p>
+        <p>
+          If you want you could create an account, pledge to a campaign, and
+          then delete your account. Then you could come back and do it again for
+          other campaigns you want to pledge to.
+        </p>
+      </>
+    ),
+  },
+  {
     question: 'Is there a directory of all campaigns I can look through?',
     answer: () => (
       <>
@@ -80,7 +98,7 @@ const faqs = [
   },
   {
     question:
-      'What if someone creates a campaign for $1,000 and I&apos;m the only pledger? I don&apos;t wanna end up paying $1,000!',
+      "What if someone creates a campaign for $1,000 and I'm the only pledger? I don't wanna end up paying $1,000!",
     answer: () => (
       <>
         <p>
@@ -125,7 +143,7 @@ const faqs = [
     ),
   },
   {
-    question: 'What&apos;s the lowest amount a pledger can pay?',
+    question: "What's the lowest amount a pledger can pay?",
     answer: () => (
       <>
         <p>
@@ -162,7 +180,7 @@ const faqs = [
   },
   {
     question:
-      'If I get a lot of pledgers, won&apos;t a lot of the pledge amount just be processing fees?',
+      "If I get a lot of pledgers, won't a lot of the pledge amount just be processing fees?",
     answer: () => (
       <>
         <p>
@@ -207,7 +225,7 @@ const faqs = [
   },
   {
     question:
-      'What if I&apos;m not willing to pledge the maximum possible pledge amount?',
+      "What if I'm not willing to pledge the maximum possible pledge amount?",
     answer: () => (
       <>
         <p>
