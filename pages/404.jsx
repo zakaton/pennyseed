@@ -9,7 +9,7 @@ export default function Error404() {
       <div className="min-h-full bg-white px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
         <div className="mx-auto max-w-max">
           <div className="sm:flex">
-            <p className="text-4xl font-extrabold text-indigo-600 sm:text-5xl">
+            <p className="text-4xl font-extrabold text-yellow-600 sm:text-5xl">
               404
             </p>
             <div className="sm:ml-6">

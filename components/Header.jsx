@@ -31,7 +31,7 @@ export default function Header() {
             <div className="relative flex h-16 justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button */}
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-500">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -60,7 +60,7 @@ export default function Header() {
                       <a
                         className={classNames(
                           router.pathname.startsWith(href)
-                            ? 'border-indigo-500 text-gray-900'
+                            ? 'border-yellow-500 text-gray-900'
                             : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                           'text-md inline-flex items-center border-b-2 px-1 pt-1 font-medium '
                         )}
@@ -76,7 +76,7 @@ export default function Header() {
                   <>
                     <Menu as="div" className="relative z-10 ml-3">
                       <div>
-                        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
                           <span className="sr-only">View notifications</span>
                           <span className="absolute top-0 right-0 block h-3.5 w-3.5 rounded-full bg-red-400 ring-2 ring-white" />
                           <BellIcon className="h-8 w-8" aria-hidden="true" />
@@ -112,7 +112,7 @@ export default function Header() {
                     {/* Profile dropdown */}
                     <Menu as="div" className="relative z-10 ml-3">
                       <div>
-                        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
                           <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
                             <svg
@@ -163,7 +163,7 @@ export default function Header() {
                   </>
                 ) : (
                   <Link href="/sign-in">
-                    <a className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                    <a className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700">
                       Sign in
                     </a>
                   </Link>
@@ -181,7 +181,7 @@ export default function Header() {
                   href={href}
                   className={classNames(
                     router.pathname.startsWith(href)
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                      ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
                       : 'border-transparent  text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
                     'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
                   )}

@@ -19,7 +19,7 @@ export default function Privacy() {
           Eleifend egestas fringilla sapien.
         </p>
       </div>
-      <div className="prose prose-lg prose-indigo mx-auto mt-6 text-gray-500">
+      <div className="prose prose-lg prose-yellow mx-auto mt-6 text-gray-500">
         <p>
           Faucibus commodo massa rhoncus, volutpat. <strong>Dignissim</strong>{' '}
           sed <strong>eget risus enim</strong>. Mattis mauris semper sed amet
