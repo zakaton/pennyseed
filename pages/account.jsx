@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { supabase } from '../utils/supabase-client';
 import enforceAuthentication from '../utils/enforce-authentication';
 import AccountPaymentInfo from '../components/account/AccountPaymentInfo';
+import AccountNotifications from '../components/account/AccountNotifications';
 import AccountGeneral from '../components/account/AccountGeneral';
 
 const navigation = [
@@ -28,7 +29,7 @@ const navigation = [
     name: 'Notifications',
     hash: 'notifications',
     icon: BellIcon,
-    component: AccountPaymentInfo,
+    component: AccountNotifications,
   },
 ];
 
@@ -46,7 +47,7 @@ export const getServerSideProps = enforceAuthentication;
 export default function Account() {
   const router = useRouter();
   const hash = router.asPath.split('#')[1] || '';
-
+  console.log(hash);
   return (
     <>
       <Head>
