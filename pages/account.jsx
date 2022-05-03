@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import {
   CreditCardIcon,
@@ -7,6 +7,7 @@ import {
   BellIcon,
 } from '@heroicons/react/outline';
 import Link from 'next/link';
+import { getURL } from 'next/dist/shared/lib/utils';
 import enforceAuthentication from '../utils/enforce-authentication';
 import AccountPaymentInfo from '../components/account/AccountPaymentInfo';
 import AccountNotifications from '../components/account/AccountNotifications';
@@ -46,26 +47,19 @@ export const getServerSideProps = enforceAuthentication;
 
 export default function Account() {
   const router = useRouter();
+  const [hash, setHash] = useState('');
   useEffect(() => {
     const handleRouteChange = (url, { shallow }) => {
-      console.log(
-        `App is changing to ${url} ${
-          shallow ? 'with' : 'without'
-        } shallow routing`
-      );
+      const newHash = url.split('#')[1] || '';
+      setHash(newHash);
     };
 
     router.events.on('hashChangeStart', handleRouteChange);
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
     return () => {
       router.events.off('hashChangeStart', handleRouteChange);
     };
   }, []);
 
-  const hash = router.asPath.split('#')[1] || '';
-  console.log('current hash:', hash);
   return (
     <>
       <Head>
@@ -76,7 +70,6 @@ export default function Account() {
           <nav className="space-y-1">
             {navigation.map((item) => {
               const current = hash === item.hash;
-              console.log(item.hash, current);
               return (
                 <Link key={item.name} href={`/account#${item.hash}`} passHref>
                   <a
