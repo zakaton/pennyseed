@@ -48,7 +48,7 @@ export default function Account() {
   const router = useRouter();
   const [hash, setHash] = useState(router.asPath.split('#')[1] || '');
   useEffect(() => {
-    const handleRouteChange = (url, { shallow }) => {
+    const handleRouteChange = (url) => {
       const newHash = url.split('#')[1] || '';
       setHash(newHash);
     };
