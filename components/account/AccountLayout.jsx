@@ -34,7 +34,7 @@ export default function AccountLayout({ children }) {
         <title>Account - Pennyseed</title>
       </Head>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <aside className="px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
+        <aside className="px-2 sm:px-6 lg:col-span-2 lg:py-0 lg:px-0">
           <nav className="space-y-1">
             {navigation.map((item) => {
               const current = hash === item.hash;
