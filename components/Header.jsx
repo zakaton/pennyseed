@@ -14,6 +14,7 @@ import { supabase } from '../utils/supabase-client';
 const navigation = [
   { name: 'About', href: '/about' },
   { name: 'FAQ', href: '/faq' },
+  { name: 'Campaign Calculator', href: '/campaign-calculator' },
 ];
 const accountNavigation = [
   { name: 'Account', href: '/account' },

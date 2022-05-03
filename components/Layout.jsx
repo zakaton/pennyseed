@@ -14,7 +14,7 @@ export default function Layout({ children }) {
       </Head>
       <Header />
       {!online && <OfflineBanner />}
-      <main className="relative mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
+      <main className="relative mx-auto max-w-7xl py-4 px-4 sm:px-6 lg:px-8">
         {children}
       </main>
       <Footer />
