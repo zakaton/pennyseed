@@ -4,11 +4,12 @@ import { OnlineContextProvider } from '../utils/online-context';
 import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }) {
-  const getNestedLayout = Component.getNestedLayout || ((page) => page);
   return (
     <OnlineContextProvider>
       <UserContextProvider>
-        <Layout>{getNestedLayout(<Component {...pageProps} />)}</Layout>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </UserContextProvider>
     </OnlineContextProvider>
   );
