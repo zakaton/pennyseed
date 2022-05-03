@@ -127,58 +127,69 @@ export default function About() {
           ))}
         </ol>
 
-        <h3>However, we noticed the following:</h3>
+        <h3>However, we realized something:</h3>
 
-        <b>😔 Problems</b>
-        <ul>
-          <li className="con">
-            Arbitrary Pricing with no guarantee of a stable income
+        <ul role="list">
+          <li style={{ listStyleType: '"😔"' }}>
+            Problems{' '}
+            <ul role="list">
+              <li className="con">
+                Arbitrary Pricing with no guarantee of a stable income
+              </li>
+              <li className="con">
+                Little incentive for supporters to encourage others to
+                contribute
+              </li>
+              <li className="con">
+                Creator has to do extra work for money (merchanidise,
+                commissions, side jobs, etc)
+              </li>
+            </ul>
           </li>
-          <li className="con">
-            Little incentive for supporters to encourage others to contribute
+          <li style={{ listStyleType: '"💡"' }}>
+            Insight
+            <ul role="list">
+              <li>The Creator wants everyone to enjoy it</li>
+              <li>Most of the money goes to living expenses</li>
+              <li>
+                Fans aren&apos;t paying for Content - they&apos;re paying for
+                Future Content
+              </li>
+            </ul>
           </li>
-          <li className="con">
-            Creator has to do extra work for money (merchanidise, commissions,
-            side jobs, etc)
-          </li>
-        </ul>
 
-        <b>💡 Insight</b>
-        <ul>
-          <li>The Creator wants everyone to enjoy it</li>
-          <li>Most of the money goes to living expenses</li>
-          <li>
-            Fans aren&apos;t paying for Content - they&apos;re paying for Future
-            Content
+          <li style={{ listStyleType: '"🤩"' }}>
+            Solution
+            <ul role="list">
+              <li>
+                A &quot;Split-the-Bill&quot; Model that divides the Funding Goal
+                by the number of Pledgers
+              </li>
+              <li>
+                Specify a <u>minimum number of pledgers</u> to ensure a maximum
+                possible pledge amount so pledgers aren&apos;t scared of paying
+                too much
+              </li>
+              <li>
+                A Minimal Design that doesn&apos;t try to be a Social Network
+              </li>
+            </ul>
           </li>
-        </ul>
-
-        <b>🤩 Solution</b>
-        <ul>
-          <li>
-            A &quot;Split-the-Bill&quot; Model that divides the Funding Goal by
-            the number of Pledgers
-          </li>
-          <li>
-            Specify a <u>minimum number of pledgers</u> to ensure a maximum
-            possible pledge amount so pledgers aren&apos;t scared of paying too
-            much
-          </li>
-          <li>A Minimal Design that doesn&apos;t try to be a Social Network</li>
-        </ul>
-
-        <b>👍 Benefits</b>
-        <ul>
-          <li className="pro">
-            Creators are guarenteed the Exact Amount they specify
-          </li>
-          <li className="pro">
-            Pledgers are incentivized to share the Campaign to reduce their
-            Pledge Share
-          </li>
-          <li className="pro">
-            Minimal Design allows for a wide range of emergent applications and
-            extensions
+          <li style={{ listStyleType: '"👍"' }}>
+            Benefits
+            <ul role="list">
+              <li className="pro">
+                Creators are guarenteed the Exact Amount they specify
+              </li>
+              <li className="pro">
+                Pledgers are incentivized to share the Campaign to reduce their
+                Pledge Share
+              </li>
+              <li className="pro">
+                Minimal Design allows for a wide range of emergent applications
+                and extensions
+              </li>
+            </ul>
           </li>
         </ul>
 
