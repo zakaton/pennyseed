@@ -7,7 +7,6 @@ import {
   BellIcon,
 } from '@heroicons/react/outline';
 import Link from 'next/link';
-import { getURL } from 'next/dist/shared/lib/utils';
 import enforceAuthentication from '../utils/enforce-authentication';
 import AccountPaymentInfo from '../components/account/AccountPaymentInfo';
 import AccountNotifications from '../components/account/AccountNotifications';
@@ -47,7 +46,7 @@ export const getServerSideProps = enforceAuthentication;
 
 export default function Account() {
   const router = useRouter();
-  const [hash, setHash] = useState('');
+  const [hash, setHash] = useState(router.asPath.split('#')[1] || '');
   useEffect(() => {
     const handleRouteChange = (url, { shallow }) => {
       const newHash = url.split('#')[1] || '';
@@ -58,6 +57,12 @@ export default function Account() {
     return () => {
       router.events.off('hashChangeStart', handleRouteChange);
     };
+  }, []);
+
+  const [isSSR, setIsSSR] = useState(true);
+
+  useEffect(() => {
+    setIsSSR(false);
   }, []);
 
   return (
@@ -71,28 +76,30 @@ export default function Account() {
             {navigation.map((item) => {
               const current = hash === item.hash;
               return (
-                <Link key={item.name} href={`/account#${item.hash}`} passHref>
-                  <a
-                    className={classNames(
-                      current
-                        ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
-                        : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                      'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
-                    )}
-                    aria-current={current ? 'page' : undefined}
-                  >
-                    <item.icon
+                !isSSR && (
+                  <Link key={item.name} href={`/account#${item.hash}`} passHref>
+                    <a
                       className={classNames(
                         current
-                          ? 'text-yellow-500 group-hover:text-yellow-500'
-                          : 'text-gray-400 group-hover:text-gray-500',
-                        '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
+                          ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
+                          : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                        'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
                       )}
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">{item.name}</span>
-                  </a>
-                </Link>
+                      aria-current={current ? 'page' : undefined}
+                    >
+                      <item.icon
+                        className={classNames(
+                          current
+                            ? 'text-yellow-500 group-hover:text-yellow-500'
+                            : 'text-gray-400 group-hover:text-gray-500',
+                          '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">{item.name}</span>
+                    </a>
+                  </Link>
+                )
               );
             })}
           </nav>
@@ -102,9 +109,12 @@ export default function Account() {
           {navigation.map((item) => {
             const current = item.hash === hash;
             return (
-              <div key={item.id} hidden={!current}>
-                <item.component />
-              </div>
+              !isSSR &&
+              current && (
+                <div key={item.id}>
+                  <item.component />
+                </div>
+              )
             );
           })}
         </div>
