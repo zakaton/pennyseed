@@ -1,11 +1,16 @@
+import { XCircleIcon } from '@heroicons/react/solid';
+
 export default function OfflineBanner() {
   return (
-    <div className="relative bg-red-500">
-      <div className="mx-auto max-w-7xl py-3 px-3 sm:px-6 lg:px-8">
-        <div className="px-16 pr-16 text-center">
-          <p className="font-medium text-white">
-            <span>You&apos;re offline</span>
-          </p>
+    <div className="rounded-md bg-red-50 p-4">
+      <div className="flex justify-center">
+        <div className="flex-shrink-0">
+          <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+        </div>
+        <div className="ml-3">
+          <h3 className="text-sm font-medium text-red-800">
+            You&apos;re offline
+          </h3>
         </div>
       </div>
     </div>

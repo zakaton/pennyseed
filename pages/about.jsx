@@ -127,7 +127,7 @@ export default function About() {
           ))}
         </ol>
 
-        <h3>However, we realized something:</h3>
+        <h3>...and then we realized something:</h3>
 
         <ul role="list">
           <li style={{ listStyleType: '"😔"' }}>
