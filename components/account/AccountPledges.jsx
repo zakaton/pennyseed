@@ -12,6 +12,16 @@ const campaigns = [
     currentNumberOfPledgers: 0,
     succeeded: 'yes',
   },
+  {
+    title: 'Need money plox',
+    goal: '$1,000',
+    deadline: 'Feb 27',
+    approved: 'yes',
+    minimumNumberOfPledgers: 100,
+    maximumNumberOfPledgers: 1000,
+    currentNumberOfPledgers: 0,
+    succeeded: 'yes',
+  },
 ];
 campaigns.forEach((campaign, index) => {
   // eslint-disable-next-line no-param-reassign

@@ -8,8 +8,7 @@ export default function AccountNotifications() {
               Notifications
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              Provide basic informtion about the job. Be specific with the job
-              title.
+              Get notified on campaign updates.
             </p>
           </div>
 
@@ -32,10 +31,10 @@ export default function AccountNotifications() {
                     htmlFor="comments"
                     className="font-medium text-gray-700"
                   >
-                    Comments
+                    Campaign succeed/fail
                   </label>
                   <p className="text-gray-500">
-                    Get notified when someones posts a comment on a posting.
+                    Get notified when your campaign succeeds or fails
                   </p>
                 </div>
               </div>
@@ -54,10 +53,10 @@ export default function AccountNotifications() {
                       htmlFor="candidates"
                       className="font-medium text-gray-700"
                     >
-                      Candidates
+                      Pledger Updates
                     </label>
                     <p className="text-gray-500">
-                      Get notified when a candidate applies for a job.
+                      Get notified when campaigns receive or lose a pledger
                     </p>
                   </div>
                 </div>
@@ -77,10 +76,11 @@ export default function AccountNotifications() {
                       htmlFor="offers"
                       className="font-medium text-gray-700"
                     >
-                      Offers
+                      About to Charge
                     </label>
                     <p className="text-gray-500">
-                      Get notified when a candidate accepts or rejects an offer.
+                      Get notified when a campaign you&apos;ve pledged to is
+                      about to succeed and you&apos;ll be charged
                     </p>
                   </div>
                 </div>
@@ -89,10 +89,59 @@ export default function AccountNotifications() {
           </fieldset>
           <fieldset className="mt-6">
             <legend className="text-base font-medium text-gray-900">
-              Push Notifications
+              Web Notifications
             </legend>
             <p className="text-sm text-gray-500">
-              These are delivered via SMS to your mobile phone.
+              Receive notifications when the website is open
+            </p>
+            <div className="mt-4 space-y-4">
+              <div className="flex items-center">
+                <input
+                  id="push-everything"
+                  name="push-notifications"
+                  type="radio"
+                  className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                />
+                <label htmlFor="push-everything" className="ml-3">
+                  <span className="block text-sm font-medium text-gray-700">
+                    Everything
+                  </span>
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="push-email"
+                  name="push-notifications"
+                  type="radio"
+                  className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                />
+                <label htmlFor="push-email" className="ml-3">
+                  <span className="block text-sm font-medium text-gray-700">
+                    Same as email
+                  </span>
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="push-nothing"
+                  name="push-notifications"
+                  type="radio"
+                  className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                />
+                <label htmlFor="push-nothing" className="ml-3">
+                  <span className="block text-sm font-medium text-gray-700">
+                    No push notifications
+                  </span>
+                </label>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset className="mt-6">
+            <legend className="text-base font-medium text-gray-900">
+              Push Notifications (PWA only)
+            </legend>
+            <p className="text-sm text-gray-500">
+              Receive notifications when you&apos;re not on the site
             </p>
             <div className="mt-4 space-y-4">
               <div className="flex items-center">
@@ -137,7 +186,14 @@ export default function AccountNotifications() {
             </div>
           </fieldset>
         </div>
-        <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+        <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
+          <button
+            type="button"
+            className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Cancel
+          </button>
+
           <button
             type="submit"
             className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-offset-2"
