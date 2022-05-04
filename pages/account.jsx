@@ -20,6 +20,18 @@ const navigation = [
     component: AccountGeneral,
   },
   {
+    name: 'My Campaigns',
+    hash: 'my-campaigns',
+    icon: CreditCardIcon,
+    component: AccountPaymentInfo,
+  },
+  {
+    name: 'My Pledges',
+    hash: 'my-pledges',
+    icon: CreditCardIcon,
+    component: AccountPaymentInfo,
+  },
+  {
     name: 'Payment Info',
     hash: 'payment-info',
     icon: CreditCardIcon,
@@ -46,6 +58,7 @@ export const getServerSideProps = enforceAuthentication;
 
 export default function Account() {
   const router = useRouter();
+
   const [hash, setHash] = useState(router.asPath.split('#')[1] || '');
   useEffect(() => {
     const handleRouteChange = (url) => {
