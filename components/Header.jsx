@@ -18,9 +18,7 @@ const navigation = [
   { name: 'Campaign Calculator', href: '/campaign-calculator' },
 ];
 const accountNavigation = [
-  { name: 'Account', href: '/account#' },
-  { name: 'My Campaigns', href: '/account#my-campaigns' },
-  { name: 'My Pledges', href: '/account#my-pledges' },
+  { name: 'Account', href: '/account' },
   { name: 'Sign Out', href: '/sign-out' },
 ];
 
@@ -149,10 +147,6 @@ export default function Header() {
                                       e.preventDefault();
                                       supabase.auth.signOut();
                                       router.replace('/sign-in');
-                                    } else {
-                                      router.push(href, null, {
-                                        shallow: true,
-                                      });
                                     }
                                   }}
                                   className={classNames(
