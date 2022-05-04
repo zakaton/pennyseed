@@ -149,6 +149,10 @@ export default function Header() {
                                       e.preventDefault();
                                       supabase.auth.signOut();
                                       router.replace('/sign-in');
+                                    } else {
+                                      router.push(href, null, {
+                                        shallow: true,
+                                      });
                                     }
                                   }}
                                   className={classNames(
