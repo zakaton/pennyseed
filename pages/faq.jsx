@@ -8,14 +8,15 @@ const faqs = [
     answer: () => (
       <>
         <p>
-          This is an experiment and is limited to persons 13 years and older in
-          the United States. Any campaigns you create must be approved by us.
+          Pennyseed is limited to persons 13 years and older in the United
+          States. Plus campaigns you create must be approved by us (though we
+          are very likely to approve them).
         </p>
         <p>
-          However, even before we approve your campaign, you are still free to
-          share your campaign with others, whom can pledge at anytime. Charges
-          will only be made if we have approved the campaign before the
-          deadline, as well as whether the minimum number of pledgers are met.
+          But even before we approve your campaign, you are still free to share
+          your campaign with others, whom can pledge at anytime. Charges will
+          only be made if we have approved the campaign before the deadline, as
+          well as whether the minimum number of pledgers are met.
         </p>
       </>
     ),
@@ -32,9 +33,10 @@ const faqs = [
         </p>
         <p>
           For instance, if you want to raise $1,000 with a minimum of 1,000
-          pledgers, each will pay at most $1 before processing. If you changed
-          the minimum number of pledgers to 100 after people have pledged then
-          they&apos;ll be paying at most $10 which wouldn&apos;t be fair.
+          pledgers, each will pay at most $1 before processing. But if you
+          changed the minimum number of pledgers to 100 after people have
+          pledged, then they&apos;ll pay at most $10, which wouldn&apos;t be
+          fair and wasn&apos;t the deal when they pledged.
         </p>
       </>
     ),
@@ -45,14 +47,15 @@ const faqs = [
       <>
         <p>
           Yes. We thought about allowing people to pledge without an account by
-          putting in their card information, but what if they change their mind
-          before the deadline? By having pledgers creating an account they can
-          choose to cancel their pledges at any time before the deadline comes.
+          just putting in their card information, but what if they changed their
+          mind before the deadline? By having pledgers creating an account they
+          can choose to cancel their pledges at any time before the deadline
+          comes.
         </p>
         <p>
-          If you want you could create an account, pledge to a campaign, and
-          then delete your account. Then you could come back and do it again for
-          other campaigns you want to pledge to.
+          If you want, you could create an account, pledge to a campaign, and
+          then delete your account after the campaign ends. Then you could come
+          back and do it again for other campaigns you want to pledge to.
         </p>
       </>
     ),
@@ -63,19 +66,19 @@ const faqs = [
       <>
         <p>
           No. We think it&apos;s better to allow users to create a campaign and
-          share the public link on their existing social networks. We just want
-          to be a way for people to pay creators whose content they enjoy,
+          share the campaign link on their existing social networks. We just
+          want to be a way for people to pay creators whose content they enjoy -
           nothing more.
         </p>
         <p>
           If we added a way to search and discover campaigns, then we&apos;d
-          have to moderate which users and campaigns are created since
-          they&apos;d be seen by anyone visiting this site. Plus we&apos;d have
-          to deal with malicious users impersonating popular creators and would
-          need to add stuff like account verification. We&apos;d prefer to have
-          users make campaigns and share the direct link to the campaign on
-          their existing social media accounts, leveraging the trust of those
-          networks.
+          have to moderate which campaigns are created since they&apos;d be seen
+          by anyone visiting this site. Plus we&apos;d have to deal with
+          malicious users impersonating popular creators and would need to add
+          stuff like account verification. We&apos;d prefer to have users make
+          campaigns and share the direct link to the campaign on their existing
+          social media accounts, leveraging the established trust of those
+          accounts.
         </p>
       </>
     ),
@@ -89,9 +92,9 @@ const faqs = [
           pledge to other campaigns.
         </p>
         <p>
-          Campaigns do not display any information about the campaigner, because
-          if we did then malicious users can impersonate popular creators not on
-          this website and trick people into pledging to them.
+          Campaigns do not display any information about the campaigner -
+          otherwise malicious users could impersonate popular creators online
+          and trick people into pledging to them.
         </p>
       </>
     ),
@@ -173,8 +176,8 @@ const faqs = [
     question: 'Is my pledge visible to others?',
     answer: () => (
       <p>
-        All pledges are anonymous, being neither visible to the public nor the
-        campaigner themself.
+        No. All pledges are anonymous, being neither visible to the public nor
+        the campaigner themself.
       </p>
     ),
   },
@@ -184,10 +187,10 @@ const faqs = [
     answer: () => (
       <>
         <p>
-          It&apos;s true that as the pledge amount decreases the larger the bulk
-          of the pledge payment due to processing fees. For instance if you
-          raise $1,000 with 4,000 pledgers each will pay $0.25, which becomes
-          $0.57 when processing fees are added.
+          Yes. As the pledge amount decreases the larger the bulk of the pledge
+          payment due to processing fees. For instance if you raise $1,000 with
+          4,000 pledgers each will pay $0.25, which becomes $0.57 when
+          processing fees are added.
         </p>
         <p>
           As inefficient as this may seem, we think it&apos;s way better than

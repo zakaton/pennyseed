@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
 
-export default function DeleteAccountModal({ open, setOpen }) {
+export default function DeleteCampaignModal({ open, setOpen }) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -60,14 +60,12 @@ export default function DeleteAccountModal({ open, setOpen }) {
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Delete account
+                      Delete Campaign
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Are you sure you want to delete your account? All of
-                        your data will be permanently removed from our servers
-                        forever, and any pending campaigns and pledges will be
-                        canceled. This action cannot be undone.
+                        Are you sure you want to delete this campaign? This
+                        action cannot be undone.
                       </p>
                     </div>
                   </div>

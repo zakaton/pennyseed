@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import Head from 'next/head';
+import Link from 'next/link';
 
 const monetizationProsAndCons = [
   {
@@ -127,7 +128,7 @@ export default function About() {
           ))}
         </ol>
 
-        <h3>...and then we realized something:</h3>
+        <h3>...but then we realized something:</h3>
 
         <ul role="list">
           <li style={{ listStyleType: '"😔"' }}>
@@ -244,6 +245,10 @@ export default function About() {
         <ol role="list" start="5">
           <li>Nothing happens; life goes on</li>
         </ol>
+
+        <h3>
+          You can check out our <Link href="/faq">FAQ</Link> for more details
+        </h3>
       </div>
     </>
   );

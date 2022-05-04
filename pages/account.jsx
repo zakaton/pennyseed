@@ -3,14 +3,18 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import {
   CreditCardIcon,
-  UserCircleIcon,
   BellIcon,
+  UserCircleIcon,
+  HandIcon,
+  PencilAltIcon,
 } from '@heroicons/react/outline';
 import Link from 'next/link';
 import enforceAuthentication from '../utils/enforce-authentication';
 import AccountPaymentInfo from '../components/account/AccountPaymentInfo';
 import AccountNotifications from '../components/account/AccountNotifications';
 import AccountGeneral from '../components/account/AccountGeneral';
+import AccountPledges from '../components/account/AccountPledges';
+import AccountCampaigns from '../components/account/AccountCampaigns';
 
 const navigation = [
   {
@@ -22,14 +26,14 @@ const navigation = [
   {
     name: 'My Campaigns',
     hash: 'my-campaigns',
-    icon: CreditCardIcon,
-    component: AccountPaymentInfo,
+    icon: PencilAltIcon,
+    component: AccountCampaigns,
   },
   {
     name: 'My Pledges',
     hash: 'my-pledges',
-    icon: CreditCardIcon,
-    component: AccountPaymentInfo,
+    icon: HandIcon,
+    component: AccountPledges,
   },
   {
     name: 'Payment Info',
