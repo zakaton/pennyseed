@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSession } from '../../utils/user-context';
+import { useSession } from '../../context/user-session-context';
 import DeleteAccountModal from './DeleteAccountModal';
 
 export default function AccountGeneral() {

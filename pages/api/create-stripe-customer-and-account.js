@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { supabase } from '../../utils/supabase-client';
 
+// eslint-disable-next-line consistent-return
 export default async function handler(req, res) {
   if (req.query.API_ROUTE_SECRET !== process.env.API_ROUTE_SECRET) {
     return res.status(401).send('You are not authorized to make this call');

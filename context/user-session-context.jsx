@@ -1,9 +1,9 @@
 import { useEffect, useState, createContext, useContext, useMemo } from 'react';
-import { supabase } from './supabase-client';
+import { supabase } from '../utils/supabase-client';
 
-export const UserContext = createContext(null);
+export const UserSessionContext = createContext(null);
 
-export function UserContextProvider(props) {
+export function UserSessionContextProvider(props) {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -35,10 +35,10 @@ export function UserContextProvider(props) {
     [session]
   );
 
-  return <UserContext.Provider value={value} {...props} />;
+  return <UserSessionContext.Provider value={value} {...props} />;
 }
 
 export function useSession() {
-  const context = useContext(UserContext);
+  const context = useContext(UserSessionContext);
   return context;
 }

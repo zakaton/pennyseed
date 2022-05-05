@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Header from './Header';
 import Footer from './Footer';
 
-import { useOnline } from '../utils/online-context';
+import { useOnline } from '../context/online-context';
 import OfflineBanner from './OfflineBanner';
 
 export default function Layout({ children }) {

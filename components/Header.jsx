@@ -9,7 +9,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { useSession } from '../utils/user-context';
+import { useSession } from '../context/user-session-context';
 import { supabase } from '../utils/supabase-client';
 
 const navigation = [
