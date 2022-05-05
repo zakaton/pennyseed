@@ -9,8 +9,8 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { useUser } from '../context/user-context';
 import { useSession } from '../context/user-session-context';
-import { supabase } from '../utils/supabase-client';
 
 const navigation = [
   { name: 'About', href: '/about' },
@@ -28,6 +28,7 @@ function classNames(...classes) {
 
 export default function Header() {
   const router = useRouter();
+  const { user, signOut } = useUser();
   const { session } = useSession();
 
   return (
@@ -145,8 +146,7 @@ export default function Header() {
                                   onClick={(e) => {
                                     if (name === 'Sign Out') {
                                       e.preventDefault();
-                                      supabase.auth.signOut();
-                                      router.replace('/sign-in');
+                                      signOut();
                                     }
                                   }}
                                   className={classNames(

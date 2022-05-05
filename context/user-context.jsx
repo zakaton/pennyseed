@@ -9,7 +9,6 @@ export function UserContextProvider(props) {
   const [user, setUser] = useState(supabase.auth.user());
 
   useEffect(() => {
-    /*
     const getUserProfile = async () => {
       const sessionUser = supabase.auth.user();
 
@@ -27,23 +26,24 @@ export function UserContextProvider(props) {
       }
     };
     getUserProfile();
-    */
 
     supabase.auth.onAuthStateChange(() => {
-      setUser(supabase.auth.user());
+      getUserProfile();
     });
   }, []);
 
-  const logout = async () => {
+  console.log(user);
+
+  const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
-    router.push('/');
+    router.push('/sign-in');
   };
 
   const value = useMemo(
     () => ({
       user,
-      logout,
+      signOut,
     }),
     [user]
   );
