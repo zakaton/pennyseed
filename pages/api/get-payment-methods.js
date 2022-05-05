@@ -15,5 +15,5 @@ export default async function handler(req, res) {
     customer: profile.customer_id,
     type: 'card',
   });
-  res.status(200).json({ payment_methods: paymentMethods });
+  res.status(200).json({ payment_methods: paymentMethods.data });
 }

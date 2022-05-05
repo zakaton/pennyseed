@@ -7,16 +7,31 @@ import getStripe from '../../utils/get-stripe';
 export default function AccountPaymentInfo() {
   // eslint-disable-next-line no-unused-vars
   const [stripePromise, setStripePromise] = useState(() => getStripe());
-  const [clientSecret, setClientSecret] = useState(null);
 
+  const [clientSecret, setClientSecret] = useState(null);
+  const createSetupIntent = async (override) => {
+    const response = await fetch('/api/create-stripe-setup-intent');
+    const { client_secret } = await response.json();
+    if (clientSecret == null || override) {
+      console.log('client_secret', client_secret);
+      setClientSecret(client_secret);
+    }
+  };
   useEffect(() => {
-    fetch('/api/create-stripe-setup-intent')
-      .then((response) => response.json())
-      .then(({ client_secret }) => {
-        if (clientSecret == null) {
-          setClientSecret(client_secret);
-        }
-      });
+    createSetupIntent();
+  }, []);
+
+  const [paymentMethods, setPaymentMethods] = useState(null);
+  const updatePaymentMethods = async (override) => {
+    const response = await fetch('/api/get-payment-methods');
+    const { payment_methods } = await response.json();
+    if (paymentMethods == null || override) {
+      console.log('payment_methods', payment_methods);
+      setPaymentMethods(payment_methods);
+    }
+  };
+  useEffect(() => {
+    updatePaymentMethods();
   }, []);
 
   return (

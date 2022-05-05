@@ -124,10 +124,10 @@ export default function Account() {
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
           {navigation.map((item) => {
-            const current = item.hash === hash;
+            const isActive = item.hash === hash;
             return (
               !isSSR && (
-                <div key={item.id} hidden={!current}>
+                <div key={item.id} hidden={!isActive}>
                   <item.component />
                 </div>
               )
