@@ -1,6 +1,6 @@
 import { PaymentElement } from '@stripe/react-stripe-js';
 
-export default function CheckoutForm() {
+function SetupForm() {
   return (
     <form>
       <PaymentElement />
@@ -8,3 +8,5 @@ export default function CheckoutForm() {
     </form>
   );
 }
+
+export default SetupForm;

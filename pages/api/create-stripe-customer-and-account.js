@@ -6,6 +6,7 @@ const supabase = getSupabaseService();
 
 // eslint-disable-next-line consistent-return
 export default async function handler(req, res) {
+  console.log('received request', req.query);
   if (!enforceApiRouteSecret(req, res)) {
     return;
   }

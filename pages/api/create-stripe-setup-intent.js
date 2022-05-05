@@ -1,17 +1,21 @@
+/* eslint-disable consistent-return */
 import Stripe from 'stripe';
+import cookie from 'cookie';
 import { getSupabaseService, getUserProfile } from '../../utils/supabase';
-import enforceApiRouteSecret from '../../utils/enforce-api-route-secret';
 
 const supabase = getSupabaseService();
 
-// eslint-disable-next-line consistent-return
 export default async function handler(req, res) {
-  if (!enforceApiRouteSecret(req, res)) {
-    return;
-  }
-
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
   const { user } = await supabase.auth.api.getUserByCookie(req);
+  if (!user) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  const token = cookie.parse(req.headers.cookie)['sb-access-token'];
+  supabase.auth.session = () => ({
+    access_token: token,
+  });
   const profile = await getUserProfile(user, supabase);
 
   const setupIntent = await stripe.setupIntents.create({
