@@ -7,6 +7,7 @@ export const UserContext = createContext();
 export function UserContextProvider(props) {
   const router = useRouter();
   const [user, setUser] = useState(supabase.auth.user());
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -23,6 +24,8 @@ export function UserContextProvider(props) {
           ...sessionUser,
           ...profile,
         });
+
+        setIsLoading(false);
       }
     };
     getUserProfile();
@@ -30,9 +33,7 @@ export function UserContextProvider(props) {
     supabase.auth.onAuthStateChange(() => {
       getUserProfile();
     });
-  }, []);
-
-  console.log(user);
+  }, [user]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -44,8 +45,9 @@ export function UserContextProvider(props) {
     () => ({
       user,
       signOut,
+      isLoading,
     }),
-    [user]
+    [user, isLoading]
   );
 
   return <UserContext.Provider value={value} {...props} />;

@@ -28,7 +28,7 @@ function classNames(...classes) {
 
 export default function Header() {
   const router = useRouter();
-  const { user, signOut } = useUser();
+  const { signOut } = useUser();
   const { session } = useSession();
 
   return (
