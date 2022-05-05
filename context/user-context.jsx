@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useContext, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../utils/supabase';
+import { supabase, getUserProfile } from '../utils/supabase';
 
 export const UserContext = createContext();
 
@@ -11,15 +11,11 @@ export function UserContextProvider(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getUserProfile = async () => {
+    const updateUserProfile = async () => {
       const sessionUser = supabase.auth.user();
 
       if (sessionUser) {
-        const { data: profile } = await supabase
-          .from('profile')
-          .select('*')
-          .eq('id', sessionUser.id)
-          .single();
+        const profile = await getUserProfile(sessionUser);
 
         setUser({
           ...sessionUser,
@@ -29,10 +25,10 @@ export function UserContextProvider(props) {
         setIsLoading(false);
       }
     };
-    getUserProfile();
+    updateUserProfile();
 
     supabase.auth.onAuthStateChange(() => {
-      getUserProfile();
+      updateUserProfile();
     });
   }, [user]);
 

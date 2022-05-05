@@ -3,6 +3,21 @@ import { Elements } from '@stripe/react-stripe-js';
 
 const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
 
+export async function getServerSideProps({ req }) {
+  const response = await fetch('/api/create-stripe-setup-intent', {
+    method: 'POST',
+    body: JSON.stringify({ event, session }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const { client_secret } = response.json();
+  return {
+    props: { client_secret },
+  };
+}
+
 export default function AccountPaymentInfo() {
   return (
     <>
