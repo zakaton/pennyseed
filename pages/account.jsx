@@ -126,9 +126,8 @@ export default function Account() {
           {navigation.map((item) => {
             const current = item.hash === hash;
             return (
-              !isSSR &&
-              current && (
-                <div key={item.id}>
+              !isSSR && (
+                <div key={item.id} hidden={!current}>
                   <item.component />
                 </div>
               )

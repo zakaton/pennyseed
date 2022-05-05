@@ -10,6 +10,7 @@ const campaigns = [
     minimumNumberOfPledgers: 100,
     maximumNumberOfPledgers: 1000,
     currentNumberOfPledgers: 0,
+    card: '1234',
     succeeded: 'yes',
   },
   {
@@ -20,6 +21,7 @@ const campaigns = [
     minimumNumberOfPledgers: 100,
     maximumNumberOfPledgers: 1000,
     currentNumberOfPledgers: 0,
+    card: '1234',
     succeeded: 'yes',
   },
 ];
@@ -82,6 +84,12 @@ export default function AccountCampaigns() {
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
+                          Card
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
                           Pledgers
                         </th>
                         <th
@@ -118,6 +126,9 @@ export default function AccountCampaigns() {
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {campaign.approved}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            {campaign.card}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {campaign.currentNumberOfPledgers}/

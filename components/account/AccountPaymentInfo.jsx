@@ -5,27 +5,19 @@ import ElementsForm from './ElementsForm';
 import getStripe from '../../utils/get-stripe';
 
 export default function AccountPaymentInfo() {
+  // eslint-disable-next-line no-unused-vars
   const [stripePromise, setStripePromise] = useState(() => getStripe());
   const [clientSecret, setClientSecret] = useState(null);
 
   useEffect(() => {
-    console.log('getting client secret!');
-    /*
-    async function getClientSecret() {
-      const response = await fetch('/api/create-stripe-setup-intent', {
-        cache: 'no-cache',
-      });
-      const { client_secret } = await response.json();
-      setClientSecret(client_secret);
-    }
-    getClientSecret();
-    */
     fetch('/api/create-stripe-setup-intent')
       .then((response) => response.json())
-      .then(({ client_secret }) => setClientSecret(client_secret));
+      .then(({ client_secret }) => {
+        if (clientSecret == null) {
+          setClientSecret(client_secret);
+        }
+      });
   }, []);
-
-  console.log(clientSecret);
 
   return (
     <div className="shadow sm:overflow-hidden sm:rounded-md">

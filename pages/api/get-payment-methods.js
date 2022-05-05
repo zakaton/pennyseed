@@ -11,9 +11,9 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-
-  const setupIntent = await stripe.setupIntents.create({
+  const paymentMethods = await stripe.paymentMethods.list({
     customer: profile.customer_id,
+    type: 'card',
   });
-  res.status(200).json({ client_secret: setupIntent.client_secret });
+  res.status(200).json({ payment_methods: paymentMethods });
 }

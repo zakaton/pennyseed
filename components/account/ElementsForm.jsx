@@ -4,7 +4,7 @@ function SetupForm() {
   return (
     <form>
       <PaymentElement />
-      <button>Submit</button>
+      <button type="submit">Submit</button>
     </form>
   );
 }
