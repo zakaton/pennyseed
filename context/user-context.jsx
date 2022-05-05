@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useContext, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../utils/supabase-client';
+import { supabase } from '../utils/supabase';
 
 export const UserContext = createContext();
 
