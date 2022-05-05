@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { supabase } from '../../utils/supabase-client';
+import { supabase } from '../../utils/supabase';
 
 // eslint-disable-next-line consistent-return
 export default async function handler(req, res) {

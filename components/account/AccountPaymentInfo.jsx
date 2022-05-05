@@ -1,6 +1,11 @@
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
+const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
+
 export default function AccountPaymentInfo() {
   return (
-    <form action="#" method="POST">
+    <>
       <div className="shadow sm:overflow-hidden sm:rounded-md">
         <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
           <div>
@@ -13,6 +18,7 @@ export default function AccountPaymentInfo() {
           </div>
         </div>
       </div>
-    </form>
+      <Elements stripe={stripe} />
+    </>
   );
 }

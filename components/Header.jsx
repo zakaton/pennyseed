@@ -10,7 +10,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { useUser } from '../context/user-context';
-import { useSession } from '../context/user-session-context';
 
 const navigation = [
   { name: 'About', href: '/about' },
@@ -28,8 +27,7 @@ function classNames(...classes) {
 
 export default function Header() {
   const router = useRouter();
-  const { signOut } = useUser();
-  const { session } = useSession();
+  const { session, signOut } = useUser();
 
   return (
     <Disclosure as="nav" className="bg-white shadow">

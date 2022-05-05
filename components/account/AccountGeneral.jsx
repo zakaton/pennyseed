@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useSession } from '../../context/user-session-context';
+import { useUser } from '../../context/user-context';
 import DeleteAccountModal from './DeleteAccountModal';
 
 export default function AccountGeneral() {
-  const { session } = useSession();
-  const { user } = session;
+  const { user } = useUser();
 
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 

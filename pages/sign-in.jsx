@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { supabase } from '../utils/supabase-client';
+import { supabase } from '../utils/supabase';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
