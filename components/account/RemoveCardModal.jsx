@@ -3,10 +3,14 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
 
-export default function RemoveCardModal({ open, setOpen, selectedCard }) {
-  console.log('selected card', selectedCard);
+export default function RemoveCardModal({
+  open,
+  setOpen,
+  selectedPaymentMethod,
+}) {
+  console.log('selected payment method', selectedPaymentMethod);
   const removeCard = async () => {
-    console.log('removing', selectedCard);
+    console.log('removing', selectedPaymentMethod);
   };
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -67,13 +71,15 @@ export default function RemoveCardModal({ open, setOpen, selectedCard }) {
                       Remove Card
                     </Dialog.Title>
                     <div className="mt-2">
-                      {selectedCard && (
+                      {selectedPaymentMethod && (
                         <p className="text-sm text-gray-500">
                           Are you sure you want to remove{' '}
                           <span className="font-bold">
-                            {selectedCard.brand.charAt(0).toUpperCase() +
-                              selectedCard.brand.slice(1)}{' '}
-                            ending in {selectedCard.last4}
+                            {selectedPaymentMethod.card.brand
+                              .charAt(0)
+                              .toUpperCase() +
+                              selectedPaymentMethod.card.brand.slice(1)}{' '}
+                            ending in {selectedPaymentMethod.card.last4}
                           </span>{' '}
                           from your account? All pending campaigns you&apos;ve
                           pledged to will be cancelled. This action cannot be

@@ -18,8 +18,7 @@ export default async function handler(req, res) {
   res.status(200).json({
     payment_methods: paymentMethods.data.map(
       ({ id, card: { brand, last4 } }) => ({
-        brand,
-        last4,
+        card: { brand, last4 },
         id,
       })
     ),
