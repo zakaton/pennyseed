@@ -1,28 +1,11 @@
 /* eslint-disable camelcase */
-// import { Elements } from '@stripe/react-stripe-js';
 import { useState, useEffect } from 'react';
-// import ElementsForm from './ElementsForm';
-// import getStripe from '../../utils/get-stripe';
 import AddCardModal from './AddCardModal';
+import RemoveCardModal from './RemoveCardModal';
 
 export default function AccountPaymentInfo() {
   const [showAddCard, setShowAddCard] = useState(false);
-
-  // eslint-disable-next-line no-unused-vars
-  // const [stripePromise, setStripePromise] = useState(() => getStripe());
-
-  // const [clientSecret, setClientSecret] = useState(null);
-  // const createSetupIntent = async (override) => {
-  //   const response = await fetch('/api/create-stripe-setup-intent');
-  //   const { client_secret } = await response.json();
-  //   if (clientSecret == null || override) {
-  //     console.log('client_secret', client_secret);
-  //     setClientSecret(client_secret);
-  //   }
-  // };
-  // useEffect(() => {
-  //   createSetupIntent();
-  // }, []);
+  const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
 
   const [paymentMethods, setPaymentMethods] = useState(null);
   const updatePaymentMethods = async (override) => {
@@ -40,6 +23,10 @@ export default function AccountPaymentInfo() {
   return (
     <>
       <AddCardModal open={showAddCard} setOpen={setShowAddCard} />
+      <RemoveCardModal
+        open={showRemoveCardModal}
+        setOpen={setShowRemoveCardModal}
+      />
       <div className="shadow sm:overflow-hidden sm:rounded-md">
         <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
           <div>
@@ -60,6 +47,7 @@ export default function AccountPaymentInfo() {
                 <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                   <button
                     type="button"
+                    onClick={() => setShowRemoveCardModal(true)}
                     className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-2 py-1 text-sm font-medium leading-4 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   >
                     remove card
