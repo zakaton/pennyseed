@@ -97,12 +97,12 @@ export default function AccountNotifications() {
             <div className="mt-4 space-y-4">
               <div className="flex items-center">
                 <input
-                  id="push-everything"
-                  name="push-notifications"
+                  id="web-everything"
+                  name="web-notifications"
                   type="radio"
                   className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
                 />
-                <label htmlFor="push-everything" className="ml-3">
+                <label htmlFor="web-everything" className="ml-3">
                   <span className="block text-sm font-medium text-gray-700">
                     Everything
                   </span>
@@ -110,12 +110,12 @@ export default function AccountNotifications() {
               </div>
               <div className="flex items-center">
                 <input
-                  id="push-email"
-                  name="push-notifications"
+                  id="web-email"
+                  name="web-notifications"
                   type="radio"
                   className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
                 />
-                <label htmlFor="push-email" className="ml-3">
+                <label htmlFor="web-email" className="ml-3">
                   <span className="block text-sm font-medium text-gray-700">
                     Same as email
                   </span>
@@ -123,12 +123,12 @@ export default function AccountNotifications() {
               </div>
               <div className="flex items-center">
                 <input
-                  id="push-nothing"
-                  name="push-notifications"
+                  id="web-nothing"
+                  name="web-notifications"
                   type="radio"
                   className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
                 />
-                <label htmlFor="push-nothing" className="ml-3">
+                <label htmlFor="web-nothing" className="ml-3">
                   <span className="block text-sm font-medium text-gray-700">
                     No push notifications
                   </span>
