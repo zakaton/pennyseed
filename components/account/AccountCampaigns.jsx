@@ -130,7 +130,7 @@ export default function AccountCampaigns() {
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <a
                               href="#"
-                              className="text-yellow-600 hover:text-yellow-900"
+                              className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
                             >
                               View<span className="sr-only"> campaign</span>
                             </a>

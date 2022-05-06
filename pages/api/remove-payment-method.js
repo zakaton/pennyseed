@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService, getUserProfile } from '../../utils/supabase';
+import { getSupabaseService } from '../../utils/supabase';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService(req);
@@ -9,7 +9,10 @@ export default async function handler(req, res) {
   if (!user) {
     return res.status(401).send('Unauthorized');
   }
+  if (!req.body.paymentMethodId) {
+    return res.status(400).send("requires a 'paymentMethodId' form field");
+  }
 
-  const profile = await getUserProfile(user, supabase);
-  // FILL
+  stripe.paymentMethods.detach(req.body.paymentMethodId);
+  res.redirect('/account#payment-info');
 }
