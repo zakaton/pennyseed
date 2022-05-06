@@ -128,7 +128,7 @@ export default function Account() {
             return (
               !isSSR && (
                 <div key={item.id} hidden={!isActive}>
-                  <item.component />
+                  <item.component isActive={isActive} />
                 </div>
               )
             );

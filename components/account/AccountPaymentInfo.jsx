@@ -3,22 +3,25 @@ import { useState, useEffect } from 'react';
 import AddCardModal from './AddCardModal';
 import RemoveCardModal from './RemoveCardModal';
 
-export default function AccountPaymentInfo() {
+export default function AccountPaymentInfo({ isActive }) {
   const [showAddCard, setShowAddCard] = useState(false);
   const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
 
+  const [didGetPaymentMethods, setDidGetPaymentMethods] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState(null);
-  const updatePaymentMethods = async (override) => {
+  const getPaymentMethods = async (override) => {
     const response = await fetch('/api/get-payment-methods');
     const { payment_methods } = await response.json();
     if (paymentMethods == null || override) {
-      console.log('payment_methods', payment_methods);
+      console.log('got payment methods');
       setPaymentMethods(payment_methods);
     }
   };
-  useEffect(() => {
-    updatePaymentMethods();
-  }, []);
+
+  if (isActive && !didGetPaymentMethods) {
+    getPaymentMethods();
+    setDidGetPaymentMethods(true);
+  }
 
   return (
     <>

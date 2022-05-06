@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useCallback } from 'react';
+import { Fragment, useState} from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon, CreditCardIcon } from '@heroicons/react/outline';
 import { Elements } from '@stripe/react-stripe-js';
@@ -20,17 +20,11 @@ export default function AddCardModal({ open, setOpen }) {
     }
   };
 
-  /*
-  const [didOpenOnce, setDidOpenOnce] = useState(false)
+  const [didOpenOnce, setDidOpenOnce] = useState(false);
   if (!didOpenOnce && open) {
-    setDidOpenOnce(true)
+    setDidOpenOnce(true);
     createSetupIntent();
   }
-  */
-
-  useEffect(() => {
-    createSetupIntent();
-  }, []);
 
   return (
     <Transition.Root show={open} as={Fragment}>
