@@ -1,4 +1,4 @@
-import { Fragment, useState} from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon, CreditCardIcon } from '@heroicons/react/outline';
 import { Elements } from '@stripe/react-stripe-js';
