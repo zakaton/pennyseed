@@ -30,7 +30,7 @@ export function UserContextProvider(props) {
     supabase.auth.onAuthStateChange(() => {
       updateUserProfile();
     });
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     const session = supabase.auth.session();
@@ -60,15 +60,7 @@ export function UserContextProvider(props) {
     router.push('/sign-in');
   };
 
-  const value = useMemo(
-    () => ({
-      user,
-      session,
-      signOut,
-      isLoading,
-    }),
-    [user, session, isLoading]
-  );
+  const value = { user, session, signOut, isLoading };
 
   return <UserContext.Provider value={value} {...props} />;
 }

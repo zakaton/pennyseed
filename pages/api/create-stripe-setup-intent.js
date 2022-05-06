@@ -12,9 +12,9 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-
+  console.log(profile.stripe_customer);
   const setupIntent = await stripe.setupIntents.create({
-    customer: profile.customer_id,
+    customer: profile.stripe_customer,
   });
   res.status(200).json({ client_secret: setupIntent.client_secret });
 }

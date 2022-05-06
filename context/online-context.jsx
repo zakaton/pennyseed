@@ -17,7 +17,7 @@ export function OnlineContextProvider(props) {
     };
   }, []);
 
-  const value = useMemo(() => ({ online }), [online]);
+  const value = { online };
 
   return <OnlineContext.Provider value={value} {...props} />;
 }
