@@ -13,7 +13,6 @@ export function UserContextProvider(props) {
   useEffect(() => {
     const updateUserProfile = async () => {
       const sessionUser = supabase.auth.user();
-
       if (sessionUser) {
         const profile = await getUserProfile(sessionUser);
 

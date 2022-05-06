@@ -4,7 +4,6 @@ import DeleteAccountModal from './DeleteAccountModal';
 
 export default function AccountGeneral() {
   const { user } = useUser();
-
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
   return (
@@ -23,31 +22,34 @@ export default function AccountGeneral() {
               This information is private and will not be shared with anyone
             </p>
           </div>
-
-          <div className="mt-5 border-t border-gray-200">
-            <dl className="sm:divide-y sm:divide-gray-200">
-              <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-                <dt className="text-sm font-medium text-gray-500">Email</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                  {user.email}
-                </dd>
-              </div>
-              <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-                <dt className="text-sm font-medium text-gray-500">Is admin?</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                  Yes/No
-                </dd>
-              </div>
-              <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-                <dt className="text-sm font-medium text-gray-500">
-                  Can create campaigns?
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                  Yes/No
-                </dd>
-              </div>
-            </dl>
-          </div>
+          {user && (
+            <div className="mt-5 border-t border-gray-200">
+              <dl className="sm:divide-y sm:divide-gray-200">
+                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+                  <dt className="text-sm font-medium text-gray-500">Email</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                    {user.email}
+                  </dd>
+                </div>
+                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Is admin?
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                    Yes/No
+                  </dd>
+                </div>
+                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Can create campaigns?
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                    Yes/No
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          )}
         </div>
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
           <button
