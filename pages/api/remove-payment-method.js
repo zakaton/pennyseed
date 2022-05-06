@@ -11,17 +11,5 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-  const paymentMethods = await stripe.paymentMethods.list({
-    customer: profile.stripe_customer,
-    type: 'card',
-  });
-  res.status(200).json({
-    payment_methods: paymentMethods.data.map(
-      ({ id, card: { brand, last4 } }) => ({
-        brand,
-        last4,
-        id,
-      })
-    ),
-  });
+  // FILL
 }
