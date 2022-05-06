@@ -13,7 +13,7 @@ const statuses = {
       </div>
     ),
     title: 'Successfully added Card',
-    message: 'Your payment method has been saved.',
+    message: 'Your card has been saved.',
   },
   processing: {
     icon: () => (

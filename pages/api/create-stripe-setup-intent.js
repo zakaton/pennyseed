@@ -11,7 +11,6 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-  console.log(profile.stripe_customer);
   const setupIntent = await stripe.setupIntents.create({
     customer: profile.stripe_customer,
   });

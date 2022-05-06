@@ -11,7 +11,7 @@ export default function AddCardModal({ open, setOpen }) {
 
   const [clientSecret, setClientSecret] = useState(null);
   const createSetupIntent = async () => {
-    console.log('gonna fetch');
+    console.log('gonna fetch client secret...');
     const response = await fetch('/api/create-stripe-setup-intent');
     // eslint-disable-next-line camelcase
     const { client_secret } = await response.json();
@@ -25,6 +25,13 @@ export default function AddCardModal({ open, setOpen }) {
   if (!didOpenOnce && open) {
     setDidOpenOnce(true);
     createSetupIntent();
+  }
+
+  let addCardText = 'Add Card';
+  if (!clientSecret) {
+    addCardText = 'Loading...';
+  } else if (isAddingCard) {
+    addCardText = 'Adding Card...';
   }
 
   return (
@@ -104,7 +111,7 @@ export default function AddCardModal({ open, setOpen }) {
                     onClick={() => setIsAddingCard(true)}
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    {isAddingCard ? 'Adding Card...' : 'Add Card'}
+                    {addCardText}
                   </button>
                   <button
                     type="button"
