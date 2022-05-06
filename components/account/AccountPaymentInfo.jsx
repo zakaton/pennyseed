@@ -28,7 +28,7 @@ export default function AccountPaymentInfo() {
         setOpen={setShowRemoveCardModal}
       />
       <div className="shadow sm:overflow-hidden sm:rounded-md">
-        <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+        <div className="space-y-6 bg-white px-4 pb-1 pt-6 sm:px-6 sm:pt-6">
           <div>
             <h3 className="text-lg font-medium leading-6 text-gray-900">
               Payment Info
