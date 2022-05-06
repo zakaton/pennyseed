@@ -7,6 +7,7 @@ import getStripe from '../../utils/get-stripe';
 
 export default function AddCardModal({ open, setOpen }) {
   const [stripePromise, setStripePromise] = useState(() => getStripe());
+  const [isAddingCard, setIsAddingCard] = useState(false);
 
   const [clientSecret, setClientSecret] = useState(null);
   const createSetupIntent = async () => {
@@ -100,9 +101,10 @@ export default function AddCardModal({ open, setOpen }) {
                   <button
                     type="submit"
                     form="addCardForm"
+                    onClick={() => setIsAddingCard(true)}
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Add Card
+                    {isAddingCard ? 'Adding Card...' : 'Add Card'}
                   </button>
                   <button
                     type="button"

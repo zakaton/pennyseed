@@ -26,6 +26,5 @@ export async function getUserProfile(user, _supabase = supabase) {
     .select('*')
     .eq('id', user.id)
     .single();
-  console.log('p', profile);
   return profile;
 }

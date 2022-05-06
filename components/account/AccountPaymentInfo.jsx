@@ -1,69 +1,10 @@
 /* eslint-disable camelcase */
-import { useState, useEffect } from 'react';
-import getStripe from '../../utils/get-stripe';
+import { useState } from 'react';
 import AddCardModal from './AddCardModal';
 import RemoveCardModal from './RemoveCardModal';
+import AddCardStatusModal from './AddCardStatusModal';
 
 export default function AccountPaymentInfo({ isActive }) {
-  const [message, setMessage] = useState(null);
-  const [stripe, setStripe] = useState(null);
-  useEffect(() => {
-    const awaitStripe = async () => {
-      const stripe = await getStripe();
-      setStripe(stripe);
-    };
-    awaitStripe();
-  }, []);
-
-  useEffect(() => {
-    if (!stripe) {
-      return;
-    }
-
-    // Retrieve the "setup_intent_client_secret" query parameter appended to
-    // your return_url by Stripe.js
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      'setup_intent_client_secret'
-    );
-
-    if (clientSecret) {
-      // Retrieve the SetupIntent
-      stripe.retrieveSetupIntent(clientSecret).then(({ setupIntent }) => {
-        // Inspect the SetupIntent `status` to indicate the status of the payment
-        // to your customer.
-        //
-        // Some payment methods will [immediately succeed or fail][0] upon
-        // confirmation, while others will first enter a `processing` state.
-        //
-        // [0]: https://stripe.com/docs/payments/payment-methods#payment-notification
-        switch (setupIntent.status) {
-          case 'succeeded':
-            setMessage('Success! Your payment method has been saved.');
-            break;
-
-          case 'processing':
-            setMessage(
-              "Processing payment details. We'll update you when processing is complete."
-            );
-            break;
-
-          case 'requires_payment_method':
-            // Redirect your user back to your payment page to attempt collecting
-            // payment again
-            setMessage(
-              'Failed to process payment details. Please try another payment method.'
-            );
-            break;
-
-          default:
-            break;
-        }
-      });
-    }
-  }, []);
-
-  console.log('message', message);
-
   const [showAddCard, setShowAddCard] = useState(false);
   const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
 
@@ -86,6 +27,7 @@ export default function AccountPaymentInfo({ isActive }) {
   return (
     <>
       <AddCardModal open={showAddCard} setOpen={setShowAddCard} />
+      <AddCardStatusModal />
       <RemoveCardModal
         open={showRemoveCardModal}
         setOpen={setShowRemoveCardModal}
