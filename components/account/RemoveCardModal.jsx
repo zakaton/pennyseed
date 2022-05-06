@@ -28,7 +28,7 @@ export default function RemoveCardModal({
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* This element is to trick the browser into centering the modal contents. */}
             <span
               className="hidden sm:inline-block sm:h-screen sm:align-middle"
