@@ -12,8 +12,18 @@ export default async function handler(req, res) {
   console.log('user to delete', user);
 
   // delete campaigns
+  const deleteCampaignsResult = await supabase
+    .from('campaign')
+    .delete()
+    .eq('created_by', user.id);
+  console.log('delete campaigns result', deleteCampaignsResult);
 
   // delete pledges
+  const deletePledgesResult = await supabase
+    .from('pledge')
+    .delete()
+    .eq('pledger', user.id);
+  console.log('delete pledges result', deletePledgesResult);
 
   // delete stripe customer/account
   const profile = await getUserProfile(user, supabase);
@@ -25,12 +35,12 @@ export default async function handler(req, res) {
     .from('profile')
     .delete()
     .eq('id', user.id);
-  console.log('delete profile error', deleteProfileResult);
+  console.log('delete profile result', deleteProfileResult);
 
   const { error: deleteUserError } = await supabase.auth.api.deleteUser(
     user.id
   );
-  console.log('delete user error', deleteUserError);
+  console.log('delete user result', deleteUserError);
 
   res.status(200).send('deleted user');
 }
