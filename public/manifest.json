@@ -71,7 +71,7 @@
     },
     {
       "name": "Create a Campaign",
-      "url": "/create",
+      "url": "/create-campaign",
       "description": "create a campaign",
       "icons": [{ "src": "/images/icon-96x96.png", "sizes": "96x96" }]
     }
