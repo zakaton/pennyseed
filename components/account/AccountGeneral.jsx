@@ -12,7 +12,6 @@ export default function AccountGeneral({ isActive }) {
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
   const [isWaitingForStripeLink, setIsWaitingForStripeLink] = useState(false);
-  console.log('waiting for link?', isWaitingForStripeLink);
 
   const [didFetchStripeAccountInfo, setDidFetchStripeAccountInfo] =
     useState(false);
