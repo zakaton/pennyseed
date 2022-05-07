@@ -36,4 +36,6 @@ yarn-error.log*
 **/public/worker-*.js.map
 **/public/fallback-*.js
 
+# custom
 TODO
+function-hooks.txt
