@@ -13,7 +13,11 @@ class MyDocument extends Document {
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="icon" href="/favicon.ico" />
           <link rel="manifest" href="/manifest.json" />
-          <link rel="apple-touch-icon" href="/images/icon-192x192.png" />
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/images/apple-touch-icon.png"
+          />
           <meta name="theme-color" content="#fff" />
           <meta
             name="description"
