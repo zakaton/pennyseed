@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     })
     .eq('id', req.body.record.id);
 
-  res.send({
+  res.status(200).send({
     message: `stripe customer ${customer.id} created and account ${account.id} created for id ${req.body.record.id}`,
   });
 }

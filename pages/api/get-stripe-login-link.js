@@ -12,7 +12,8 @@ export default async function handler(req, res) {
 
   const profile = await getUserProfile(user, supabase);
   const link = await stripe.accounts.createLoginLink(profile.stripe_account, {
-    redirect_url: 'http://localhost:3000/account',
+    redirect_url:
+      req.headers.host + process.env.STRIPE_ACCOUNT_LOGIN_LINK_REDIRECT_URL,
   });
   if (link) {
     res.status(200).json({

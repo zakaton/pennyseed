@@ -13,8 +13,10 @@ export default async function handler(req, res) {
   const profile = await getUserProfile(user, supabase);
   const link = await stripe.accountLinks.create({
     account: profile.stripe_account,
-    refresh_url: 'http://localhost:3000/account',
-    return_url: 'http://localhost:3000/account',
+    refresh_url:
+      req.headers.host + process.env.STRIPE_ACCOUNT_ONBOARDING_LINK_REFRESH_URL,
+    return_url:
+      req.headers.host + process.env.STRIPE_ACCOUNT_ONBOARDING_LINK_RETURN_URL,
     type: 'account_onboarding',
   });
   if (link) {
