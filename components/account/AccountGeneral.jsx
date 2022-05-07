@@ -8,8 +8,6 @@ export default function AccountGeneral({ isActive }) {
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
-  const [isWaitingForStripeLink, setIsWaitingForStripeLink] = useState(false);
-
   const [didFetchStripeAccountInfo, setDidFetchStripeAccountInfo] =
     useState(false);
   const [didReceiveStripeAccountInfo, setDidReceiveStripeAccountInfo] =
@@ -31,37 +29,32 @@ export default function AccountGeneral({ isActive }) {
     setDidReceiveStripeAccountInfo(true);
   };
 
-  if (isActive && !didFetchStripeAccountInfo) {
-    getStripeAccountInfo();
-    setDidFetchStripeAccountInfo(true);
+  const [didFetchStripeLink, setDidFetchStripeLink] = useState(false);
+  const [stripeLink, setStripeLink] = useState(null);
+  const getStripeLink = async () => {
+    console.log('fetching stripe link');
+    if (canCreateCampaigns) {
+      const response = await fetch('/api/get-stripe-login-link');
+      const { stripe_login_link } = await response.json();
+      setStripeLink(stripe_login_link);
+    } else {
+      const response = await fetch('/api/get-stripe-onboarding-link');
+      const { stripe_onboarding_link } = await response.json();
+      setStripeLink(stripe_onboarding_link);
+    }
+  };
+
+  if (isActive) {
+    if (!didFetchStripeAccountInfo) {
+      getStripeAccountInfo();
+      setDidFetchStripeAccountInfo(true);
+    } else if (!didFetchStripeLink) {
+      getStripeLink();
+      setDidFetchStripeLink(true);
+    }
   }
-  const setupStripeAccount = () => {
-    setIsWaitingForStripeLink(true);
 
-    const windowReference = window.open('about:blank', '_blank');
-    fetch('/api/get-stripe-onboarding-link')
-      .then((response) => response.json())
-      .then(({ stripe_onboarding_link }) => {
-        setIsWaitingForStripeLink(false);
-        windowReference.location = stripe_onboarding_link;
-      });
-
-    // router.push(stripe_onboarding_link);
-  };
-
-  const goToStripeDashboard = () => {
-    setIsWaitingForStripeLink(true);
-
-    const windowReference = window.open('about:blank', '_blank');
-    fetch('/api/get-stripe-login-link')
-      .then((response) => response.json())
-      .then(({ stripe_login_link }) => {
-        setIsWaitingForStripeLink(false);
-        windowReference.location = stripe_login_link;
-      });
-
-    // router.push(stripe_login_link);
-  };
+  console.log('stripe link', stripeLink);
 
   return (
     <>
@@ -107,15 +100,18 @@ export default function AccountGeneral({ isActive }) {
                       ) : (
                         <>
                           No.{' '}
-                          <button
-                            type="button"
-                            onClick={setupStripeAccount}
-                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          <a
+                            href={stripeLink}
+                            target={stripeLink ? '_blank' : ''}
+                            rel="noreferrer"
                           >
-                            {isWaitingForStripeLink
-                              ? 'Loading Stripe setup...'
-                              : 'Setup your Stripe account'}
-                          </button>{' '}
+                            <button
+                              type="button"
+                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            >
+                              Setup your Stripe account
+                            </button>
+                          </a>{' '}
                           in order to create campaigns.
                         </>
                       )
@@ -130,27 +126,20 @@ export default function AccountGeneral({ isActive }) {
         </div>
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
           {didReceiveStripeAccountInfo ? (
-            hasCompletedOnboarding ? (
+            <a
+              href={stripeLink || '#'}
+              target={stripeLink ? '_blank' : ''}
+              rel="noreferrer"
+            >
               <button
                 type="button"
-                onClick={goToStripeDashboard}
                 className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                {isWaitingForStripeLink
-                  ? 'Loading Stripe Dashboard...'
-                  : 'Go to Stripe Dashboard'}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={setupStripeAccount}
-                className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                {isWaitingForStripeLink
-                  ? 'Loading Stripe Setup...'
+                {hasCompletedOnboarding
+                  ? 'Go to Stripe Dashboard'
                   : 'Setup Stripe Account'}
               </button>
-            )
+            </a>
           ) : (
             <button
               type="button"
