@@ -25,6 +25,71 @@ export default function AccountPaymentInfo({ isActive }) {
     setDidGetPaymentMethods(true);
   }
 
+  let paymentMethodsContent;
+  if (paymentMethods) {
+    if (paymentMethods.length > 0) {
+      paymentMethodsContent = paymentMethods.map((paymentMethod) => (
+        <div
+          key={paymentMethod.id}
+          className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5"
+        >
+          <dt className="text-sm font-medium text-gray-500 sm:col-span-1">
+            {paymentMethod.card.brand.charAt(0).toUpperCase() +
+              paymentMethod.card.brand.slice(1)}{' '}
+            ending in {paymentMethod.card.last4}
+          </dt>
+          <dd className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+            >
+              view pledges using this card
+            </button>
+          </dd>
+          <dd className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedPaymentMethod(paymentMethod);
+                setShowRemoveCardModal(true);
+              }}
+              className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-2 py-1 text-sm font-medium leading-4 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            >
+              remove card
+            </button>
+          </dd>
+        </div>
+      ));
+    } else {
+      paymentMethodsContent = (
+        <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+          <dt className="text-sm font-medium text-gray-500">
+            No cards available
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-gray-500 sm:col-span-2 sm:mt-0">
+            You need to{' '}
+            <button
+              type="button"
+              onClick={() => setShowAddCard(true)}
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              add a card
+            </button>{' '}
+            in order to pledge to campaigns
+          </dd>
+        </div>
+      );
+    }
+  } else {
+    paymentMethodsContent = (
+      <div className="py-4 text-center sm:py-5">
+        <div className="text-sm font-medium text-gray-500">
+          loading payment info...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <AddCardModal open={showAddCard} setOpen={setShowAddCard} />
@@ -58,58 +123,7 @@ export default function AccountPaymentInfo({ isActive }) {
 
           <div className="mt-5 border-t border-gray-200">
             <dl className="sm:divide-y sm:divide-gray-200">
-              {paymentMethods &&
-                (paymentMethods.length > 0 ? (
-                  paymentMethods.map((paymentMethod) => (
-                    <div
-                      key={paymentMethod.id}
-                      className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5"
-                    >
-                      <dt className="text-sm font-medium text-gray-500 sm:col-span-1">
-                        {paymentMethod.card.brand.charAt(0).toUpperCase() +
-                          paymentMethod.card.brand.slice(1)}{' '}
-                        ending in {paymentMethod.card.last4}
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
-                        <button
-                          type="button"
-                          className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-                        >
-                          view pledges using this card
-                        </button>
-                      </dd>
-                      <dd className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedPaymentMethod(paymentMethod);
-                            setShowRemoveCardModal(true);
-                          }}
-                          className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-2 py-1 text-sm font-medium leading-4 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                        >
-                          remove card
-                        </button>
-                      </dd>
-                    </div>
-                  ))
-                ) : (
-                  <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-                    <dt className="text-sm font-medium text-gray-500">
-                      No cards available
-                    </dt>
-                    <dd className="mt-1 text-sm font-medium text-gray-500 sm:col-span-2 sm:mt-0">
-                      You need to{' '}
-                      <button
-                        type="button"
-                        onClick={() => setShowAddCard(true)}
-                        className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      >
-                        add a card
-                      </button>{' '}
-                      in order to pledge to campaigns
-                    </dd>
-                  </div>
-                ))}
+              {paymentMethodsContent}
             </dl>
           </div>
         </div>
