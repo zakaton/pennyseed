@@ -1,12 +1,18 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useUser } from '../../context/user-context';
 import DeleteAccountModal from './DeleteAccountModal';
 
 export default function AccountGeneral({ isActive }) {
+  const router = useRouter();
+
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+
+  const [isWaitingForStripeLink, setIsWaitingForStripeLink] = useState(false);
+  console.log('waiting for link?', isWaitingForStripeLink);
 
   const [didFetchStripeAccountInfo, setDidFetchStripeAccountInfo] =
     useState(false);
@@ -89,27 +95,39 @@ export default function AccountGeneral({ isActive }) {
               <button
                 type="button"
                 onClick={async () => {
+                  setIsWaitingForStripeLink(true);
                   const response = await fetch('/api/get-stripe-login-link');
                   const { stripe_login_link } = await response.json();
-                  window.open(stripe_login_link, '_blank').focus();
+
+                  router.push(stripe_login_link);
+                  // window.open(stripe_login_link, '_blank').focus();
+                  // setIsWaitingForStripeLink(false);
                 }}
                 className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Go to Stripe Dashboard
+                {isWaitingForStripeLink
+                  ? 'Loading Stripe Dashboard...'
+                  : 'Go to Stripe Dashboard'}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={async () => {
+                  setIsWaitingForStripeLink(true);
                   const response = await fetch(
                     '/api/get-stripe-onboarding-link'
                   );
                   const { stripe_onboarding_link } = await response.json();
-                  window.open(stripe_onboarding_link, '_blank').focus();
+
+                  router.push(stripe_onboarding_link);
+                  // window.open(stripe_onboarding_link, '_blank').focus();
+                  // setIsWaitingForStripeLink(false);
                 }}
                 className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Setup Stripe Account
+                {isWaitingForStripeLink
+                  ? 'Loading Stripe Setup...'
+                  : 'Setup Stripe Account'}
               </button>
             ))}
 
