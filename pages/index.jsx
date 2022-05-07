@@ -78,8 +78,7 @@ export default function Home() {
         </p>
 
         <p>
-          For more information check out{' '}
-          <a href="https://www.pennyseed.fund/faq">FAQ</a>.
+          For more information check out <a href="/faq">FAQ</a>.
         </p>
       </div>
     </>

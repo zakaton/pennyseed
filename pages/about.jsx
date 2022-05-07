@@ -246,9 +246,9 @@ export default function About() {
           <li>Nothing happens; life goes on</li>
         </ol>
 
-        <h3>
+        <p className="font-bold">
           You can check out our <Link href="/faq">FAQ</Link> for more details
-        </h3>
+        </p>
       </div>
     </>
   );
