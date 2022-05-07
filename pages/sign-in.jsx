@@ -13,9 +13,14 @@ export default function SignIn() {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { error, data } = await supabase.auth.signIn({
-      email,
-    });
+    const { error, data } = await supabase.auth.signIn(
+      {
+        email,
+      },
+      {
+        redirectTo: `${window.location.origin}`,
+      }
+    );
     if (error) {
       // eslint-disable-next-line no-console
       console.log({ error });
