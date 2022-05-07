@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -78,7 +79,7 @@ export default function Home() {
         </p>
 
         <p>
-          For more information check out <a href="/faq">FAQ</a>.
+          For more information check out <Link href="/faq">FAQ</Link>.
         </p>
       </div>
     </>

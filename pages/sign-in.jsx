@@ -6,11 +6,14 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [agree, setAgree] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function signIn() {
     if (!(email && agree)) {
       return;
     }
+
+    setIsSubmitting(true);
 
     // eslint-disable-next-line no-unused-vars
     const { error, data } = await supabase.auth.signIn(
@@ -27,6 +30,7 @@ export default function SignIn() {
     } else {
       setSubmitted(true);
     }
+    setIsSubmitting(false);
   }
 
   if (submitted) {
@@ -103,11 +107,13 @@ export default function SignIn() {
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 text-sm font-medium text-white hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
               onClick={(e) => {
                 e.preventDefault();
-                e.target.closest('form').reportValidity();
-                signIn();
+                const isValid = e.target.closest('form').reportValidity();
+                if (isValid) {
+                  signIn();
+                }
               }}
             >
-              Send link
+              {isSubmitting ? 'Sending Link...' : 'Send link'}
             </button>
           </div>
         </form>
