@@ -20,9 +20,8 @@ export function UserContextProvider(props) {
           ...sessionUser,
           ...profile,
         });
-
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
     updateUserProfile();
 
