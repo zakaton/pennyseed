@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
+import absoluteUrl from 'next-absolute-url';
 import { getSupabaseService, getUserProfile } from '../../utils/supabase';
 
 export default async function handler(req, res) {
@@ -10,10 +11,12 @@ export default async function handler(req, res) {
     return res.status(401).send('Unauthorized');
   }
 
+  const { origin } = absoluteUrl(req);
+  console.log(origin + process.env.STRIPE_ACCOUNT_LOGIN_LINK_REDIRECT_URL);
+
   const profile = await getUserProfile(user, supabase);
   const link = await stripe.accounts.createLoginLink(profile.stripe_account, {
-    redirect_url:
-      req.headers.host + process.env.STRIPE_ACCOUNT_LOGIN_LINK_REDIRECT_URL,
+    redirect_url: origin + process.env.STRIPE_ACCOUNT_LOGIN_LINK_REDIRECT_URL,
   });
   if (link) {
     res.status(200).json({
