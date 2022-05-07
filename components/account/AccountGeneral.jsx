@@ -35,25 +35,32 @@ export default function AccountGeneral({ isActive }) {
     getStripeAccountInfo();
     setDidFetchStripeAccountInfo(true);
   }
-
-  const setupStripeAccount = async () => {
+  const setupStripeAccount = () => {
     setIsWaitingForStripeLink(true);
-    const response = await fetch('/api/get-stripe-onboarding-link');
-    const { stripe_onboarding_link } = await response.json();
+
+    const windowReference = window.open('about:blank', '_blank');
+    fetch('/api/get-stripe-onboarding-link')
+      .then((response) => response.json())
+      .then(({ stripe_onboarding_link }) => {
+        setIsWaitingForStripeLink(false);
+        windowReference.location = stripe_onboarding_link;
+      });
 
     // router.push(stripe_onboarding_link);
-    window.open(stripe_onboarding_link, '_blank').focus();
-    setIsWaitingForStripeLink(false);
   };
 
-  const goToStripeDashboard = async () => {
+  const goToStripeDashboard = () => {
     setIsWaitingForStripeLink(true);
-    const response = await fetch('/api/get-stripe-login-link');
-    const { stripe_login_link } = await response.json();
+
+    const windowReference = window.open('about:blank', '_blank');
+    fetch('/api/get-stripe-login-link')
+      .then((response) => response.json())
+      .then(({ stripe_login_link }) => {
+        setIsWaitingForStripeLink(false);
+        windowReference.location = stripe_login_link;
+      });
 
     // router.push(stripe_login_link);
-    window.open(stripe_login_link, '_blank').focus();
-    setIsWaitingForStripeLink(false);
   };
 
   return (
