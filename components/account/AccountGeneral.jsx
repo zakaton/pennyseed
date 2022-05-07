@@ -91,7 +91,7 @@ export default function AccountGeneral({ isActive }) {
             <button
               type="button"
               onClick={async () => {
-                const response = await fetch('/api/get-stripe-login-link');
+                const response = await fetch('/api/get-stripe-onboarding-link');
                 const { stripe_onboarding_link } = await response.json();
                 window.open(stripe_onboarding_link, '_blank').focus();
               }}
