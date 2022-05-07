@@ -42,7 +42,7 @@ export default function SignIn() {
               Thank you
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Check your email for a confirmation link
+              Check your email for a magic link to sign in
             </p>
           </div>
         </div>
@@ -58,7 +58,8 @@ export default function SignIn() {
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            We&apos;ll send a link to your email - no password required
+            We&apos;ll email you link that&apos;ll sign you in - no password
+            required
           </p>
         </div>
         <form className="mt-8 space-y-6" action="#" method="POST">
@@ -113,7 +114,7 @@ export default function SignIn() {
                 }
               }}
             >
-              {isSubmitting ? 'Sending Link...' : 'Send link'}
+              {isSubmitting ? 'Sending Magic Link...' : 'Send Magic Link'}
             </button>
           </div>
         </form>

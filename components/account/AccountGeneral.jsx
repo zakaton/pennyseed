@@ -99,7 +99,7 @@ export default function AccountGeneral({ isActive }) {
                         'yes'
                       ) : (
                         <>
-                          No.{' '}
+                          no.{' '}
                           <a
                             href={stripeLink}
                             target={stripeLink ? '_blank' : ''}
