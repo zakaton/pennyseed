@@ -39,6 +39,26 @@ export default function AccountGeneral({ isActive }) {
     setDidFetchStripeAccountInfo(true);
   }
 
+  const setupStripeAccount = async () => {
+    setIsWaitingForStripeLink(true);
+    const response = await fetch('/api/get-stripe-onboarding-link');
+    const { stripe_onboarding_link } = await response.json();
+
+    // router.push(stripe_onboarding_link);
+    window.open(stripe_onboarding_link, '_blank').focus();
+    setIsWaitingForStripeLink(false);
+  };
+
+  const goToStripeDashboard = async () => {
+    setIsWaitingForStripeLink(true);
+    const response = await fetch('/api/get-stripe-login-link');
+    const { stripe_login_link } = await response.json();
+
+    // router.push(stripe_login_link);
+    window.open(stripe_login_link, '_blank').focus();
+    setIsWaitingForStripeLink(false);
+  };
+
   return (
     <>
       <DeleteAccountModal
@@ -77,11 +97,27 @@ export default function AccountGeneral({ isActive }) {
                     Can create campaigns?
                   </dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    {didReceiveStripeAccountInfo
-                      ? canCreateCampaigns
-                        ? 'yes'
-                        : 'no'
-                      : 'loading...'}
+                    {didReceiveStripeAccountInfo ? (
+                      canCreateCampaigns ? (
+                        'yes'
+                      ) : (
+                        <>
+                          No.{' '}
+                          <button
+                            type="button"
+                            onClick={setupStripeAccount}
+                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            {isWaitingForStripeLink
+                              ? 'Loading Stripe setup...'
+                              : 'Setup your Stripe account'}
+                          </button>{' '}
+                          in order to create campaigns.
+                        </>
+                      )
+                    ) : (
+                      'loading...'
+                    )}
                   </dd>
                 </div>
               </dl>
@@ -93,15 +129,7 @@ export default function AccountGeneral({ isActive }) {
             hasCompletedOnboarding ? (
               <button
                 type="button"
-                onClick={async () => {
-                  setIsWaitingForStripeLink(true);
-                  const response = await fetch('/api/get-stripe-login-link');
-                  const { stripe_login_link } = await response.json();
-
-                  router.push(stripe_login_link);
-                  // window.open(stripe_login_link, '_blank').focus();
-                  // setIsWaitingForStripeLink(false);
-                }}
+                onClick={goToStripeDashboard}
                 className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 {isWaitingForStripeLink
@@ -111,17 +139,7 @@ export default function AccountGeneral({ isActive }) {
             ) : (
               <button
                 type="button"
-                onClick={async () => {
-                  setIsWaitingForStripeLink(true);
-                  const response = await fetch(
-                    '/api/get-stripe-onboarding-link'
-                  );
-                  const { stripe_onboarding_link } = await response.json();
-
-                  router.push(stripe_onboarding_link);
-                  // window.open(stripe_onboarding_link, '_blank').focus();
-                  // setIsWaitingForStripeLink(false);
-                }}
+                onClick={setupStripeAccount}
                 className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 {isWaitingForStripeLink
