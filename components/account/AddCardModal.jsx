@@ -6,7 +6,7 @@ import ElementsForm from './ElementsForm';
 import getStripe from '../../utils/get-stripe';
 
 export default function AddCardModal({ open, setOpen }) {
-  const [stripePromise, setStripePromise] = useState(() => getStripe());
+  const [stripePromise] = useState(() => getStripe());
   const [isAddingCard, setIsAddingCard] = useState(false);
 
   const [clientSecret, setClientSecret] = useState(null);

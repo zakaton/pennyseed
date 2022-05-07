@@ -1,13 +1,10 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { useUser } from '../../context/user-context';
 import DeleteAccountModal from './DeleteAccountModal';
 
 export default function AccountGeneral({ isActive }) {
-  const router = useRouter();
-
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 

@@ -43,14 +43,7 @@ export default function AddCardStatusModal() {
 
   const [open, setOpen] = useState(false);
   const [statusString, setStatusString] = useState('succeeded');
-  const [stripe, setStripe] = useState(null);
-  useEffect(() => {
-    const awaitStripe = async () => {
-      const stripe = await getStripe();
-      setStripe(stripe);
-    };
-    awaitStripe();
-  }, []);
+  const [stripe] = useState(() => getStripe());
 
   useEffect(() => {
     if (!stripe) {

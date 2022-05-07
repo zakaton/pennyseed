@@ -48,12 +48,12 @@ function SetupForm() {
       <button
         disabled={!stripe}
         type="submit"
-        className="mt-2 inline-flex hidden items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        className="mt-2 -inline-flex hidden items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Submit
       </button>
       {errorMessage && (
-        <span className="mt-3 inline-flex items-center rounded-md bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800">
+        <span className="inline-flex mt-3 items-center rounded-md bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800">
           {errorMessage}
         </span>
       )}
