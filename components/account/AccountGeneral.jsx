@@ -90,8 +90,8 @@ export default function AccountGeneral({ isActive }) {
           )}
         </div>
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
-          {didReceiveStripeAccountInfo &&
-            (hasCompletedOnboarding ? (
+          {didReceiveStripeAccountInfo ? (
+            hasCompletedOnboarding ? (
               <button
                 type="button"
                 onClick={async () => {
@@ -129,7 +129,15 @@ export default function AccountGeneral({ isActive }) {
                   ? 'Loading Stripe Setup...'
                   : 'Setup Stripe Account'}
               </button>
-            ))}
+            )
+          ) : (
+            <button
+              type="button"
+              className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Loading Stripe Info...
+            </button>
+          )}
 
           <button
             type="button"
