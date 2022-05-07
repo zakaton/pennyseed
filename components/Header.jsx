@@ -14,7 +14,7 @@ import { useUser } from '../context/user-context';
 const navigation = [
   { name: 'About', href: '/about' },
   { name: 'FAQ', href: '/faq' },
-  { name: 'Campaign Calculator', href: '/campaign-calculator' },
+  { name: 'Create Campaign', href: '/create-campaign' },
 ];
 const accountNavigation = [
   { name: 'Account', href: '/account' },
