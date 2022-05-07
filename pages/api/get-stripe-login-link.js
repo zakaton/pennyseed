@@ -11,9 +11,13 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-  const account = await stripe.accounts.retrieve(profile.stripe_account);
-  if (account) {
-    res.status(200).json({ can_create_campaigns: account.charges_enabled });
+  const link = await stripe.accounts.createLoginLink(profile.stripe_account, {
+    redirect_url: 'http://localhost:3000/account',
+  });
+  if (link) {
+    res.status(200).json({
+      stripe_login_link: link.url,
+    });
   } else {
     res.status(400).send('could not find stripe account for user');
   }

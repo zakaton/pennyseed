@@ -55,8 +55,8 @@ export function UserContextProvider(props) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setUser(null);
     router.push('/sign-in');
+    setUser(null);
   };
 
   const value = { user, session, signOut, isLoading };

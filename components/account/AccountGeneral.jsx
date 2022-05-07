@@ -1,10 +1,33 @@
+/* eslint-disable camelcase */
 import { useState } from 'react';
 import { useUser } from '../../context/user-context';
 import DeleteAccountModal from './DeleteAccountModal';
 
-export default function AccountGeneral() {
+export default function AccountGeneral({ isActive }) {
   const { user } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+
+  const [didGetStripeAccountInfo, setDidGetStripeAccountInfo] = useState(false);
+  const [canCreateCampaigns, setCanCreateCampaigns] = useState(null);
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(null);
+  const getStripeAccountInfo = async (override) => {
+    const response = await fetch('/api/get-stripe-account-info');
+    const { can_create_campaigns, has_completed_onboarding } =
+      await response.json();
+    if (canCreateCampaigns == null || override) {
+      console.log('can create campaigns?', can_create_campaigns);
+      setCanCreateCampaigns(can_create_campaigns);
+    }
+    if (canCreateCampaigns == null || override) {
+      console.log('has completed onboarding?', has_completed_onboarding);
+      setHasCompletedOnboarding(has_completed_onboarding);
+    }
+  };
+
+  if (isActive && !didGetStripeAccountInfo) {
+    getStripeAccountInfo();
+    setDidGetStripeAccountInfo(true);
+  }
 
   return (
     <>
@@ -36,7 +59,7 @@ export default function AccountGeneral() {
                     Is admin?
                   </dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    Yes/No
+                    {user.is_admin ? 'yes' : 'no'}
                   </dd>
                 </div>
                 <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
@@ -44,7 +67,7 @@ export default function AccountGeneral() {
                     Can create campaigns?
                   </dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    Yes/No
+                    {canCreateCampaigns ? 'yes' : 'no'}
                   </dd>
                 </div>
               </dl>
@@ -52,18 +75,32 @@ export default function AccountGeneral() {
           )}
         </div>
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
-          <button
-            type="button"
-            className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Setup Stripe Account
-          </button>
-          <button
-            type="button"
-            className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Go to Stripe Dashboard
-          </button>
+          {hasCompletedOnboarding ? (
+            <button
+              type="button"
+              onClick={async () => {
+                const response = await fetch('/api/get-stripe-login-link');
+                const { stripe_login_link } = await response.json();
+                window.open(stripe_login_link, '_blank').focus();
+              }}
+              className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Go to Stripe Dashboard
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={async () => {
+                const response = await fetch('/api/get-stripe-login-link');
+                const { stripe_onboarding_link } = await response.json();
+                window.open(stripe_onboarding_link, '_blank').focus();
+              }}
+              className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Setup Stripe Account
+            </button>
+          )}
+
           <button
             type="button"
             onClick={() => setShowDeleteAccount(true)}
