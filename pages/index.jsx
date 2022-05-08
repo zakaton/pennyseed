@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { truncateDollars } from '../utils/stripe-calculator';
+// import { truncateDollars } from '../utils/stripe-calculator';
 
 export default function Home() {
   return (
