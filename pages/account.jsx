@@ -81,12 +81,6 @@ export default function Account() {
     };
   }, []);
 
-  const [isSSR, setIsSSR] = useState(true);
-
-  useEffect(() => {
-    setIsSSR(false);
-  }, []);
-
   return (
     !isLoading &&
     user && (
@@ -100,34 +94,28 @@ export default function Account() {
               {navigation.map((item) => {
                 const current = hash === item.hash;
                 return (
-                  !isSSR && (
-                    <Link
-                      key={item.name}
-                      href={`/account#${item.hash}`}
-                      passHref
+                  <Link key={item.name} href={`/account#${item.hash}`} passHref>
+                    <a
+                      className={classNames(
+                        current
+                          ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
+                          : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                        'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
+                      )}
+                      aria-current={current ? 'page' : undefined}
                     >
-                      <a
+                      <item.icon
                         className={classNames(
                           current
-                            ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
-                            : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                          'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
+                            ? 'text-yellow-500 group-hover:text-yellow-500'
+                            : 'text-gray-400 group-hover:text-gray-500',
+                          '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
                         )}
-                        aria-current={current ? 'page' : undefined}
-                      >
-                        <item.icon
-                          className={classNames(
-                            current
-                              ? 'text-yellow-500 group-hover:text-yellow-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
-                            '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
-                          )}
-                          aria-hidden="true"
-                        />
-                        <span className="truncate">{item.name}</span>
-                      </a>
-                    </Link>
-                  )
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">{item.name}</span>
+                    </a>
+                  </Link>
                 );
               })}
             </nav>
@@ -137,11 +125,9 @@ export default function Account() {
             {navigation.map((item) => {
               const isActive = item.hash === hash;
               return (
-                !isSSR && (
-                  <div key={item.id} hidden={!isActive}>
-                    <item.component isActive={isActive} />
-                  </div>
-                )
+                <div key={item.id} hidden={!isActive}>
+                  <item.component isActive={isActive} />
+                </div>
               );
             })}
           </div>
