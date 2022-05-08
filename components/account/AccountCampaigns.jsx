@@ -20,7 +20,7 @@ campaigns.forEach((campaign, index) => {
 });
 // campaigns.length = 0;
 
-export default function AccountCampaigns({ isActive }) {
+export default function AccountCampaigns() {
   const [showDeleteCampaign, setShowDeleteCampaign] = useState(false);
   /*
     TODO
