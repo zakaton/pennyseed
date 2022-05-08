@@ -75,10 +75,12 @@ const faqs = [
           have to moderate which campaigns are created since they&apos;d be seen
           by anyone visiting this site. Plus we&apos;d have to deal with
           malicious users impersonating popular creators and would need to add
-          stuff like account verification. We&apos;d prefer to have users make
-          campaigns and share the direct link to the campaign on their existing
-          social media accounts, leveraging the established trust of those
-          accounts.
+          stuff like account verification.
+        </p>
+        <p>
+          We&apos;d prefer to just have users make campaigns and share the
+          direct link to the campaign on their existing social media accounts,
+          leveraging the established trust of those accounts.
         </p>
       </>
     ),
@@ -109,11 +111,14 @@ const faqs = [
           a maximum possible pledge amount will be paid.
         </p>
         <p>
-          For instance, a minimum number of 100 pledgers ensures that if less
-          than 100 people pledge then no one will pay anything. However if 100
-          people pledge then each will pay $10, which is the most they&apos;ll
-          ever pay. Any more than that will be less than $10 (e.g. if 200 pledge
-          then each pays $5, if 500 then $2, and if 1,000 then $1)
+          For instance, raising $1,000 with a minimum number of 100 pledgers
+          ensures that if less than 100 people pledge then no one will pay
+          anything. But if 100 people pledge then each will pay $10, which is
+          the most they can possibly pay. Any more than 100 pledgers will result
+          in a pledge amount less than $10 (e.g. if 200 people pledge then each
+          pays $5, if 500 people pledge then each pays $2, and if 1,000 people
+          pledge then each pays $1). All the pledge amounts described above are
+          before processing fees.
         </p>
       </>
     ),
@@ -272,8 +277,8 @@ const faqs = [
           person should be enough, but that isn&apos;t enough nowadays.
         </p>
         <p>
-          However, if people who actually knew how to make real production web
-          applications took over, you could use your pledge as a key to access
+          However, if people who actually knew how to make real production
+          websites took over, you could use your pledge as a key to access
           special content and stuff, similar to Patreon and Gumroad.
         </p>
         <p>
@@ -310,7 +315,7 @@ export default function FAQ() {
       </Head>
       <div className="style-links mx-auto max-w-3xl divide-y-2 divide-gray-200">
         <h2 className="text-center text-3xl font-extrabold text-gray-900 sm:text-4xl">
-          Frequently asked questions
+          Frequently Asked Questions
         </h2>
         <dl className="mt-6 space-y-6 divide-y divide-gray-200">
           {faqs.map((faq) => (

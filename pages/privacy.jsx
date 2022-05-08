@@ -23,13 +23,17 @@ export default function Privacy() {
           :
         </p>
         <ul>
-          <li>email address (so you can sign in)</li>
           <li>
-            Stripe customer information (so you can make payments to campaigns)
+            Your email address so you can sign in, as well as optionally receive
+            campaign updates (which is disabled by default, you&apos;d need to
+            opt-in to receive emails)
           </li>
           <li>
-            Stripe account information (so you can receive payments for your
-            campaigns)
+            Stripe customer information, so you can make payments to campaigns
+          </li>
+          <li>
+            Stripe account information, so you can receive payments for your
+            campaigns
           </li>
           <li>campaigns you&apos;ve created</li>
           <li>campaigns you&apos;ve pledged to</li>
@@ -47,7 +51,9 @@ export default function Privacy() {
           above as we perform the following:
         </p>
         <ul>
-          <li>delete your user data stored in our database</li>
+          <li>
+            delete your user data stored in our database, including your email
+          </li>
           <li>
             delete your stripe customer data (which stores card information for
             making payments)

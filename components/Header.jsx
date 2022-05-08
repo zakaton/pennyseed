@@ -12,7 +12,8 @@ import { useRouter } from 'next/router';
 import { useUser } from '../context/user-context';
 
 const navigation = [
-  { name: 'About', href: '/about' },
+  { name: 'What?', href: '/' },
+  { name: 'Why?', href: '/why' },
   { name: 'FAQ', href: '/faq' },
   { name: 'Create Campaign', href: '/create-campaign' },
 ];
@@ -65,7 +66,7 @@ export default function Header() {
                     <Link href={href} key={name}>
                       <a
                         className={classNames(
-                          router.pathname.startsWith(href)
+                          router.pathname === href
                             ? 'border-yellow-500 text-gray-900'
                             : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                           'text-md inline-flex items-center border-b-2 px-1 pt-1 font-medium'
