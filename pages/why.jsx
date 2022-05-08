@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import Head from 'next/head';
-import Link from 'next/link';
+import MyLink from '../components/MyLink';
 
 const monetizationProsAndCons = [
   {
@@ -247,7 +247,8 @@ export default function About() {
         </ol>
 
         <p className="font-bold">
-          You can check out our <Link href="/faq">FAQ</Link> for more details
+          You can check out our <MyLink href="/faq">FAQ</MyLink> for more
+          details
         </p>
       </div>
     </>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Link from 'next/link';
+import MyLink from '../MyLink';
 import DeleteCampaignModal from './DeleteCampaignModal';
 
 const campaigns = [
@@ -46,14 +46,14 @@ export default function AccountCampaigns() {
               </p>
             </div>
             <div className="invisible mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              <Link passHref href="/create-campaign">
+              <MyLink href="/create-campaign">
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:w-auto"
                 >
                   Create Campaign
                 </button>
-              </Link>
+              </MyLink>
             </div>
           </div>
 
@@ -138,12 +138,12 @@ export default function AccountCampaigns() {
                               {campaign.succeeded}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <a
+                              <MyLink
                                 href="#"
                                 className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
                               >
                                 View<span className="sr-only"> campaign</span>
-                              </a>
+                              </MyLink>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <button

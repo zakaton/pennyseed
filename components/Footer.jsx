@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import MyLink from './MyLink';
 
 /* This example requires Tailwind CSS v2.0+ */
 const navigation = {
@@ -76,7 +77,7 @@ export default function Footer() {
         >
           {navigation.main.map((item) => (
             <div key={item.name} className="px-5 py-2">
-              <a
+              <MyLink
                 href={item.href}
                 className={classNames(
                   router.pathname.startsWith(item.href) ? 'underline' : '',
@@ -84,13 +85,13 @@ export default function Footer() {
                 )}
               >
                 {item.name}
-              </a>
+              </MyLink>
             </div>
           ))}
         </nav>
         <div className="mt-8 flex justify-center space-x-6">
           {navigation.social.map((item) => (
-            <a
+            <MyLink
               key={item.name}
               href={item.href}
               className="text-gray-500 hover:text-gray-900"
@@ -99,19 +100,19 @@ export default function Footer() {
             >
               <span className="sr-only">{item.name}</span>
               <item.icon className="h-6 w-6" aria-hidden="true" />
-            </a>
+            </MyLink>
           ))}
         </div>
         <p className="mt-8 text-center text-base text-gray-600">
           Pennyseed is created by{' '}
-          <a
+          <MyLink
             href="https://www.ukaton.com/"
             target="_blank"
             rel="noreferrer"
             className="text-base text-gray-600 underline hover:text-gray-900"
           >
             Ukaton Inc
-          </a>
+          </MyLink>
         </p>
       </div>
     </footer>

@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { useUser } from '../context/user-context';
+import MyLink from './MyLink';
 
 const navigation = [
   { name: 'What?', href: '/' },
@@ -48,33 +49,31 @@ export default function Header() {
                 </Disclosure.Button>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <Link href="/">
-                  <a className="flex flex-shrink-0 items-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      className="hidden h-6 w-auto xxs:block"
-                      src="/images/icon.svg"
-                      alt="Pennyseed"
-                    />
-                    <span className="hidden px-2 text-xl font-bold xs:block">
-                      Pennyseed
-                    </span>
-                  </a>
-                </Link>
+                <MyLink href="/" className="flex flex-shrink-0 items-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    className="hidden h-6 w-auto xxs:block"
+                    src="/images/icon.svg"
+                    alt="Pennyseed"
+                  />
+                  <span className="hidden px-2 text-xl font-bold xs:block">
+                    Pennyseed
+                  </span>
+                </MyLink>
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map(({ name, href }) => (
-                    <Link href={href} key={name}>
-                      <a
-                        className={classNames(
-                          router.pathname === href
-                            ? 'border-yellow-500 text-gray-900'
-                            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                          'text-md inline-flex items-center border-b-2 px-1 pt-1 font-medium'
-                        )}
-                      >
-                        {name}
-                      </a>
-                    </Link>
+                    <MyLink
+                      href={href}
+                      key={name}
+                      className={classNames(
+                        router.pathname === href
+                          ? 'border-yellow-500 text-gray-900'
+                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                        'text-md inline-flex items-center border-b-2 px-1 pt-1 font-medium'
+                      )}
+                    >
+                      {name}
+                    </MyLink>
                   ))}
                 </div>
               </div>
@@ -102,7 +101,7 @@ export default function Header() {
                           <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <Menu.Item>
                               {({ active }) => (
-                                <a
+                                <MyLink
                                   href="#"
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
@@ -110,7 +109,7 @@ export default function Header() {
                                   )}
                                 >
                                   Notifications
-                                </a>
+                                </MyLink>
                               )}
                             </Menu.Item>
                           </Menu.Items>
@@ -141,7 +140,7 @@ export default function Header() {
                             {accountNavigation.map(({ name, href }) => (
                               <Menu.Item key={name}>
                                 {({ active }) => (
-                                  <a
+                                  <MyLink
                                     href={href}
                                     onClick={(e) => {
                                       if (name === 'Sign Out') {
@@ -155,7 +154,7 @@ export default function Header() {
                                     )}
                                   >
                                     {name}
-                                  </a>
+                                  </MyLink>
                                 )}
                               </Menu.Item>
                             ))}
@@ -164,11 +163,12 @@ export default function Header() {
                       </Menu>
                     </>
                   ) : (
-                    <Link href="/sign-in">
-                      <a className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700">
-                        Sign in
-                      </a>
-                    </Link>
+                    <MyLink
+                      href="/sign-in"
+                      className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700"
+                    >
+                      Sign in
+                    </MyLink>
                   ))}
               </div>
             </div>

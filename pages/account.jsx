@@ -8,7 +8,7 @@ import {
   HandIcon,
   PencilAltIcon,
 } from '@heroicons/react/outline';
-import Link from 'next/link';
+import MyLink from '../components/MyLink';
 import { useUser } from '../context/user-context';
 import AccountPaymentInfo from '../components/account/AccountPaymentInfo';
 import AccountNotifications from '../components/account/AccountNotifications';
@@ -94,28 +94,28 @@ export default function Account() {
               {navigation.map((item) => {
                 const current = hash === item.hash;
                 return (
-                  <Link key={item.name} href={`/account#${item.hash}`} passHref>
-                    <a
+                  <MyLink
+                    key={item.name}
+                    href={`/account#${item.hash}`}
+                    className={classNames(
+                      current
+                        ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
+                        : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                      'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
+                    )}
+                    aria-current={current ? 'page' : undefined}
+                  >
+                    <item.icon
                       className={classNames(
                         current
-                          ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
-                          : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                        'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
+                          ? 'text-yellow-500 group-hover:text-yellow-500'
+                          : 'text-gray-400 group-hover:text-gray-500',
+                        '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
                       )}
-                      aria-current={current ? 'page' : undefined}
-                    >
-                      <item.icon
-                        className={classNames(
-                          current
-                            ? 'text-yellow-500 group-hover:text-yellow-500'
-                            : 'text-gray-400 group-hover:text-gray-500',
-                          '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
-                        )}
-                        aria-hidden="true"
-                      />
-                      <span className="truncate">{item.name}</span>
-                    </a>
-                  </Link>
+                      aria-hidden="true"
+                    />
+                    <span className="truncate">{item.name}</span>
+                  </MyLink>
                 );
               })}
             </nav>

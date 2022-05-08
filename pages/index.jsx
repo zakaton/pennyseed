@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Link from 'next/link';
+import MyLink from '../components/MyLink';
 // import { truncateDollars } from '../utils/stripe-calculator';
 
 export default function Home() {
@@ -214,8 +214,8 @@ export default function Home() {
             Supabase
           </a>{' '}
           for user authentication and minimal data storage (see our{' '}
-          <Link href="/privacy">privacy policy</Link> for what information we
-          store), and is hosted on{' '}
+          <MyLink href="/privacy">privacy policy</MyLink> for what information
+          we store), and is hosted on{' '}
           <a href="https://vercel.com/" target="_blank" rel="noreferrer">
             Vercel
           </a>
@@ -240,7 +240,7 @@ export default function Home() {
         </p>
 
         <p>
-          For more information check out <Link href="/faq">FAQ</Link>.
+          For more information check out <MyLink href="/faq">FAQ</MyLink>.
         </p>
       </div>
     </>

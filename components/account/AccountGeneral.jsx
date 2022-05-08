@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '../../context/user-context';
 import DeleteAccountModal from './DeleteAccountModal';
 import getStripeAccountInfo from '../../utils/get-stripe-account-info';
+import MyLink from '../MyLink';
 
 export default function AccountGeneral({ isActive }) {
   const { user, isLoading } = useUser();
@@ -82,8 +83,8 @@ export default function AccountGeneral({ isActive }) {
                       ) : (
                         <>
                           no.{' '}
-                          <a
-                            href={stripeLink}
+                          <MyLink
+                            href={stripeLink || '#'}
                             target={stripeLink ? '_blank' : ''}
                             rel="noreferrer"
                           >
@@ -93,7 +94,7 @@ export default function AccountGeneral({ isActive }) {
                             >
                               Setup your Stripe account
                             </button>
-                          </a>{' '}
+                          </MyLink>{' '}
                           in order to create campaigns.
                         </>
                       )
@@ -108,7 +109,7 @@ export default function AccountGeneral({ isActive }) {
         </div>
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
           {stripeAccountInfo ? (
-            <a
+            <MyLink
               href={stripeLink || '#'}
               target={stripeLink ? '_blank' : ''}
               rel="noreferrer"
@@ -121,7 +122,7 @@ export default function AccountGeneral({ isActive }) {
                   ? 'Go to Stripe Dashboard'
                   : 'Setup Stripe Account'}
               </button>
-            </a>
+            </MyLink>
           ) : (
             <button
               type="button"
