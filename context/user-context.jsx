@@ -37,7 +37,7 @@ export function UserContextProvider(props) {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
-        await fetch('/api/set-auth-cookie', {
+        await fetch('/api/account/set-auth-cookie', {
           method: 'POST',
           body: JSON.stringify({ event, session }),
           headers: {

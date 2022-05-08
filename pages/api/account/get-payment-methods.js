@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService, getUserProfile } from '../../utils/supabase';
+import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService(req);
@@ -11,8 +11,16 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-  const setupIntent = await stripe.setupIntents.create({
+  const paymentMethods = await stripe.paymentMethods.list({
     customer: profile.stripe_customer,
+    type: 'card',
   });
-  res.status(200).json({ client_secret: setupIntent.client_secret });
+  res.status(200).json({
+    payment_methods: paymentMethods.data.map(
+      ({ id, card: { brand, last4 } }) => ({
+        card: { brand, last4 },
+        id,
+      })
+    ),
+  });
 }

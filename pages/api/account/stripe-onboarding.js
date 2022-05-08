@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
 import absoluteUrl from 'next-absolute-url';
-import { getSupabaseService, getUserProfile } from '../../utils/supabase';
+import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService(req);
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res.status(401).send('Unauthorized');
+    return res.redirect('/account');
   }
 
   const { origin } = absoluteUrl(req);
@@ -22,10 +22,8 @@ export default async function handler(req, res) {
     type: 'account_onboarding',
   });
   if (link) {
-    res.status(200).json({
-      stripe_onboarding_link: link.url,
-    });
+    res.redirect(link.url);
   } else {
-    res.status(400).send('could not find stripe account for user');
+    res.redirect('/account');
   }
 }

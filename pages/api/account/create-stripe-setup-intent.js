@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService, getUserProfile } from '../../utils/supabase';
+import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService(req);
@@ -11,13 +11,8 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-  const account = await stripe.accounts.retrieve(profile.stripe_account);
-  if (account) {
-    res.status(200).json({
-      canCreateCampaigns: account.charges_enabled,
-      hasCompletedOnboarding: account.details_submitted,
-    });
-  } else {
-    res.status(400).send('could not find stripe account for user');
-  }
+  const setupIntent = await stripe.setupIntents.create({
+    customer: profile.stripe_customer,
+  });
+  res.status(200).json({ client_secret: setupIntent.client_secret });
 }

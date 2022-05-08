@@ -12,7 +12,7 @@ export default function AddCardModal({ open, setOpen }) {
   const [clientSecret, setClientSecret] = useState(null);
   const createSetupIntent = async () => {
     console.log('gonna fetch client secret...');
-    const response = await fetch('/api/create-stripe-setup-intent');
+    const response = await fetch('/api/account/create-stripe-setup-intent');
     // eslint-disable-next-line camelcase
     const { client_secret } = await response.json();
     if (clientSecret == null) {

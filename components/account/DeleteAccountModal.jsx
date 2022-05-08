@@ -80,7 +80,7 @@ export default function DeleteAccountModal({ open, setOpen }) {
                     type="button"
                     onClick={async () => {
                       setIsDeletingAccount(true);
-                      await fetch('/api/delete-account');
+                      await fetch('/api/account/delete-account');
                       // setIsDeletingAccount(false);
                       signOut();
                     }}

@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
-import enforceApiRouteSecret from '../../utils/enforce-api-route-secret';
-import { getSupabaseService } from '../../utils/supabase';
+import enforceApiRouteSecret from '../../../utils/enforce-api-route-secret';
+import { getSupabaseService } from '../../../utils/supabase';
 
 const supabase = getSupabaseService();
 

@@ -13,7 +13,7 @@ export default function AccountPaymentInfo({ isActive }) {
   const [paymentMethods, setPaymentMethods] = useState(null);
   const getPaymentMethods = async (override) => {
     console.log('fetching payment methods');
-    const response = await fetch('/api/get-payment-methods');
+    const response = await fetch('/api/account/get-payment-methods');
     const { payment_methods } = await response.json();
     if (paymentMethods == null || override) {
       console.log('got payment methods', payment_methods);
@@ -22,6 +22,7 @@ export default function AccountPaymentInfo({ isActive }) {
   };
 
   console.log('did get payment methods?', didGetPaymentMethods);
+  console.log('payment methods', paymentMethods);
 
   if (isActive && !didGetPaymentMethods) {
     getPaymentMethods();

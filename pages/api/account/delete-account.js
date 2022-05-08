@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService, getUserProfile } from '../../utils/supabase';
+import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService(req);

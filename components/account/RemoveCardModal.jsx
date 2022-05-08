@@ -87,7 +87,10 @@ export default function RemoveCardModal({
                 </div>
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                   {selectedPaymentMethod && (
-                    <form method="POST" action="/api/remove-payment-method">
+                    <form
+                      method="POST"
+                      action="/api/account/remove-payment-method"
+                    >
                       <input
                         required
                         name="paymentMethodId"

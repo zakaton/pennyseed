@@ -6,7 +6,7 @@ import DeleteAccountModal from './DeleteAccountModal';
 import getStripeAccountInfo from '../../utils/get-stripe-account-info';
 import MyLink from '../MyLink';
 
-export default function AccountGeneral({ isActive }) {
+export default function AccountGeneral() {
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
@@ -16,28 +16,6 @@ export default function AccountGeneral({ isActive }) {
       setStripeAccountInfo(data);
     });
   }, [stripeAccountInfo]);
-
-  const [didFetchStripeLink, setDidFetchStripeLink] = useState(false);
-  const [stripeLink, setStripeLink] = useState(null);
-  const getStripeLink = async () => {
-    console.log('fetching stripe link');
-    if (stripeAccountInfo.canCreateCampaigns) {
-      const response = await fetch('/api/get-stripe-login-link');
-      const { stripe_login_link } = await response.json();
-      setStripeLink(stripe_login_link);
-    } else {
-      const response = await fetch('/api/get-stripe-onboarding-link');
-      const { stripe_onboarding_link } = await response.json();
-      setStripeLink(stripe_onboarding_link);
-    }
-  };
-
-  if (isActive && stripeAccountInfo) {
-    if (!didFetchStripeLink) {
-      getStripeLink();
-      setDidFetchStripeLink(true);
-    }
-  }
 
   return (
     <>
@@ -84,8 +62,8 @@ export default function AccountGeneral({ isActive }) {
                         <>
                           no.{' '}
                           <MyLink
-                            href={stripeLink || '#'}
-                            target={stripeLink ? '_blank' : ''}
+                            href="/api/account/stripe-onboarding"
+                            target="_blank"
                             rel="noreferrer"
                           >
                             <button
@@ -110,8 +88,12 @@ export default function AccountGeneral({ isActive }) {
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
           {stripeAccountInfo ? (
             <MyLink
-              href={stripeLink || '#'}
-              target={stripeLink ? '_blank' : ''}
+              href={
+                stripeAccountInfo.hasCompletedOnboarding
+                  ? '/api/account/stripe-dashboard'
+                  : '/api/account/stripe-onboarding'
+              }
+              target="_blank"
               rel="noreferrer"
             >
               <button
