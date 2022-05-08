@@ -6,16 +6,18 @@ import DeleteAccountModal from './DeleteAccountModal';
 import getStripeAccountInfo from '../../utils/get-stripe-account-info';
 import MyLink from '../MyLink';
 
-export default function AccountGeneral() {
+export default function AccountGeneral({ isActive }) {
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
   const [stripeAccountInfo, setStripeAccountInfo] = useState(null);
   useEffect(() => {
-    getStripeAccountInfo().then((data) => {
-      setStripeAccountInfo(data);
-    });
-  }, [stripeAccountInfo]);
+    if (!stripeAccountInfo && isActive) {
+      getStripeAccountInfo().then((data) => {
+        setStripeAccountInfo(data);
+      });
+    }
+  }, [stripeAccountInfo, isActive]);
 
   return (
     <>

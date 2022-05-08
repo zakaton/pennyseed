@@ -1,38 +1,28 @@
 /* eslint-disable camelcase */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AddCardModal from './AddCardModal';
 import RemoveCardModal from './RemoveCardModal';
 import AddCardStatusModal from './AddCardStatusModal';
+import getStripePaymentMethods from '../../utils/get-stripe-payment-methods';
 
 export default function AccountPaymentInfo({ isActive }) {
   const [showAddCard, setShowAddCard] = useState(false);
   const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 
-  const [didGetPaymentMethods, setDidGetPaymentMethods] = useState(false);
-  const [paymentMethods, setPaymentMethods] = useState(null);
-  const getPaymentMethods = async (override) => {
-    console.log('fetching payment methods');
-    const response = await fetch('/api/account/get-payment-methods');
-    const { payment_methods } = await response.json();
-    if (paymentMethods == null || override) {
-      console.log('got payment methods', payment_methods);
-      setPaymentMethods(payment_methods);
+  const [stripePaymentMethods, setStripePaymentMethods] = useState(null);
+  useEffect(() => {
+    if (!stripePaymentMethods && isActive) {
+      getStripePaymentMethods().then((data) => {
+        setStripePaymentMethods(data.stripePaymentMethods);
+      });
     }
-  };
-
-  console.log('did get payment methods?', didGetPaymentMethods);
-  console.log('payment methods', paymentMethods);
-
-  if (isActive && !didGetPaymentMethods) {
-    getPaymentMethods();
-    setDidGetPaymentMethods(true);
-  }
+  }, [stripePaymentMethods, isActive]);
 
   let paymentMethodsContent;
-  if (paymentMethods) {
-    if (paymentMethods.length > 0) {
-      paymentMethodsContent = paymentMethods.map((paymentMethod) => (
+  if (stripePaymentMethods) {
+    if (stripePaymentMethods.length > 0) {
+      paymentMethodsContent = stripePaymentMethods.map((paymentMethod) => (
         <div
           key={paymentMethod.id}
           className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5"
