@@ -1,7 +1,4 @@
 import Head from 'next/head';
-import enforceAuthentication from '../utils/enforce-authentication';
-
-export const getServerSideProps = enforceAuthentication;
 
 export default function CreateCampaign() {
   return (
