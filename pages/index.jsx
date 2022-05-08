@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { truncateDollars } from '../utils/stripe-calculator';
 
 export default function Home() {
   return (
@@ -21,23 +22,17 @@ export default function Home() {
         </p>
 
         <p>
-          For instance, if you ask for $1,000 and reach 500 pledgers, then each
-          pays $2. However, if 1,000 people pledge, then each pays only $1.
+          For example, if you want to raise $1,000 and reach 1,000 pledgers,
+          then each pledger pays $1. However, if 2,000 people pledge, then each
+          pledger pays only $0.50 (before processing fees; more below).
         </p>
 
         <p>
-          Campaigns require a deadline and a minimum number of pledgers - that
+          Campaigns require a deadline and a minimum number of pledgers; that
           way people know the maximum possible pledge amount (funding goal) /
-          (minimum number of pledgers).
-        </p>
-
-        <p>
-          You can check out our{' '}
-          <a href="https://www.pennyseed.fund/campaign-calculator">
-            Campaign Calculator
-          </a>{' '}
-          to see how much pledgers would pay given the funding goal and number
-          of pledgers
+          (minimum number of pledgers). Otherwise if you wanted to raise $1,000
+          and only one person pledged before the deadline, then they&apos;d pay
+          $1,000.
         </p>
 
         <p>
@@ -49,9 +44,10 @@ export default function Home() {
           <a href="https://stripe.com/pricing" target="_blank" rel="noreferrer">
             Stripe processing fees
           </a>{' '}
-          (2.9% + $0.30) so the campaigner gets exactly how much they ask for.
-          (so instead of paying $1 you&apos;ll actually be paying $1.34, which
-          will be $1.00 after the $0.34 processing fee)
+          (2.9% + $0.30), so the campaigner gets exactly how much they ask for.
+          For example, if you successfully raise $1,000 with 1,000 pledgers,
+          each pledger won&apos;t actually pay $1, but will pay $1.34, which is
+          $1.00 after processing fees ($0.34).
         </p>
 
         <p>
@@ -59,11 +55,13 @@ export default function Home() {
           <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
             Next.js
           </a>{' '}
-          for the frontend,{' '}
+          for the frontend and apis,{' '}
           <a href="https://supabase.com/" target="_blank" rel="noreferrer">
             Supabase
           </a>{' '}
-          for user authentication and database management, and is hosted on{' '}
+          for user authentication and minimal data storage (see our{' '}
+          <Link href="/privacy">privacy policy</Link> for what information we store),
+          and is hosted on{' '}
           <a href="https://vercel.com/" target="_blank" rel="noreferrer">
             Vercel
           </a>

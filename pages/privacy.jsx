@@ -23,12 +23,12 @@ export default function Privacy() {
           :
         </p>
         <ul>
-          <li>email address</li>
+          <li>email address (so you can sign in)</li>
           <li>
-            Stripe customer information (for making payments to campaigns)
+            Stripe customer information (so you can make payments to campaigns)
           </li>
           <li>
-            Stripe account information (for receiving payments for your
+            Stripe account information (so you can receive payments for your
             campaigns)
           </li>
           <li>campaigns you&apos;ve created</li>
@@ -36,28 +36,18 @@ export default function Privacy() {
         </ul>
 
         <p>
-          You can see how we store user information{' '}
-          <a
-            href="https://github.com/zakaton/pennyseed"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here
-          </a>
-        </p>
-
-        <p>
           We only use this information to make this site work, and we don&apos;t
-          share it with any third parties
+          share it with any third parties (including people whose campaigns
+          you&apos;ve pledged to, or people who pledged to your campaigns)
         </p>
 
         <h3>Deleting your Account</h3>
         <p>
-          When you delete your account we delete all of this information as we
-          perform the following:
+          When you delete your account we delete all of the information listed
+          above as we perform the following:
         </p>
         <ul>
-          <li>delete your user data stored in the database</li>
+          <li>delete your user data stored in our database</li>
           <li>
             delete your stripe customer data (which stores card information for
             making payments)
@@ -68,13 +58,13 @@ export default function Privacy() {
           </li>
           <li>
             deletes all campaigns you&apos;ve created (and cancels any pending
-            campaigns). It does not refund any successful campaigns you&apos;ve
-            created to in the past.
+            campaigns). It does not refund any payments you&apos;ve received
+            from successful campaigns you&apos;ve created in the past.
           </li>
           <li>
             deletes all pledges you&apos;ve created (and cancels any pledges for
-            any pending campaigns). It does not refund any successful campaigns
-            you&apos;ve pledged to in the past.
+            any pending campaigns). It does not refund any payments you&apos;ve
+            made to successful campaigns you&apos;ve pledged to in the past.
           </li>
         </ul>
       </div>

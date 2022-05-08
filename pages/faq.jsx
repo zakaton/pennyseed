@@ -162,9 +162,13 @@ const faqs = [
         </p>
         <p>
           However, while the campaign creator can set a maximum possible number
-          of pledgers we set a <i>maximum possible number of pledgers</i> to
-          ensure pledgers will pay a minimum of $0.50 due to{' '}
-          <a href="https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts">
+          of pledgers, we set an upper limit to ensure pledgers will pay a
+          minimum of $0.50 due to{' '}
+          <a
+            href="https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts"
+            target="_blank"
+            rel="noreferrer"
+          >
             Stripe&apos;s minimum charge amount
           </a>
           .

@@ -37,5 +37,5 @@ yarn-error.log*
 **/public/fallback-*.js
 
 # custom
-TODO
+TODO.txt
 function-hooks.txt

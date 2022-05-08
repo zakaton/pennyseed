@@ -26,8 +26,11 @@ export default function Terms() {
 
         <h3>Your Campaigns</h3>
         <p>
-          By creating a connected Stripe Account with us you agree to the
-          following:
+          By creating a{' '}
+          <a href="https://stripe.com/connect" target="_blank" rel="noreferrer">
+            Connected Stripe Account
+          </a>{' '}
+          with us you agree to the following:
         </p>
         <ul>
           <li>
@@ -61,23 +64,24 @@ export default function Terms() {
         <p>By signing in you agree to the following:</p>
         <ul>
           <li>
-            we can delete your Stripe Customer Account, cancelling any pending
-            pledges in the process
+            we can delete your Stripe Customer Account (which stores payment
+            information so you can make payments to successful campaigns),
+            cancelling any pending pledges in the process
           </li>
           <li>we can cancel or refund any pledges you&apos;ve made</li>
           <li>
             as a pledger of a successful campaign (a campaign that has passed
             the minimum number of pledgers) you agree to pay (up to and
             including) the <i>Maximum Possible Pledge Amount</i> as stated in
-            the campaign (funding goal)/(minimum number of pledgers) once the
-            deadline has passed
+            the campaign (funding goal) / (minimum number of pledgers) once the
+            deadline is reached
           </li>
           <li>
             all charged pledges are final - make sure you read the campaign
             description carefully to see how much you&apos;ll be paying (ranging
-            from (funding goal)/(minimum number of pledgers) to $0.50 before
-            processing fees), and that the campaigner can be trusted (beware of
-            scams and people pretending to be others)
+            from $0.50 to (funding goal) / (minimum number of pledgers) before
+            processing fees), and that the campaigner can be trusted; beware of
+            scams and people pretending to be others
           </li>
         </ul>
       </div>

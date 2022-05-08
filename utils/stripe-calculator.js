@@ -30,7 +30,11 @@ export function getPledgeAmountPlusProcessing(fundingGoal, numberOfUsers) {
   return getAmountBeforeProcessing(getPledgeAmount(fundingGoal, numberOfUsers));
 }
 
-const minimumPossiblePledgeAmount = 0.5;
+export const minimumPossiblePledgeAmount = 0.5;
 export function getMaximumPossibleNumberOfPledgers(fundingGoal) {
   return Math.floor(fundingGoal / minimumPossiblePledgeAmount);
+}
+export const maximumPossiblePledgeAmount = 999_999.99;
+export function getMinimumPossibleNumberOfPledgers(fundingGoal) {
+  return Math.ceil(fundingGoal / maximumPossiblePledgeAmount);
 }
