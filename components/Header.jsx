@@ -6,7 +6,6 @@ import {
   XIcon,
   UserCircleIcon,
 } from '@heroicons/react/outline';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { useUser } from '../context/user-context';
