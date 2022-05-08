@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import MyLink from './MyLink';
 
-/* This example requires Tailwind CSS v2.0+ */
 const navigation = {
   main: [
     { name: 'Terms of Use', href: '/terms' },
