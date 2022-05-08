@@ -14,8 +14,8 @@ export default async function handler(req, res) {
   const account = await stripe.accounts.retrieve(profile.stripe_account);
   if (account) {
     res.status(200).json({
-      can_create_campaigns: account.charges_enabled,
-      has_completed_onboarding: account.details_submitted,
+      canCreateCampaigns: account.charges_enabled,
+      hasCompletedOnboarding: account.details_submitted,
     });
   } else {
     res.status(400).send('could not find stripe account for user');

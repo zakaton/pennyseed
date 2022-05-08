@@ -1,4 +1,4 @@
-import { useEffect, useState, createContext, useContext, useMemo } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 
 export const OnlineContext = createContext(true);
 

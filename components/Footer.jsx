@@ -1,4 +1,3 @@
-import { MailIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -7,19 +6,9 @@ const navigation = {
     { name: 'About', href: '/about' },
     { name: 'Terms of Use', href: '/terms' },
     { name: 'Privacy Policy', href: '/privacy' },
+    { name: 'Contact', href: '/contact' },
   ],
   social: [
-    {
-      name: 'Email',
-      href: 'mailto:contact@pennyseed.fund?subject=Pennyseed',
-      icon: (props) => (
-        <MailIcon
-          className="h-6 w-6 text-gray-400"
-          aria-hidden="true"
-          {...props}
-        />
-      ),
-    },
     {
       name: 'GitHub',
       href: 'https://github.com/zakaton/pennyseed',

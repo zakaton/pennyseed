@@ -1,4 +1,4 @@
-import { useEffect, useState, createContext, useContext, useMemo } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { supabase, getUserProfile } from '../utils/supabase';
 

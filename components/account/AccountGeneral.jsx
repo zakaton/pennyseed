@@ -1,39 +1,26 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '../../context/user-context';
 import DeleteAccountModal from './DeleteAccountModal';
+import getStripeAccountInfo from '../../utils/get-stripe-account-info';
 
 export default function AccountGeneral({ isActive }) {
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
-  const [didFetchStripeAccountInfo, setDidFetchStripeAccountInfo] =
-    useState(false);
-  const [didReceiveStripeAccountInfo, setDidReceiveStripeAccountInfo] =
-    useState(false);
-  const [canCreateCampaigns, setCanCreateCampaigns] = useState(null);
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(null);
-  const getStripeAccountInfo = async (override) => {
-    const response = await fetch('/api/get-stripe-account-info');
-    const { can_create_campaigns, has_completed_onboarding } =
-      await response.json();
-    if (canCreateCampaigns == null || override) {
-      console.log('can create campaigns?', can_create_campaigns);
-      setCanCreateCampaigns(can_create_campaigns);
-    }
-    if (canCreateCampaigns == null || override) {
-      console.log('has completed onboarding?', has_completed_onboarding);
-      setHasCompletedOnboarding(has_completed_onboarding);
-    }
-    setDidReceiveStripeAccountInfo(true);
-  };
+  const [stripeAccountInfo, setStripeAccountInfo] = useState(null);
+  useEffect(() => {
+    getStripeAccountInfo().then((data) => {
+      setStripeAccountInfo(data);
+    });
+  }, [stripeAccountInfo]);
 
   const [didFetchStripeLink, setDidFetchStripeLink] = useState(false);
   const [stripeLink, setStripeLink] = useState(null);
   const getStripeLink = async () => {
     console.log('fetching stripe link');
-    if (canCreateCampaigns) {
+    if (stripeAccountInfo.canCreateCampaigns) {
       const response = await fetch('/api/get-stripe-login-link');
       const { stripe_login_link } = await response.json();
       setStripeLink(stripe_login_link);
@@ -44,17 +31,12 @@ export default function AccountGeneral({ isActive }) {
     }
   };
 
-  if (isActive) {
-    if (!didFetchStripeAccountInfo) {
-      getStripeAccountInfo();
-      setDidFetchStripeAccountInfo(true);
-    } else if (!didFetchStripeLink) {
+  if (isActive && stripeAccountInfo) {
+    if (!didFetchStripeLink) {
       getStripeLink();
       setDidFetchStripeLink(true);
     }
   }
-
-  console.log('stripe link', stripeLink);
 
   return (
     <>
@@ -94,8 +76,8 @@ export default function AccountGeneral({ isActive }) {
                     Can create campaigns?
                   </dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    {didReceiveStripeAccountInfo ? (
-                      canCreateCampaigns ? (
+                    {stripeAccountInfo ? (
+                      stripeAccountInfo.canCreateCampaigns ? (
                         'yes'
                       ) : (
                         <>
@@ -125,7 +107,7 @@ export default function AccountGeneral({ isActive }) {
           )}
         </div>
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
-          {didReceiveStripeAccountInfo ? (
+          {stripeAccountInfo ? (
             <a
               href={stripeLink || '#'}
               target={stripeLink ? '_blank' : ''}
@@ -135,7 +117,7 @@ export default function AccountGeneral({ isActive }) {
                 type="button"
                 className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                {hasCompletedOnboarding
+                {stripeAccountInfo.hasCompletedOnboarding
                   ? 'Go to Stripe Dashboard'
                   : 'Setup Stripe Account'}
               </button>
