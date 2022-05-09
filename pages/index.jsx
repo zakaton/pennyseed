@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import CampaignCalculator from '../components/CampaignCalculator';
+import CampaignForm from '../components/CampaignForm';
 import MyLink from '../components/MyLink';
 
 export default function Home() {
@@ -55,7 +55,7 @@ export default function Home() {
           $1, but will pay $1.34, which is $1.00 after processing fees ($0.34).
         </p>
 
-        <CampaignCalculator />
+        <CampaignForm />
 
         <p>
           This project is built using{' '}

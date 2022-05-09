@@ -42,6 +42,16 @@ const faqs = [
     ),
   },
   {
+    question: 'How many Campaigns can I make at a time?',
+    answer: () => (
+      <p>
+        You are limited to 1 active campaign at a time. Once the campaign&apos;s
+        deadline has passed (or if you choose to delete it before the deadline
+        passed), you can create another campaign.
+      </p>
+    ),
+  },
+  {
     question: 'Do I need to create an account to pledge?',
     answer: () => (
       <>

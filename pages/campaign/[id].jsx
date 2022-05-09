@@ -1,6 +1,13 @@
+/* eslint-disable no-param-reassign */
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 export default function Campaign() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  console.log(id);
+
   return (
     <>
       <Head>
@@ -13,9 +20,7 @@ export default function Campaign() {
           </span>
         </h1>
       </div>
-      <div className="style-links prose prose-lg mx-auto mt-6 text-gray-500">
-        lol
-      </div>
+      <div className="style-links prose prose-lg mx-auto mt-6 text-gray-500" />
     </>
   );
 }

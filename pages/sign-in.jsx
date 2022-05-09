@@ -1,19 +1,16 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import { supabase } from '../utils/supabase';
-import MyLink from '../components/MyLink';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [agree, setAgree] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function signIn() {
     if (!(email && agree)) {
       return;
     }
-
-    setIsSubmitting(true);
 
     // eslint-disable-next-line no-unused-vars
     const { error, data } = await supabase.auth.signIn(
@@ -24,13 +21,13 @@ export default function SignIn() {
         redirectTo: `${window.location.origin}`,
       }
     );
+    console.log(`${window.location.origin}`);
     if (error) {
       // eslint-disable-next-line no-console
       console.log({ error });
     } else {
       setSubmitted(true);
     }
-    setIsSubmitting(false);
   }
 
   if (submitted) {
@@ -42,7 +39,7 @@ export default function SignIn() {
               Thank you
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Check your email for a magic link to sign in
+              Check your email for a confirmation link
             </p>
           </div>
         </div>
@@ -58,8 +55,7 @@ export default function SignIn() {
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            We&apos;ll email you link that&apos;ll sign you in - no password
-            required
+            We&apos;ll send a link to your email - no password required
           </p>
         </div>
         <form className="mt-8 space-y-6" action="#" method="POST">
@@ -97,7 +93,7 @@ export default function SignIn() {
                 className="ml-2 block text-sm text-gray-900"
               >
                 By signing in you agree to the{' '}
-                <MyLink href="/terms">terms of use</MyLink>.
+                <Link href="/terms">terms of use</Link>.
               </label>
             </div>
           </div>
@@ -108,13 +104,11 @@ export default function SignIn() {
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 text-sm font-medium text-white hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
               onClick={(e) => {
                 e.preventDefault();
-                const isValid = e.target.closest('form').reportValidity();
-                if (isValid) {
-                  signIn();
-                }
+                e.target.closest('form').reportValidity();
+                signIn();
               }}
             >
-              {isSubmitting ? 'Sending Magic Link...' : 'Send Magic Link'}
+              Send link
             </button>
           </div>
         </form>
