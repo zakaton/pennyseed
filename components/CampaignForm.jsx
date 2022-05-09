@@ -207,7 +207,7 @@ export default function CampaignForm() {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                  must be later than right now
+                  must be a future date
                 </p>
               </div>
 
