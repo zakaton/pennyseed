@@ -16,6 +16,8 @@ export default function CampaignForm() {
     return date.toISOString().slice(0, 16);
   }
 
+  const maxCharacterLimit = 140;
+
   const [fundingGoal, setFundingGoal] = useState(1000);
   const [reason, setReason] = useState('reason');
   const [deadline, setDeadline] = useState('');
@@ -43,10 +45,13 @@ export default function CampaignForm() {
     ? pledgeAmountAfterProcessing * currentNumberOfPledgers
     : 0;
 
+  const maximumPossibleNumberOfPledgers =
+    getMaximumPossibleNumberOfPledgers(fundingGoal);
+
   return (
     <div className="bg-white px-4 py-2 shadow sm:rounded-lg sm:p-6">
-      <div className="md:grid md:grid-cols-3 md:gap-6">
-        <div className="md:col-span-1">
+      <div className="md:grid md:grid-cols-3 md:gap-3">
+        <div className="pr-2 md:col-span-1">
           <h3 className="mt-0 mb-2 text-xl font-medium leading-6 text-gray-900">
             Campaign Example
           </h3>
@@ -58,7 +63,7 @@ export default function CampaignForm() {
             <span className="font-medium text-green-500">
               ${fundingGoal.toLocaleString()}
             </span>{' '}
-            for <span className="font-medium">{reason || 'reason'}</span>.
+            for <span className="font-bold">{reason || 'reason'}</span>.
           </p>
           <p className="m-0 mb-3 text-sm text-gray-500">
             This campaign requires a minimum of{' '}
@@ -66,12 +71,12 @@ export default function CampaignForm() {
               {minimumNumberOfPledgers.toLocaleString()}
             </span>{' '}
             {minimumNumberOfPledgers === 1 ? 'pledger' : 'pledgers'} by{' '}
-            <span className="font-medium">
+            <span className="font-bold">
               {deadline && deadline.toLocaleString()}
             </span>
             .
           </p>
-          <p className="m-0 mb-3 text-sm text-gray-500">
+          <p className="m-0 mb-0 text-sm text-gray-500">
             If there {currentNumberOfPledgers === 1 ? 'is' : 'are'}{' '}
             <span className="font-medium text-yellow-600">
               {currentNumberOfPledgers > 0
@@ -131,8 +136,8 @@ export default function CampaignForm() {
               e.target.reportValidity();
             }}
           >
-            <div className="grid grid-cols-6 gap-6">
-              <div className="col-span-6 sm:col-span-2">
+            <div className="grid grid-cols-6 gap-4">
+              <div className="col-span-6 sm:col-span-3">
                 <label
                   htmlFor="funding-goal"
                   className="block text-sm font-medium text-gray-700"
@@ -169,51 +174,12 @@ export default function CampaignForm() {
                     </span>
                   </div>
                 </div>
-              </div>
-
-              <div className="col-span-6 sm:col-span-4">
-                <label
-                  htmlFor="reason"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Reason
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="reason"
-                  id="reason"
-                  maxLength={50}
-                  placeholder={reason}
-                  onInput={(e) => setReason(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
-                />
+                <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
+                  must be below ${maximumCampaignAmount.toLocaleString()}
+                </p>
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <label
-                  htmlFor="minimum-number-of-pledgers"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Minimum Number of Pledgers
-                </label>
-                <input
-                  required
-                  type="number"
-                  name="minimum-number-of-pledgers"
-                  id="minimum-number-of-pledgers"
-                  min="1"
-                  step="1"
-                  value={minimumNumberOfPledgers}
-                  max={getMaximumPossibleNumberOfPledgers(fundingGoal)}
-                  onInput={(e) =>
-                    setMinimumNumberOfPledgers(Number(e.target.value))
-                  }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
-                />
-              </div>
-
-              <div className="col-span-6 sm:col-span-3 lg:col-span-3">
                 <label
                   htmlFor="deadline"
                   className="block text-sm font-medium text-gray-700"
@@ -240,9 +206,61 @@ export default function CampaignForm() {
                   }}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />
+                <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
+                  must be later than right now
+                </p>
               </div>
 
-              <div className="col-span-6 sm:col-span-3 lg:col-span-3">
+              <div className="col-span-6">
+                <label
+                  htmlFor="reason"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Reason
+                </label>
+                <div className="mt-1">
+                  <textarea
+                    rows="3"
+                    name="reason"
+                    id="reason"
+                    maxLength={maxCharacterLimit}
+                    placeholder={reason}
+                    onInput={(e) => setReason(e.target.value)}
+                    className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
+                  />
+                  <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
+                    {reason.length}/{maxCharacterLimit} characters remaining
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
+                <label
+                  htmlFor="minimum-number-of-pledgers"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Minimum Number of Pledgers
+                </label>
+                <input
+                  required
+                  type="number"
+                  name="minimum-number-of-pledgers"
+                  id="minimum-number-of-pledgers"
+                  min="1"
+                  step="1"
+                  value={minimumNumberOfPledgers}
+                  max={maximumPossibleNumberOfPledgers}
+                  onInput={(e) =>
+                    setMinimumNumberOfPledgers(Number(e.target.value))
+                  }
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
+                />
+                <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
+                  must be between 1 and {maximumPossibleNumberOfPledgers}
+                </p>
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
                 <label
                   htmlFor="current-number-of-pledgers"
                   className="block text-sm font-medium text-gray-700"
