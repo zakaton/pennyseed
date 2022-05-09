@@ -43,16 +43,6 @@ export default function CampaignForm() {
     ? pledgeAmountAfterProcessing * currentNumberOfPledgers
     : 0;
 
-  if (isCampaignSuccessful) {
-    console.log('pledge amount', pledgeAmount);
-    console.log('after processing', pledgeAmountAfterProcessing);
-    console.log(
-      'net',
-      (pledgeAmountAfterProcessing * currentNumberOfPledgers).toLocaleString()
-    );
-    console.log('\n');
-  }
-
   return (
     <div className="bg-white px-4 py-2 shadow sm:rounded-lg sm:p-6">
       <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -65,25 +55,25 @@ export default function CampaignForm() {
           </p>
           <p className="mt-1 mb-3 text-sm text-gray-500">
             I am raising{' '}
-            <span className="font-bold text-green-500">
+            <span className="font-medium text-green-500">
               ${fundingGoal.toLocaleString()}
             </span>{' '}
-            for <span className="font-bold">{reason || 'reason'}</span>.
+            for <span className="font-medium">{reason || 'reason'}</span>.
           </p>
           <p className="m-0 mb-3 text-sm text-gray-500">
             This campaign requires a minimum of{' '}
-            <span className="font-bold text-yellow-600">
+            <span className="font-medium text-yellow-600">
               {minimumNumberOfPledgers.toLocaleString()}
             </span>{' '}
             {minimumNumberOfPledgers === 1 ? 'pledger' : 'pledgers'} by{' '}
-            <span className="font-bold">
+            <span className="font-medium">
               {deadline && deadline.toLocaleString()}
             </span>
             .
           </p>
           <p className="m-0 mb-3 text-sm text-gray-500">
             If there {currentNumberOfPledgers === 1 ? 'is' : 'are'}{' '}
-            <span className="font-bold text-yellow-600">
+            <span className="font-medium text-yellow-600">
               {currentNumberOfPledgers > 0
                 ? currentNumberOfPledgers.toLocaleString()
                 : 'no'}
@@ -92,7 +82,7 @@ export default function CampaignForm() {
             deadline passes, then the campaign{' '}
             <span
               className={classNames(
-                'font-bold',
+                'font-medium',
                 isCampaignSuccessful ? 'text-green-500' : 'text-red-400'
               )}
             >
@@ -102,15 +92,15 @@ export default function CampaignForm() {
             {isCampaignSuccessful ? (
               <>
                 each pledger is charged exactly{' '}
-                <span className="font-bold text-green-500">
+                <span className="font-medium text-green-500">
                   ${pledgeAmount.toFixed(2).toLocaleString()}
                 </span>{' '}
                 (which is{' '}
-                <span className="font-bold text-green-500">
+                <span className="font-medium text-green-500">
                   ${pledgeAmountAfterProcessing.toFixed(2).toLocaleString()}
                 </span>{' '}
                 after{' '}
-                <span className="font-bold">
+                <span className="font-medium">
                   <a
                     href="https://stripe.com/pricing"
                     target="_blank"
@@ -120,7 +110,7 @@ export default function CampaignForm() {
                   </a>
                 </span>
                 ), resulting in{' '}
-                <span className="font-bold text-green-500">
+                <span className="font-medium text-green-500">
                   ${netPledgeAmount.toFixed(2).toLocaleString()}
                 </span>{' '}
                 for me, the campaigner
