@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
 import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
@@ -15,10 +16,11 @@ export default async function handler(req, res) {
     customer: profile.stripe_customer,
     type: 'card',
   });
+  console.log(paymentMethods.data);
   res.status(200).json({
     stripePaymentMethods: paymentMethods.data.map(
-      ({ id, card: { brand, last4 } }) => ({
-        card: { brand, last4 },
+      ({ id, card: { brand, last4, exp_month, exp_year } }) => ({
+        card: { brand, last4, exp_month, exp_year },
         id,
       })
     ),

@@ -37,7 +37,7 @@ const statuses = {
   },
 };
 
-export default function AddCardStatusModal() {
+export default function AddCardStatusNotification() {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);

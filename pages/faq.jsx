@@ -128,7 +128,7 @@ const faqs = [
           in a pledge amount less than $10 (e.g. if 200 people pledge then each
           pays $5, if 500 people pledge then each pays $2, and if 1,000 people
           pledge then each pays $1). All the pledge amounts described above are
-          before processing fees.
+          before fees.
         </p>
       </>
     ),
@@ -153,7 +153,7 @@ const faqs = [
         </p>
         <p>
           We fix this problem by raising the pledge amount so the final amount
-          after processing fees will equal the ideal pledge amount.
+          after fees will equal the ideal pledge amount.
         </p>
         <p>
           For example, if 1,000 people pledge to raise a total of $1,000, then
@@ -172,20 +172,7 @@ const faqs = [
     answer: () => (
       <>
         <p>
-          The minimum possible pledge amount is determined by the maximum number
-          of pledgers a campaign can have.
-        </p>
-        <p>
-          For example a campaign for $1,000 with a maximum of 100 pledgers
-          implies the least a pledger will pay is $10 if there&apos;s 100
-          pledgers by the deadline. Ideally you wouldn&apos;t want a maximum
-          number of pledgers but if a pledge represented pre-orders for some
-          limited physical then it&apos;d make sense.
-        </p>
-        <p>
-          However, while the campaign creator can set a maximum possible number
-          of pledgers, we set an upper limit to ensure pledgers will pay a
-          minimum of $0.50 due to{' '}
+          The minimum possible pledge amount is $0.50, due to{' '}
           <a
             href="https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts"
             target="_blank"
@@ -193,7 +180,48 @@ const faqs = [
           >
             Stripe&apos;s minimum charge amount
           </a>
-          .
+          . Therefore, we set the upper limit on the possible number of pleders
+          to <span className="underline">2 times the funding goal</span> so the
+          least you&apos;ll pay is $0.50 (before fees).
+        </p>
+        <p>
+          For example, a funding goal with $1,000 can only have a maximum of
+          2,000 pledgers, each paying $0.50 (before fees) if 2,000 pledge.
+        </p>
+      </>
+    ),
+  },
+  {
+    question: "What's the highest amount a pledger can possibly pay?",
+    answer: () => (
+      <>
+        <p>
+          The highest possible pledge amount is $999,999.99, due to{' '}
+          <a
+            href="https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Stripe&apos;s maximum charge amount
+          </a>
+          . Therefore, we set the lower limit on the minimum number of pledgers
+          to <span className="underline">(funding goal) / 999,999.99</span>{' '}
+          (rounded up), which would be just 1 if the funding goal is less than
+          $999,999.99.
+        </p>
+        <p>
+          Thus, the most you can possibly pay (before processing) is
+          $999,999.99, which is extremely unlikely since the person making the
+          campaign would have to set the minimum number of pledgers to the
+          lowest possible allowed number.
+        </p>
+        <p>
+          For example, if you wanted to raise $1,000,000, the lowest minimum
+          number of pledgers 2 pledgers, where if only 2 people pledged
+          they&apos;d each pay $500,000 before processing. Of course you would
+          set the actual minimum number of pledgers to something much higher
+          like 200,000, where if at least 200,000 pledged they&apos;d each pay
+          $5 before processing
         </p>
       </>
     ),
@@ -214,9 +242,8 @@ const faqs = [
       <>
         <p>
           Yes. As the pledge amount decreases the larger the bulk of the pledge
-          payment due to processing fees. For instance if you raise $1,000 with
-          4,000 pledgers each will pay $0.25, which becomes $0.57 when
-          processing fees are added.
+          payment due to fees. For instance if you raise $1,000 with 2,000
+          pledgers each will pay $0.84, which becomes $0.50 when fees are added.
         </p>
         <p>
           As inefficient as this may seem, we think it&apos;s way better than

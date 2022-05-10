@@ -27,7 +27,7 @@ export default function Home() {
         <p>
           For example, if you want to raise $1,000 and reach 1,000 pledgers,
           then each pledger pays $1. However, if 2,000 people pledge, then each
-          pledger pays only $0.50 (before processing fees; more below).
+          pledger pays only $0.50 (before fees; more below).
         </p>
 
         <p>

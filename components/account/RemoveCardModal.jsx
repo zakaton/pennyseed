@@ -8,6 +8,12 @@ export default function RemoveCardModal({
   setOpen,
   selectedPaymentMethod,
 }) {
+  /*
+    TODO
+      delete card (don't refresh)
+      add "response" function callback
+      add notification 
+  */
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>

@@ -80,8 +80,8 @@ export default function Terms() {
             all charged pledges are final - make sure you read the campaign
             description carefully to see how much you&apos;ll be paying (ranging
             from $0.50 to (funding goal) / (minimum number of pledgers) before
-            processing fees), and that the campaigner can be trusted; beware of
-            scams and people pretending to be others
+            fees), and that the campaigner can be trusted; beware of scams and
+            people pretending to be others
           </li>
         </ul>
       </div>
