@@ -145,7 +145,9 @@ const faqs = [
         </p>
         <p>
           In addition, due to{' '}
-          <a href="https://stripe.com/pricing">Stripe&apos;s processing fees</a>{' '}
+          <a href="https://stripe.com/pricing" target="_blank" rel="noreferrer">
+            Stripe&apos;s processing fees
+          </a>{' '}
           (2.9% + 30¢ per transaction) we raise the pledge amount a little more
           so the final payment after fees is what&apos;s expected.
         </p>
@@ -155,8 +157,12 @@ const faqs = [
         </p>
         <p>
           For example, if 1,000 people pledge to raise a total of $1,000, then
-          each would not pay $1, but around $1.34, since (1.34 - (1.34 * 0.029 +
-          0.30)) ≈ 1.00
+          each would not pay $1, but around $1.35, which would end up be $1
+          after{' '}
+          <a href="https://stripe.com/pricing" target="_blank" rel="noreferrer">
+            Stripe&apos;s processing fee
+          </a>{' '}
+          ($0.34) and Pennyseed&apos;s 1% fee ($0.01)
         </p>
       </>
     ),
