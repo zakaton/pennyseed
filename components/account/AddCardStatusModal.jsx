@@ -1,10 +1,10 @@
 import { Fragment, useState, useEffect } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { Transition } from '@headlessui/react';
 import {
-  CheckIcon,
   XIcon,
-  ExclamationIcon,
   CheckCircleIcon,
+  XCircleIcon,
+  ExclamationCircleIcon,
 } from '@heroicons/react/outline';
 
 import { useRouter } from 'next/router';
@@ -13,32 +13,26 @@ import getStripe from '../../utils/get-stripe';
 const statuses = {
   succeeded: {
     icon: () => (
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-        <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
-      </div>
+      <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
     ),
-    title: 'Successfully added Card',
+    title: 'Successfully Added Card',
     message: 'Your card has been saved.',
   },
   processing: {
     icon: () => (
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
-        <ExclamationIcon
-          className="h-6 w-6 text-orange-600"
-          aria-hidden="true"
-        />
-      </div>
+      <ExclamationCircleIcon
+        className="h-6 w-6 text-orange-400"
+        aria-hidden="true"
+      />
     ),
-    title: 'Processing payment details',
+    title: 'Processing Payment Details',
     message: "We'll update you when processing is complete.",
   },
   requires_payment_method: {
     icon: () => (
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-        <XIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
-      </div>
+      <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
     ),
-    title: 'Failed to add Card',
+    title: 'Failed to Add Card',
     message: 'Please try another payment method.',
   },
 };
@@ -89,7 +83,7 @@ export default function AddCardStatusModal() {
       {/* Global notification live region, render this permanently at the end of the document */}
       <div
         aria-live="assertive"
-        className="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+        className="pointer-events-none fixed inset-0 z-10 flex items-end px-4 py-6 sm:items-start sm:p-6"
       >
         <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
           {/* Notification panel, dynamically insert this into the live region when it needs to be displayed */}
@@ -107,17 +101,14 @@ export default function AddCardStatusModal() {
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    <CheckCircleIcon
-                      className="h-6 w-6 text-green-400"
-                      aria-hidden="true"
-                    />
+                    <status.icon />
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
                     <p className="text-sm font-medium text-gray-900">
-                      Successfully saved!
+                      {status.title}
                     </p>
                     <p className="mt-1 text-sm text-gray-500">
-                      Anyone with a link can now view this file.
+                      {status.message}
                     </p>
                   </div>
                   <div className="ml-4 flex flex-shrink-0">
