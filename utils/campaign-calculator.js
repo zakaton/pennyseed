@@ -12,11 +12,15 @@ export function dollarsToCents(dollars) {
 }
 
 export const minimumCampaignAmount = 1;
-export const maximumCampaignAmount = 999_999;
+export const maximumCampaignAmount = 1_000_000_000;
 
 export const minimumPossiblePledgeAmount = 0.5;
+export const maximumPossiblePledgeAmount = 999_999.99;
 export const pennyseedFeePercentage = 0.01;
 
+export function getMinimumPossibleNumberOfPledgers(fundingGoal) {
+  return Math.ceil(fundingGoal / maximumPossiblePledgeAmount);
+}
 export function getMaximumPossibleNumberOfPledgers(fundingGoal) {
   return Math.floor(fundingGoal / minimumPossiblePledgeAmount);
 }

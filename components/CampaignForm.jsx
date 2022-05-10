@@ -1,7 +1,8 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import {
-  maximumCampaignAmount,
   minimumCampaignAmount,
+  maximumCampaignAmount,
+  getMinimumPossibleNumberOfPledgers,
   getMaximumPossibleNumberOfPledgers,
   getPledgeAmountPlusProcessing,
   getAmountAfterProcessing,
@@ -88,6 +89,14 @@ export default function CampaignForm({ isExample = false }) {
     currentNumberOfPledgers,
   ]);
 
+  const [minimumPossibleNumberOfPledgers, setMinimumPossibleNumberOfPledgers] =
+    useState(1);
+  useEffect(() => {
+    setMinimumPossibleNumberOfPledgers(
+      getMinimumPossibleNumberOfPledgers(fundingGoal)
+    );
+  }, [fundingGoal]);
+
   const [maximumPossibleNumberOfPledgers, setMaximumPossibleNumberOfPledgers] =
     useState(defaultFundingGoal);
   useEffect(() => {
@@ -99,11 +108,16 @@ export default function CampaignForm({ isExample = false }) {
   useLayoutEffect(() => {
     if (minimumNumberOfPledgers > maximumPossibleNumberOfPledgers) {
       setMinimumNumberOfPledgers(maximumPossibleNumberOfPledgers);
+    } else if (minimumNumberOfPledgers < minimumPossibleNumberOfPledgers) {
+      setMinimumNumberOfPledgers(minimumPossibleNumberOfPledgers);
     }
+
     if (currentNumberOfPledgers > maximumPossibleNumberOfPledgers) {
       setCurrentNumberOfPledgers(maximumPossibleNumberOfPledgers);
+    } else if (currentNumberOfPledgers < minimumPossibleNumberOfPledgers) {
+      setCurrentNumberOfPledgers(minimumPossibleNumberOfPledgers);
     }
-  }, [maximumPossibleNumberOfPledgers]);
+  }, [minimumPossibleNumberOfPledgers, maximumPossibleNumberOfPledgers]);
 
   const [pennyseedFee, setPennyseedFee] = useState(0);
   useEffect(() => {
@@ -326,6 +340,7 @@ export default function CampaignForm({ isExample = false }) {
                   min="1"
                   step="1"
                   value={minimumNumberOfPledgers}
+                  min={minimumPossibleNumberOfPledgers}
                   max={maximumPossibleNumberOfPledgers}
                   onInput={(e) =>
                     setMinimumNumberOfPledgers(Number(e.target.value))
@@ -333,7 +348,9 @@ export default function CampaignForm({ isExample = false }) {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                  must be between 1 and {maximumPossibleNumberOfPledgers}
+                  must be between{' '}
+                  {minimumPossibleNumberOfPledgers.toLocaleString()} and{' '}
+                  {maximumPossibleNumberOfPledgers.toLocaleString()}
                 </p>
               </div>
 
