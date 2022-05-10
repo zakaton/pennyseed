@@ -4,12 +4,9 @@
 
 @layer base {
   .style-links a {
-    @apply underline text-yellow-600;
+    @apply text-yellow-600 no-underline;
   }
   .style-links a:hover {
     @apply text-yellow-500;
-  }
-  .style-links a:visited {
-    @apply text-yellow-700;
   }
 }
