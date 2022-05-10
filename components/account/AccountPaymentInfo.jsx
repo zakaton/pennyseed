@@ -1,151 +1,127 @@
-export default function AccountPaymentInfo() {
-  return (
-    <form action="#" method="POST">
-      <div className="shadow sm:overflow-hidden sm:rounded-md">
-        <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
-          <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Payment Info
-            </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Provide basic informtion about the job. Be specific with the job
-              title.
-            </p>
-          </div>
+/* eslint-disable camelcase */
+import { useState, useEffect } from 'react';
+import AddCardModal from './AddCardModal';
+import RemoveCardModal from './RemoveCardModal';
+import AddCardStatusModal from './AddCardStatusModal';
+import getStripePaymentMethods from '../../utils/get-stripe-payment-methods';
 
-          <fieldset>
-            <legend className="text-base font-medium text-gray-900">
-              By Email
-            </legend>
-            <div className="mt-4 space-y-4">
-              <div className="flex items-start">
-                <div className="flex h-5 items-center">
-                  <input
-                    id="comments"
-                    name="comments"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label
-                    htmlFor="comments"
-                    className="font-medium text-gray-700"
-                  >
-                    Comments
-                  </label>
-                  <p className="text-gray-500">
-                    Get notified when someones posts a comment on a posting.
-                  </p>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-start">
-                  <div className="flex h-5 items-center">
-                    <input
-                      id="candidates"
-                      name="candidates"
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="candidates"
-                      className="font-medium text-gray-700"
-                    >
-                      Candidates
-                    </label>
-                    <p className="text-gray-500">
-                      Get notified when a candidate applies for a job.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-start">
-                  <div className="flex h-5 items-center">
-                    <input
-                      id="offers"
-                      name="offers"
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="offers"
-                      className="font-medium text-gray-700"
-                    >
-                      Offers
-                    </label>
-                    <p className="text-gray-500">
-                      Get notified when a candidate accepts or rejects an offer.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </fieldset>
-          <fieldset className="mt-6">
-            <legend className="text-base font-medium text-gray-900">
-              Push Notifications
-            </legend>
-            <p className="text-sm text-gray-500">
-              These are delivered via SMS to your mobile phone.
-            </p>
-            <div className="mt-4 space-y-4">
-              <div className="flex items-center">
-                <input
-                  id="push-everything"
-                  name="push-notifications"
-                  type="radio"
-                  className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                />
-                <label htmlFor="push-everything" className="ml-3">
-                  <span className="block text-sm font-medium text-gray-700">
-                    Everything
-                  </span>
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="push-email"
-                  name="push-notifications"
-                  type="radio"
-                  className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                />
-                <label htmlFor="push-email" className="ml-3">
-                  <span className="block text-sm font-medium text-gray-700">
-                    Same as email
-                  </span>
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="push-nothing"
-                  name="push-notifications"
-                  type="radio"
-                  className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                />
-                <label htmlFor="push-nothing" className="ml-3">
-                  <span className="block text-sm font-medium text-gray-700">
-                    No push notifications
-                  </span>
-                </label>
-              </div>
-            </div>
-          </fieldset>
+export default function AccountPaymentInfo({ isActive }) {
+  const [showAddCard, setShowAddCard] = useState(false);
+  const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
+  const [stripePaymentMethods, setStripePaymentMethods] = useState(null);
+  useEffect(() => {
+    if (!stripePaymentMethods && isActive) {
+      getStripePaymentMethods().then((data) => {
+        setStripePaymentMethods(data.stripePaymentMethods);
+      });
+    }
+  }, [stripePaymentMethods, isActive]);
+
+  let paymentMethodsContent;
+  if (stripePaymentMethods) {
+    if (stripePaymentMethods.length > 0) {
+      paymentMethodsContent = stripePaymentMethods.map((paymentMethod) => (
+        <div
+          key={paymentMethod.id}
+          className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5"
+        >
+          <dt className="text-sm font-medium text-gray-500 sm:col-span-1">
+            {paymentMethod.card.brand.charAt(0).toUpperCase() +
+              paymentMethod.card.brand.slice(1)}{' '}
+            ending in {paymentMethod.card.last4}
+          </dt>
+          <dd className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+            >
+              view pledges using this card
+            </button>
+          </dd>
+          <dd className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedPaymentMethod(paymentMethod);
+                setShowRemoveCardModal(true);
+              }}
+              className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-2 py-1 text-sm font-medium leading-4 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            >
+              remove card
+            </button>
+          </dd>
         </div>
-        <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-          <button
-            type="submit"
-            className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-offset-2"
-          >
-            Save
-          </button>
+      ));
+    } else {
+      paymentMethodsContent = (
+        <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+          <dt className="text-sm font-medium text-gray-500">
+            No cards available
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-gray-500 sm:col-span-2 sm:mt-0">
+            You need to{' '}
+            <button
+              type="button"
+              onClick={() => setShowAddCard(true)}
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              add a card
+            </button>{' '}
+            in order to pledge to campaigns
+          </dd>
+        </div>
+      );
+    }
+  } else {
+    paymentMethodsContent = (
+      <div className="py-4 text-center sm:py-5">
+        <div className="text-sm font-medium text-gray-500">
+          loading payment info...
         </div>
       </div>
-    </form>
+    );
+  }
+
+  return (
+    <>
+      <AddCardModal open={showAddCard} setOpen={setShowAddCard} />
+      <AddCardStatusModal />
+      <RemoveCardModal
+        open={showRemoveCardModal}
+        setOpen={setShowRemoveCardModal}
+        selectedPaymentMethod={selectedPaymentMethod}
+      />
+      <div className="shadow sm:overflow-hidden sm:rounded-md">
+        <div className="space-y-6 bg-white px-4 pb-1 pt-6 sm:px-6 sm:pt-6">
+          <div className="sm:flex sm:items-center">
+            <div className="sm:flex-auto">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Payment Info
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Add and remove payment methods.
+              </p>
+            </div>
+            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+              <button
+                type="button"
+                onClick={() => setShowAddCard(true)}
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+              >
+                Add card
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-5 border-t border-gray-200">
+            <dl className="sm:divide-y sm:divide-gray-200">
+              {paymentMethodsContent}
+            </dl>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
