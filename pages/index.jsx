@@ -33,7 +33,7 @@ export default function Home() {
         <p>
           Campaigns require a deadline and a minimum number of pledgers; that
           way people know the maximum possible pledge amount{' '}
-          <span className="inline-block font-bold">
+          <span className="font-bold">
             (funding goal) / (minimum number of pledgers)
           </span>
           . Otherwise if you wanted to raise $1,000 and only one person pledged
