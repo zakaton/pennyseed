@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Link from 'next/link';
+import MyLink from '../components/MyLink';
 import { supabase } from '../utils/supabase';
 
 export default function SignIn() {
@@ -93,7 +93,10 @@ export default function SignIn() {
                 className="ml-2 block text-sm text-gray-900"
               >
                 By signing in you agree to the{' '}
-                <Link href="/terms">terms of use</Link>.
+                <MyLink href="/terms" className="font-medium">
+                  terms of use
+                </MyLink>
+                .
               </label>
             </div>
           </div>
