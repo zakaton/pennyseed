@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import {
   maximumCampaignAmount,
   minimumCampaignAmount,
@@ -11,18 +11,28 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function CampaignForm() {
+export default function CampaignForm({ isExample = false }) {
   function formatDateForInput(date) {
     return date.toISOString().slice(0, 16);
   }
+  function formatDollars(dollars) {
+    return dollars.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
 
-  const maxCharacterLimit = 140;
+  const reasonPlaceholder = 'reason';
+  const maxReasonCharacterLimit = 140;
+  const defaultFundingGoal = 1000;
 
-  const [fundingGoal, setFundingGoal] = useState(1000);
-  const [reason, setReason] = useState('reason');
+  const [fundingGoal, setFundingGoal] = useState(defaultFundingGoal);
+  const [reason, setReason] = useState(reasonPlaceholder);
   const [deadline, setDeadline] = useState('');
-  const [minimumNumberOfPledgers, setMinimumNumberOfPledgers] = useState(1000);
-  const [currentNumberOfPledgers, setCurrentNumberOfPledgers] = useState(1000);
+  const [minimumNumberOfPledgers, setMinimumNumberOfPledgers] =
+    useState(defaultFundingGoal);
+  const [currentNumberOfPledgers, setCurrentNumberOfPledgers] =
+    useState(defaultFundingGoal);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -32,11 +42,19 @@ export default function CampaignForm() {
     setDeadline(currentDate);
   }, []);
 
-  const isCampaignSuccessful =
-    currentNumberOfPledgers >= minimumNumberOfPledgers;
-  const pledgeAmount = isCampaignSuccessful
-    ? getPledgeAmountPlusProcessing(fundingGoal, currentNumberOfPledgers)
-    : 0;
+  const [isCampaignSuccessful, setIsCampaignSuccessful] = useState(false);
+  useEffect(() => {
+    setIsCampaignSuccessful(currentNumberOfPledgers >= minimumNumberOfPledgers);
+  }, [currentNumberOfPledgers, minimumNumberOfPledgers]);
+
+  const [pledgeAmount, setPledgeAmount] = useState(1);
+  useEffect(() => {
+    setPledgeAmount(
+      isCampaignSuccessful
+        ? getPledgeAmountPlusProcessing(fundingGoal, currentNumberOfPledgers)
+        : 0
+    );
+  }, [isCampaignSuccessful]);
 
   const pledgeAmountAfterProcessing = isCampaignSuccessful
     ? getAmountAfterProcessing(pledgeAmount)
@@ -45,15 +63,30 @@ export default function CampaignForm() {
     ? pledgeAmountAfterProcessing * currentNumberOfPledgers
     : 0;
 
-  const maximumPossibleNumberOfPledgers =
-    getMaximumPossibleNumberOfPledgers(fundingGoal);
+  const [maximumPossibleNumberOfPledgers, setMaximumPossibleNumberOfPledgers] =
+    useState(defaultFundingGoal);
+
+  useEffect(() => {
+    setMaximumPossibleNumberOfPledgers(
+      getMaximumPossibleNumberOfPledgers(fundingGoal)
+    );
+  }, [fundingGoal]);
+
+  useLayoutEffect(() => {
+    if (minimumNumberOfPledgers > maximumPossibleNumberOfPledgers) {
+      setMinimumNumberOfPledgers(maximumPossibleNumberOfPledgers);
+    }
+    if (currentNumberOfPledgers > maximumPossibleNumberOfPledgers) {
+      setCurrentNumberOfPledgers(maximumPossibleNumberOfPledgers);
+    }
+  }, [maximumPossibleNumberOfPledgers]);
 
   return (
     <div className="bg-white px-4 py-2 shadow sm:rounded-lg sm:p-6">
       <div className="md:grid md:grid-cols-3 md:gap-3">
         <div className="pr-2 md:col-span-1">
           <h3 className="mt-0 mb-2 text-xl font-medium leading-6 text-gray-900">
-            Campaign Example
+            {isExample ? 'Campaign Example' : 'Create Campaign'}
           </h3>
           <p className="text-sm italic text-gray-500">
             See how much your pledgers would pay for a given funding goal
@@ -63,7 +96,8 @@ export default function CampaignForm() {
             <span className="font-medium text-green-500">
               ${fundingGoal.toLocaleString()}
             </span>{' '}
-            for <span className="font-bold">{reason || 'reason'}</span>.
+            for <span className="font-bold">{reason || reasonPlaceholder}</span>
+            .
           </p>
           <p className="m-0 mb-3 text-sm text-gray-500">
             This campaign requires a minimum of{' '}
@@ -98,11 +132,11 @@ export default function CampaignForm() {
               <>
                 each pledger is charged exactly{' '}
                 <span className="font-medium text-green-500">
-                  ${pledgeAmount.toFixed(2).toLocaleString()}
+                  ${formatDollars(pledgeAmount)}
                 </span>{' '}
                 (which is{' '}
                 <span className="font-medium text-green-500">
-                  ${pledgeAmountAfterProcessing.toFixed(2).toLocaleString()}
+                  ${formatDollars(pledgeAmountAfterProcessing)}
                 </span>{' '}
                 after{' '}
                 <span className="font-medium">
@@ -116,7 +150,7 @@ export default function CampaignForm() {
                 </span>
                 ), resulting in{' '}
                 <span className="font-medium text-green-500">
-                  ${netPledgeAmount.toFixed(2).toLocaleString()}
+                  ${formatDollars(netPledgeAmount)}
                 </span>{' '}
                 for me, the campaigner
               </>
@@ -198,7 +232,7 @@ export default function CampaignForm() {
                     const hasDeadlinePassed =
                       newDeadline.getTime() < Date.now();
                     e.target.setCustomValidity(
-                      hasDeadlinePassed ? 'Deadline has already passed' : ''
+                      hasDeadlinePassed ? 'deadline must be a future date' : ''
                     );
                     if (!hasDeadlinePassed) {
                       setDeadline(newDeadline);
@@ -220,16 +254,18 @@ export default function CampaignForm() {
                 </label>
                 <div className="mt-1">
                   <textarea
+                    required
                     rows="3"
                     name="reason"
                     id="reason"
-                    maxLength={maxCharacterLimit}
+                    maxLength={maxReasonCharacterLimit}
                     placeholder={reason}
                     onInput={(e) => setReason(e.target.value)}
                     className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                   />
                   <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                    {reason.length}/{maxCharacterLimit} characters remaining
+                    {reason.length}/{maxReasonCharacterLimit} characters
+                    remaining
                   </p>
                 </div>
               </div>
@@ -265,7 +301,9 @@ export default function CampaignForm() {
                   htmlFor="current-number-of-pledgers"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Final Number of Pledgers
+                  {isExample
+                    ? 'Final Number of Pledgers'
+                    : 'Current Number of Pledgers'}
                 </label>
                 <input
                   type="number"
