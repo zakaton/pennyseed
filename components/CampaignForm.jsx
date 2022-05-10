@@ -337,7 +337,6 @@ export default function CampaignForm({ isExample = false }) {
                   type="number"
                   name="minimum-number-of-pledgers"
                   id="minimum-number-of-pledgers"
-                  min="1"
                   step="1"
                   value={minimumNumberOfPledgers}
                   min={minimumPossibleNumberOfPledgers}
