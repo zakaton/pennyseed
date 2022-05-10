@@ -5,6 +5,8 @@ import {
   getMaximumPossibleNumberOfPledgers,
   getPledgeAmountPlusProcessing,
   getAmountAfterProcessing,
+  getPennyseedFee,
+  getStripeProcessingFee,
 } from '../utils/campaign-calculator';
 
 function classNames(...classes) {
@@ -54,18 +56,40 @@ export default function CampaignForm({ isExample = false }) {
         ? getPledgeAmountPlusProcessing(fundingGoal, currentNumberOfPledgers)
         : 0
     );
-  }, [isCampaignSuccessful]);
+  }, [isCampaignSuccessful, fundingGoal, currentNumberOfPledgers]);
 
-  const pledgeAmountAfterProcessing = isCampaignSuccessful
-    ? getAmountAfterProcessing(pledgeAmount)
-    : 0;
-  const netPledgeAmount = isCampaignSuccessful
-    ? pledgeAmountAfterProcessing * currentNumberOfPledgers
-    : 0;
+  const [pledgeAmountAfterProcessing, setPledgeAmountAfterProcessing] =
+    useState(1);
+  useEffect(() => {
+    setPledgeAmountAfterProcessing(
+      isCampaignSuccessful ? getAmountAfterProcessing(pledgeAmount) : 0
+    );
+  }, [isCampaignSuccessful, pledgeAmount]);
+
+  const [stripeProcessingFee, setStripeProcessingFee] = useState(0);
+  useEffect(() => {
+    setStripeProcessingFee(
+      isCampaignSuccessful
+        ? getStripeProcessingFee(pledgeAmountAfterProcessing)
+        : 0
+    );
+  }, [isCampaignSuccessful, pledgeAmountAfterProcessing]);
+
+  const [netPledgeAmount, setNetPledgeAmount] = useState(1);
+  useEffect(() => {
+    setNetPledgeAmount(
+      isCampaignSuccessful
+        ? pledgeAmountAfterProcessing * currentNumberOfPledgers
+        : 0
+    );
+  }, [
+    isCampaignSuccessful,
+    pledgeAmountAfterProcessing,
+    currentNumberOfPledgers,
+  ]);
 
   const [maximumPossibleNumberOfPledgers, setMaximumPossibleNumberOfPledgers] =
     useState(defaultFundingGoal);
-
   useEffect(() => {
     setMaximumPossibleNumberOfPledgers(
       getMaximumPossibleNumberOfPledgers(fundingGoal)
@@ -80,6 +104,11 @@ export default function CampaignForm({ isExample = false }) {
       setCurrentNumberOfPledgers(maximumPossibleNumberOfPledgers);
     }
   }, [maximumPossibleNumberOfPledgers]);
+
+  const [pennyseedFee, setPennyseedFee] = useState(0);
+  useEffect(() => {
+    setPennyseedFee(getPennyseedFee(pledgeAmountAfterProcessing));
+  }, [pledgeAmountAfterProcessing]);
 
   return (
     <div className="bg-white px-4 py-2 shadow sm:rounded-lg sm:p-6">
@@ -110,7 +139,7 @@ export default function CampaignForm({ isExample = false }) {
             </span>
             .
           </p>
-          <p className="m-0 mb-0 text-sm text-gray-500">
+          <p className="m-0 mb-3 text-sm text-gray-500">
             If there {currentNumberOfPledgers === 1 ? 'is' : 'are'}{' '}
             <span className="font-medium text-yellow-600">
               {currentNumberOfPledgers > 0
@@ -133,32 +162,44 @@ export default function CampaignForm({ isExample = false }) {
                 each pledger is charged exactly{' '}
                 <span className="font-medium text-green-500">
                   ${formatDollars(pledgeAmount)}
-                </span>{' '}
-                (which is{' '}
-                <span className="font-medium text-green-500">
-                  ${formatDollars(pledgeAmountAfterProcessing)}
-                </span>{' '}
-                after{' '}
-                <span className="font-medium">
-                  <a
-                    href="https://stripe.com/pricing"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Stripe&apos;s processing fees
-                  </a>
                 </span>
-                ), resulting in{' '}
-                <span className="font-medium text-green-500">
-                  ${formatDollars(netPledgeAmount)}
-                </span>{' '}
-                for me, the campaigner
               </>
             ) : (
               'nothing happens'
             )}
             .
           </p>
+
+          {isCampaignSuccessful && (
+            <p className="m-0 mb-0 text-sm text-gray-500">
+              This pledge amount results in{' '}
+              <span className="font-medium text-green-500">
+                ${formatDollars(pledgeAmountAfterProcessing)}
+              </span>{' '}
+              after{' '}
+              <span className="font-medium">
+                <a
+                  href="https://stripe.com/pricing"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Stripe&apos;s processing fees
+                </a>{' '}
+                <span className="font-medium text-red-400">
+                  (${formatDollars(stripeProcessingFee)})
+                </span>
+              </span>{' '}
+              and Pennyseed&apos;s 1% fee{' '}
+              <span className="font-medium text-red-400">
+                (${formatDollars(pennyseedFee)})
+              </span>
+              , adding up to{' '}
+              <span className="font-medium text-green-500">
+                ${formatDollars(netPledgeAmount)}
+              </span>{' '}
+              for me, the campaigner
+            </p>
+          )}
         </div>
         <div className="mt-5 md:col-span-2 md:mt-0">
           <form

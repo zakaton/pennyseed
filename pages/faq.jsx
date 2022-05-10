@@ -138,15 +138,16 @@ const faqs = [
     answer: () => (
       <>
         <p>
-          None. If a campaign is successful each pledger pays an equal share of
-          the funding goal, and the campaigner gets exactly how much they asked
-          for; no more, no less.
+          We take 1% of successful campaigns, but the campaigner doesn&apos;t
+          get any less money than they asked for. We do this by pre-calculating
+          our 1% and raising the pledge amount so the final amount is the
+          expected amount.
         </p>
         <p>
-          However, due to{' '}
+          In addition, due to{' '}
           <a href="https://stripe.com/pricing">Stripe&apos;s processing fees</a>{' '}
-          (2.9% + 30¢ per transaction) the user would get less than they asked
-          for.
+          (2.9% + 30¢ per transaction) we raise the pledge amount a little more
+          so the final payment after fees is what&apos;s expected.
         </p>
         <p>
           We fix this problem by raising the pledge amount so the final amount
@@ -350,7 +351,7 @@ export default function FAQ() {
                   </dt>
                   <Disclosure.Panel
                     as="dd"
-                    className="prose mt-2 pr-12 text-base text-gray-500"
+                    className="prose mt-2 text-base text-gray-500"
                   >
                     <faq.answer />
                   </Disclosure.Panel>
