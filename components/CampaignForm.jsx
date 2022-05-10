@@ -157,7 +157,7 @@ export default function CampaignForm({ isExample = false }) {
           </p>
           <p className="m-0 mb-3 text-sm text-gray-500">
             This campaign requires a minimum of{' '}
-            <span className="font-medium text-yellow-600">
+            <span className="font-bold ">
               {minimumNumberOfPledgers.toLocaleString()}
             </span>{' '}
             {minimumNumberOfPledgers === 1 ? 'pledger' : 'pledgers'} by{' '}
@@ -168,7 +168,7 @@ export default function CampaignForm({ isExample = false }) {
           </p>
           <p className="m-0 mb-3 text-sm text-gray-500">
             If there {currentNumberOfPledgers === 1 ? 'is' : 'are'}{' '}
-            <span className="font-medium text-yellow-600">
+            <span className="font-bold">
               {currentNumberOfPledgers > 0
                 ? currentNumberOfPledgers.toLocaleString()
                 : 'no'}
@@ -201,7 +201,7 @@ export default function CampaignForm({ isExample = false }) {
             <p className="m-0 mb-0 text-sm text-gray-500">
               This pledge amount results in{' '}
               <span className="font-medium text-green-500">
-                ${formatDollars(pledgeDollarsMinusStripeFee)}
+                ${formatDollars(pledgeDollarsMinusStripeFee - pennyseedFee)}
               </span>{' '}
               after{' '}
               <span className="font-medium">
@@ -212,12 +212,12 @@ export default function CampaignForm({ isExample = false }) {
                 >
                   Stripe&apos;s processing fees
                 </a>{' '}
-                <span className="font-medium text-red-400">
+                <span className="red font-medium text-red-500">
                   (${formatDollars(stripeFee)})
                 </span>
               </span>{' '}
               and Pennyseed&apos;s 1% fee{' '}
-              <span className="font-medium text-red-400">
+              <span className="font-medium text-red-500">
                 (${formatDollars(pennyseedFee)})
               </span>
               , adding up to{' '}

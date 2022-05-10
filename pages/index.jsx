@@ -33,8 +33,8 @@ export default function Home() {
         <p>
           Campaigns require a deadline and a minimum number of pledgers; that
           way people know the maximum possible pledge amount{' '}
-          <span className="font-bold">
-            (funding goal)/(minimum number of pledgers)
+          <span className="inline-block font-bold">
+            (funding goal) / (minimum number of pledgers)
           </span>
           . Otherwise if you wanted to raise $1,000 and only one person pledged
           before the deadline, then they&apos;d pay $1,000.
@@ -49,15 +49,16 @@ export default function Home() {
           <a href="https://stripe.com/pricing" target="_blank" rel="noreferrer">
             Stripe processing fees
           </a>{' '}
-          <span className="font-bold">(2.9% + $0.30)</span>, so the campaigner
-          gets exactly how much they ask for. For example, if you successfully
-          raise $1,000 with 1,000 pledgers, each pledger won&apos;t actually pay
-          $1, but will pay $1.34, which is $1.00 after processing fees ($0.34).
+          <span className="inline-block">(2.9% + $0.30)</span> and a 1%
+          Pennyseed fee, so the campaigner gets exactly how much they ask for.
+          For example, if you successfully raise $1,000 with 1,000 pledgers,
+          each pledger won&apos;t actually pay $1, but will pay $1.35, which is
+          $1.00 after fees ($0.35).
         </p>
 
         <p>
           Try out the Campaign Example below to see what creating a campaign is
-          like
+          like:
         </p>
 
         <CampaignForm isExample />

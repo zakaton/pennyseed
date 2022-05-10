@@ -4,7 +4,7 @@
 
 @layer base {
   .style-links a {
-    @apply text-yellow-600 underline;
+    @apply underline text-yellow-600;
   }
   .style-links a:hover {
     @apply text-yellow-500;
