@@ -1,18 +1,22 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import {
-  minimumCampaignAmount,
-  maximumCampaignAmount,
+  minimumCampaignDollars,
+  maximumCampaignDollars,
   getMinimumPossibleNumberOfPledgers,
   getMaximumPossibleNumberOfPledgers,
-  getPledgeAmountPlusProcessing,
-  getAmountAfterProcessing,
+  getDollarsMinusStripeFee,
   getPennyseedFee,
-  getStripeProcessingFee,
+  getStripeFee,
+  getPledgeDollars,
+  getPledgeDollarsPlusFees,
 } from '../utils/campaign-calculator';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
+
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export default function CampaignForm({ isExample = false }) {
   function formatDateForInput(date) {
@@ -50,42 +54,56 @@ export default function CampaignForm({ isExample = false }) {
     setIsCampaignSuccessful(currentNumberOfPledgers >= minimumNumberOfPledgers);
   }, [currentNumberOfPledgers, minimumNumberOfPledgers]);
 
-  const [pledgeAmount, setPledgeAmount] = useState(1);
+  const [pledgeDollars, setPledgeDollars] = useState(1);
   useEffect(() => {
-    setPledgeAmount(
-      isCampaignSuccessful
-        ? getPledgeAmountPlusProcessing(fundingGoal, currentNumberOfPledgers)
-        : 0
-    );
+    if (isCampaignSuccessful) {
+      setPledgeDollars(getPledgeDollars(fundingGoal, currentNumberOfPledgers));
+    }
   }, [isCampaignSuccessful, fundingGoal, currentNumberOfPledgers]);
 
-  const [pledgeAmountAfterProcessing, setPledgeAmountAfterProcessing] =
+  const [pledgeDollarsPlusFees, setPledgeDollarsPlusFees] = useState(
+    getPledgeDollarsPlusFees(fundingGoal, currentNumberOfPledgers)
+  );
+  useEffect(() => {
+    if (isCampaignSuccessful) {
+      setPledgeDollarsPlusFees(
+        getPledgeDollarsPlusFees(fundingGoal, currentNumberOfPledgers)
+      );
+    }
+  }, [isCampaignSuccessful, fundingGoal, currentNumberOfPledgers]);
+
+  const [pledgeDollarsMinusStripeFee, setPledgeDollarsMinusStripeFee] =
     useState(1);
   useEffect(() => {
-    setPledgeAmountAfterProcessing(
-      isCampaignSuccessful ? getAmountAfterProcessing(pledgeAmount) : 0
-    );
-  }, [isCampaignSuccessful, pledgeAmount]);
+    if (isCampaignSuccessful) {
+      setPledgeDollarsMinusStripeFee(
+        getDollarsMinusStripeFee(pledgeDollarsPlusFees)
+      );
+    }
+  }, [pledgeDollars, isCampaignSuccessful]);
 
-  const [stripeProcessingFee, setStripeProcessingFee] = useState(0);
+  const [pennyseedFee, setPennyseedFee] = useState(0);
   useEffect(() => {
-    setStripeProcessingFee(
-      isCampaignSuccessful
-        ? getStripeProcessingFee(pledgeAmountAfterProcessing)
-        : 0
-    );
-  }, [isCampaignSuccessful, pledgeAmountAfterProcessing]);
+    setPennyseedFee(getPennyseedFee(pledgeDollars));
+  }, [pledgeDollars]);
 
-  const [netPledgeAmount, setNetPledgeAmount] = useState(1);
+  const [stripeFee, setStripeFee] = useState(0);
   useEffect(() => {
-    setNetPledgeAmount(
-      isCampaignSuccessful
-        ? pledgeAmountAfterProcessing * currentNumberOfPledgers
-        : 0
-    );
+    if (isCampaignSuccessful) {
+      setStripeFee(getStripeFee(pledgeDollarsPlusFees - pennyseedFee));
+    }
+  }, [isCampaignSuccessful, pledgeDollarsPlusFees, pennyseedFee]);
+
+  const [netPledgeDollars, setNetPledgeDollars] = useState(1);
+  useEffect(() => {
+    if (isCampaignSuccessful) {
+      setNetPledgeDollars(
+        (pledgeDollarsMinusStripeFee - pennyseedFee) * currentNumberOfPledgers
+      );
+    }
   }, [
     isCampaignSuccessful,
-    pledgeAmountAfterProcessing,
+    pledgeDollarsMinusStripeFee,
     currentNumberOfPledgers,
   ]);
 
@@ -105,7 +123,7 @@ export default function CampaignForm({ isExample = false }) {
     );
   }, [fundingGoal]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (minimumNumberOfPledgers > maximumPossibleNumberOfPledgers) {
       setMinimumNumberOfPledgers(maximumPossibleNumberOfPledgers);
     } else if (minimumNumberOfPledgers < minimumPossibleNumberOfPledgers) {
@@ -118,11 +136,6 @@ export default function CampaignForm({ isExample = false }) {
       setCurrentNumberOfPledgers(minimumPossibleNumberOfPledgers);
     }
   }, [minimumPossibleNumberOfPledgers, maximumPossibleNumberOfPledgers]);
-
-  const [pennyseedFee, setPennyseedFee] = useState(0);
-  useEffect(() => {
-    setPennyseedFee(getPennyseedFee(pledgeAmountAfterProcessing));
-  }, [pledgeAmountAfterProcessing]);
 
   return (
     <div className="bg-white px-4 py-2 shadow sm:rounded-lg sm:p-6">
@@ -175,7 +188,7 @@ export default function CampaignForm({ isExample = false }) {
               <>
                 each pledger is charged exactly{' '}
                 <span className="font-medium text-green-500">
-                  ${formatDollars(pledgeAmount)}
+                  ${formatDollars(pledgeDollarsPlusFees)}
                 </span>
               </>
             ) : (
@@ -188,7 +201,7 @@ export default function CampaignForm({ isExample = false }) {
             <p className="m-0 mb-0 text-sm text-gray-500">
               This pledge amount results in{' '}
               <span className="font-medium text-green-500">
-                ${formatDollars(pledgeAmountAfterProcessing)}
+                ${formatDollars(pledgeDollarsMinusStripeFee)}
               </span>{' '}
               after{' '}
               <span className="font-medium">
@@ -200,7 +213,7 @@ export default function CampaignForm({ isExample = false }) {
                   Stripe&apos;s processing fees
                 </a>{' '}
                 <span className="font-medium text-red-400">
-                  (${formatDollars(stripeProcessingFee)})
+                  (${formatDollars(stripeFee)})
                 </span>
               </span>{' '}
               and Pennyseed&apos;s 1% fee{' '}
@@ -209,7 +222,7 @@ export default function CampaignForm({ isExample = false }) {
               </span>
               , adding up to{' '}
               <span className="font-medium text-green-500">
-                ${formatDollars(netPledgeAmount)}
+                ${formatDollars(netPledgeDollars)}
               </span>{' '}
               for me, the campaigner
             </p>
@@ -242,8 +255,8 @@ export default function CampaignForm({ isExample = false }) {
                     type="number"
                     name="funding-goal"
                     id="funding-goal"
-                    min={minimumCampaignAmount}
-                    max={maximumCampaignAmount}
+                    min={minimumCampaignDollars}
+                    max={maximumCampaignDollars}
                     value={fundingGoal}
                     inputMode="numeric"
                     step="1"
@@ -264,7 +277,7 @@ export default function CampaignForm({ isExample = false }) {
                   </div>
                 </div>
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                  must be below ${maximumCampaignAmount.toLocaleString()}
+                  must be below ${maximumCampaignDollars.toLocaleString()}
                 </p>
               </div>
 
@@ -375,6 +388,10 @@ export default function CampaignForm({ isExample = false }) {
                   id="current-number-of-pledgers"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />
+                <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
+                  must be below{' '}
+                  {maximumPossibleNumberOfPledgers.toLocaleString()}
+                </p>
               </div>
             </div>
           </form>
