@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../utils/supabase';
@@ -30,13 +31,31 @@ export default async function handler(req, res) {
       case 'account.updated':
         {
           const account = event.data.object;
-          await supabase
+          const { data: profile } = await supabase
             .from('profile')
-            .update({
-              has_completed_onboarding: account.details_submitted,
-              can_create_campaigns: account.charges_enabled,
-            })
-            .eq('stripe_account', account.id);
+            .select('*')
+            .eq('stripe_account', account.id)
+            .single();
+          if (profile) {
+            const has_completed_onboarding = account.details_submitted;
+            const can_create_campaigns = account.charges_enabled;
+            const updates = {};
+            let needsUpdate = false;
+            if (profile.has_completed_onboarding !== has_completed_onboarding) {
+              updates.has_completed_onboarding = has_completed_onboarding;
+              needsUpdate = true;
+            }
+            if (profile.can_create_campaigns !== can_create_campaigns) {
+              updates.can_create_campaigns = can_create_campaigns;
+              needsUpdate = true;
+            }
+            if (needsUpdate) {
+              await supabase
+                .from('profile')
+                .update(updates)
+                .eq('stripe_account', account.id);
+            }
+          }
         }
         break;
       default:
