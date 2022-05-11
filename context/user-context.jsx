@@ -37,7 +37,7 @@ export function UserContextProvider(props) {
       const subscription = supabase
         .from(`profile:id=eq.${user.id}`)
         .on('UPDATE', (payload) => {
-          console.log('updated profile!');
+          console.log('updated profile');
           setUser({ ...user, ...payload.new });
         })
         .subscribe();
