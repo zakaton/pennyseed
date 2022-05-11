@@ -1,23 +1,13 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useUser } from '../../context/user-context';
 import DeleteAccountModal from './DeleteAccountModal';
-import getStripeAccountInfo from '../../utils/get-stripe-account-info';
 import MyLink from '../MyLink';
 
-export default function AccountGeneral({ isActive }) {
+export default function AccountGeneral() {
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
-
-  const [stripeAccountInfo, setStripeAccountInfo] = useState(null);
-  useEffect(() => {
-    if (!stripeAccountInfo && isActive) {
-      getStripeAccountInfo().then((data) => {
-        setStripeAccountInfo(data);
-      });
-    }
-  }, [stripeAccountInfo, isActive]);
 
   return (
     <>
@@ -57,29 +47,25 @@ export default function AccountGeneral({ isActive }) {
                     Can create campaigns?
                   </dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    {stripeAccountInfo ? (
-                      stripeAccountInfo.canCreateCampaigns ? (
-                        'yes'
-                      ) : (
-                        <>
-                          no.{' '}
-                          <MyLink
-                            href="/api/account/stripe-onboarding"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                              Setup your Stripe account
-                            </button>
-                          </MyLink>{' '}
-                          in order to create campaigns.
-                        </>
-                      )
+                    {user.can_create_campaigns ? (
+                      'yes'
                     ) : (
-                      'loading...'
+                      <>
+                        no.{' '}
+                        <MyLink
+                          href="/api/account/stripe-onboarding"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <button
+                            type="button"
+                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            Setup your Stripe account
+                          </button>
+                        </MyLink>{' '}
+                        in order to create campaigns.
+                      </>
                     )}
                   </dd>
                 </div>
@@ -88,33 +74,24 @@ export default function AccountGeneral({ isActive }) {
           )}
         </div>
         <div className="flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
-          {stripeAccountInfo ? (
-            <MyLink
-              href={
-                stripeAccountInfo.hasCompletedOnboarding
-                  ? '/api/account/stripe-dashboard'
-                  : '/api/account/stripe-onboarding'
-              }
-              target="_blank"
-              rel="noreferrer"
-            >
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                {stripeAccountInfo.hasCompletedOnboarding
-                  ? 'Go to Stripe Dashboard'
-                  : 'Setup Stripe Account'}
-              </button>
-            </MyLink>
-          ) : (
+          <MyLink
+            href={
+              user.has_completed_onboarding
+                ? '/api/account/stripe-dashboard'
+                : '/api/account/stripe-onboarding'
+            }
+            target="_blank"
+            rel="noreferrer"
+          >
             <button
               type="button"
               className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              Loading Stripe Info...
+              {user.has_completed_onboarding
+                ? 'Go to Stripe Dashboard'
+                : 'Setup Stripe Account'}
             </button>
-          )}
+          </MyLink>
 
           <button
             type="button"

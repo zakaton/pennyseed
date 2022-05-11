@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import enforceApiRouteSecret from '../../../utils/enforce-api-route-secret';
 import { getSupabaseService } from '../../../utils/supabase';
 
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = getSupabaseService();
 
 // eslint-disable-next-line consistent-return
@@ -11,7 +12,6 @@ export default async function handler(req, res) {
     return;
   }
 
-  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
   const customer = await stripe.customers.create({
     email: req.body.record.email,
   });

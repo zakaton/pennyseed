@@ -348,6 +348,7 @@ export default function CampaignForm({ isExample = false }) {
                 <input
                   required
                   type="number"
+                  inputMode="numeric"
                   name="minimum-number-of-pledgers"
                   id="minimum-number-of-pledgers"
                   step="1"
@@ -377,6 +378,7 @@ export default function CampaignForm({ isExample = false }) {
                 </label>
                 <input
                   type="number"
+                  inputMode="numeric"
                   min="0"
                   step="1"
                   max={fundingGoal * 2}

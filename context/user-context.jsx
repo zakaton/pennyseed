@@ -30,6 +30,24 @@ export function UserContextProvider(props) {
     });
   }, []);
 
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (user) {
+      console.log('subscribing to user updates');
+      const subscription = supabase
+        .from(`profile:id=eq.${user.id}`)
+        .on('UPDATE', (payload) => {
+          console.log('updated profile!');
+          setUser({ ...user, ...payload.new });
+        })
+        .subscribe();
+      return () => {
+        console.log('unsubscribing to user updates');
+        supabase.removeSubscription(subscription);
+      };
+    }
+  }, [user]);
+
   useEffect(() => {
     const session = supabase.auth.session();
     setSession(session);
