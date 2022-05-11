@@ -14,15 +14,22 @@ export default function AccountPaymentInfo({ isActive }) {
   const [showAddCard, setShowAddCard] = useState(false);
   const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [showRemoveCardNotification, setShowRemoveCardNotification] =
+    useState(false);
+  const [removeCardStatusString, setRemoveCardStatusString] =
+    useState('succeeded');
 
   const [stripePaymentMethods, setStripePaymentMethods] = useState(null);
+  const updateStripePaymentMethods = (refresh) => {
+    getStripePaymentMethods(refresh).then((data) => {
+      setStripePaymentMethods(data.stripePaymentMethods);
+    });
+  };
   useEffect(() => {
     if (!stripePaymentMethods && isActive) {
-      getStripePaymentMethods().then((data) => {
-        setStripePaymentMethods(data.stripePaymentMethods);
-      });
+      updateStripePaymentMethods();
     }
-  }, [stripePaymentMethods, isActive]);
+  }, [isActive]);
 
   let paymentMethodsContent;
   if (stripePaymentMethods) {
@@ -109,11 +116,18 @@ export default function AccountPaymentInfo({ isActive }) {
     <>
       <AddCardModal open={showAddCard} setOpen={setShowAddCard} />
       <AddCardStatusNotification />
-      <RemoveCardStatusNotification />
       <RemoveCardModal
         open={showRemoveCardModal}
         setOpen={setShowRemoveCardModal}
         selectedPaymentMethod={selectedPaymentMethod}
+        setShowRemoveCardNotification={setShowRemoveCardNotification}
+        setRemoveCardStatusString={setRemoveCardStatusString}
+        updateStripePaymentMethods={updateStripePaymentMethods}
+      />
+      <RemoveCardStatusNotification
+        open={showRemoveCardNotification}
+        setOpen={setShowRemoveCardNotification}
+        statusString={removeCardStatusString}
       />
       <div className="shadow sm:overflow-hidden sm:rounded-md">
         <div className="space-y-6 bg-white px-4 pb-1 pt-6 sm:px-6 sm:pt-6">

@@ -13,6 +13,10 @@ export default async function handler(req, res) {
     return res.status(400).send("requires a 'paymentMethodId' form field");
   }
 
-  stripe.paymentMethods.detach(req.body.paymentMethodId);
-  res.redirect('/account#payment-info');
+  const paymentMethod = await stripe.paymentMethods.detach(
+    req.body.paymentMethodId
+  );
+
+  const status = paymentMethod.customer == null ? 'succeeded' : 'failed';
+  res.status(200).json({ status });
 }

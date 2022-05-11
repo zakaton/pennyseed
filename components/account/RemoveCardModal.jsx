@@ -7,13 +7,10 @@ export default function RemoveCardModal({
   open,
   setOpen,
   selectedPaymentMethod,
+  setShowRemoveCardNotification,
+  setRemoveCardStatusString,
+  updateStripePaymentMethods,
 }) {
-  /*
-    TODO
-      delete card (don't refresh)
-      add "response" function callback
-      add notification 
-  */
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -96,6 +93,24 @@ export default function RemoveCardModal({
                     <form
                       method="POST"
                       action="/api/account/remove-payment-method"
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        const form = e.target;
+                        const formData = new FormData(form);
+                        const data = new URLSearchParams();
+                        formData.forEach((value, key) => {
+                          data.append(key, value);
+                        });
+                        const response = await fetch(form.action, {
+                          method: 'post',
+                          body: data,
+                        });
+                        const { status } = await response.json();
+                        setRemoveCardStatusString(status);
+                        setShowRemoveCardNotification(true);
+                        updateStripePaymentMethods(true);
+                        setOpen(false);
+                      }}
                     >
                       <input
                         required

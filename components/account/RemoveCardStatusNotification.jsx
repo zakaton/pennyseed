@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Transition } from '@headlessui/react';
 import {
   XIcon,
@@ -12,32 +12,34 @@ const statuses = {
     icon: () => (
       <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
     ),
-    title: 'Successfully Added Card',
-    message: 'Your card has been saved.',
+    title: 'Successfully Removed Card',
+    message: 'Your card has been removed.',
   },
-  processing: {
+  warning: {
     icon: () => (
       <ExclamationCircleIcon
         className="h-6 w-6 text-orange-400"
         aria-hidden="true"
       />
     ),
-    title: 'Processing Payment Details',
-    message: "We'll update you when processing is complete.",
+    title: 'Warning',
+    message: 'warning',
   },
-  requires_payment_method: {
+  failed: {
     icon: () => (
       <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
     ),
-    title: 'Failed to Add Card',
-    message: 'Please try another payment method.',
+    title: 'Failed to Remove Card',
+    message: 'We were unable to remove your card',
   },
 };
 
-export default function RemoveCardStatusNotification() {
-  const [open, setOpen] = useState(false);
-
-  const status = statuses.succeeded;
+export default function RemoveCardStatusNotification({
+  statusString = 'succeeded',
+  open,
+  setOpen,
+}) {
+  const status = statuses[statusString];
 
   return (
     <>
