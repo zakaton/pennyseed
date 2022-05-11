@@ -37,10 +37,9 @@ const statuses = {
   },
 };
 
-export default function AddCardStatusNotification() {
+export default function AddCardStatusNotification({ open, setOpen }) {
   const router = useRouter();
 
-  const [open, setOpen] = useState(false);
   const [statusString, setStatusString] = useState('succeeded');
   const [stripe, setStripe] = useState(null);
   useEffect(() => {
