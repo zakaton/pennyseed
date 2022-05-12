@@ -141,7 +141,7 @@ export default function CampaignForm({ props, isExample = false }) {
     <div {...props} className="px-4 py-2 shadow sm:rounded-lg sm:p-6">
       <div className="py-2 sm:py-0 md:grid md:grid-cols-3 md:gap-3">
         <div className="pr-2 md:col-span-1">
-          <h3 className="mt-0 mb-2 text-xl font-medium leading-6 text-gray-900">
+          <h3 className="mt-0 mb-1 text-xl font-medium leading-6 text-gray-900">
             {isExample ? 'Campaign Example' : 'Create Campaign'}
           </h3>
           <p className="mb-3 text-sm italic text-gray-500">
