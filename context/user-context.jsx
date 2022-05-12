@@ -9,6 +9,7 @@ export function UserContextProvider(props) {
   const [user, setUser] = useState(supabase.auth.user());
   const [session, setSession] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [didDeleteAccount, setDidDeleteAccount] = useState(false);
 
   const updateUserProfile = async () => {
     const user = supabase.auth.user();
@@ -102,7 +103,20 @@ export function UserContextProvider(props) {
     setUser(null);
   };
 
-  const value = { user, session, signOut, isLoading };
+  const deleteAccount = async () => {
+    await fetch('/api/account/delete-account');
+    signOut();
+    setDidDeleteAccount(true);
+  };
+
+  const value = {
+    user,
+    session,
+    signOut,
+    deleteAccount,
+    isLoading,
+    didDeleteAccount,
+  };
 
   return <UserContext.Provider value={value} {...props} />;
 }
