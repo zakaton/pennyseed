@@ -19,6 +19,8 @@ const navigation = [
 ];
 const accountNavigation = [
   { name: 'Account', href: '/account' },
+  { name: 'My Campaigns', href: '/account#my-campaigns' },
+  { name: 'My Pledges', href: '/account#my-pledges' },
   { name: 'Sign Out', href: '/sign-out' },
 ];
 
@@ -101,13 +103,13 @@ export default function Header() {
                             <Menu.Item>
                               {({ active }) => (
                                 <MyLink
-                                  href="#"
+                                  href="/account#notifications"
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
                                     'block px-4 py-2 text-sm text-gray-700'
                                   )}
                                 >
-                                  Notifications
+                                  Set Notifications
                                 </MyLink>
                               )}
                             </Menu.Item>
