@@ -93,6 +93,7 @@ export default function RemoveCardModal({
                     <form
                       method="POST"
                       action="/api/account/remove-payment-method"
+                      className="py-2 sm:py-0"
                       onSubmit={async (e) => {
                         e.preventDefault();
                         const form = e.target;

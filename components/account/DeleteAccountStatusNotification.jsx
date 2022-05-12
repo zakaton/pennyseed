@@ -6,7 +6,7 @@ import {
   XCircleIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/outline';
-import { useUser } from '../context/user-context';
+import { useUser } from '../../context/user-context';
 
 const statuses = {
   succeeded: {

@@ -4,7 +4,7 @@ import Footer from './Footer';
 
 import { useOnline } from '../context/online-context';
 import OfflineBanner from './OfflineBanner';
-import DeleteAccountStatusNotification from './DeleteAccountStatusNotification';
+import DeleteAccountStatusNotification from './account/DeleteAccountStatusNotification';
 
 export default function Layout({ children }) {
   const { online } = useOnline();
