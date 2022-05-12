@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import CampaignForm from '../components/CampaignForm';
 
 export default function CreateCampaign() {
   return (
@@ -13,9 +14,7 @@ export default function CreateCampaign() {
           </span>
         </h1>
       </div>
-      <div className="style-links prose prose-lg mx-auto mt-6 text-gray-500">
-        hello
-      </div>
+      <CampaignForm />
     </>
   );
 }
