@@ -1,6 +1,6 @@
 import { ExclamationIcon } from '@heroicons/react/solid';
 
-export default function CampaignBanner({ children }) {
+export default function WarningBanner({ children }) {
   return (
     <div className="mb-2 rounded-md bg-orange-50 p-4">
       <div className="flex justify-center">
