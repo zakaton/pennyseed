@@ -5,7 +5,7 @@ import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
-  const supabase = getSupabaseService(req);
+  const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
     return res.status(401).send('Unauthorized');
