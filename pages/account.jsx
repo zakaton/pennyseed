@@ -66,7 +66,7 @@ export default function Account() {
     if (!isLoading && !user) {
       router.replace('/sign-in');
     }
-  }, [isLoading]);
+  }, [isLoading, user]);
 
   const [hash, setHash] = useState(router.asPath.split('#')[1] || '');
   useEffect(() => {

@@ -10,24 +10,72 @@ export function UserContextProvider(props) {
   const [session, setSession] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const updateUserProfile = async () => {
-      const sessionUser = supabase.auth.user();
-      if (sessionUser) {
-        const profile = await getUserProfile(sessionUser);
+  const updateUserProfile = async () => {
+    const user = supabase.auth.user();
+    if (user) {
+      const profile = await getUserProfile(user);
 
-        setUser({
-          ...sessionUser,
-          ...profile,
-        });
-      }
-      setIsLoading(false);
-    };
+      setUser({
+        ...user,
+        ...profile,
+      });
+    } else {
+      setUser(null);
+    }
+    setIsLoading(false);
+  };
+
+  const setAuthCookie = async (event, session) => {
+    if (session) {
+      await fetch('/api/account/set-auth-cookie', {
+        method: 'POST',
+        body: JSON.stringify({ event, session }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    const session = supabase.auth.session();
+    setSession(session);
+
     updateUserProfile();
 
-    supabase.auth.onAuthStateChange(() => {
-      updateUserProfile();
-    });
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log(event, session);
+
+        setSession(session);
+        switch (event) {
+          case 'SIGNED_IN':
+            await setAuthCookie(event, session);
+            await updateUserProfile();
+            break;
+          case 'SIGNED_OUT':
+            setUser(null);
+            break;
+          case 'TOKEN_REFRESHED':
+            await setAuthCookie(event, session);
+            await updateUserProfile();
+            break;
+          case 'USER_UPDATED':
+            // await updateUserProfile();
+            break;
+          case 'USER_DELETED':
+            setUser(null);
+            break;
+          default:
+            console.log(`uncaught event "${event}"`);
+            break;
+        }
+      }
+    );
+
+    return () => {
+      authListener?.unsubscribe();
+    };
   }, []);
 
   // eslint-disable-next-line consistent-return
@@ -47,28 +95,6 @@ export function UserContextProvider(props) {
       };
     }
   }, [user]);
-
-  useEffect(() => {
-    const session = supabase.auth.session();
-    setSession(session);
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        await fetch('/api/account/set-auth-cookie', {
-          method: 'POST',
-          body: JSON.stringify({ event, session }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-      }
-    );
-
-    return () => {
-      authListener?.unsubscribe();
-    };
-  }, []);
 
   const signOut = async () => {
     await supabase.auth.signOut();

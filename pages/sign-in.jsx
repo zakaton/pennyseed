@@ -16,7 +16,7 @@ export default function SignIn() {
     if (!isLoading && user) {
       router.replace('/account');
     }
-  }, [isLoading]);
+  }, [isLoading, user]);
 
   async function signIn() {
     if (!(email && agree)) {
