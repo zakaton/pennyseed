@@ -1,11 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import MyLink from '../components/MyLink';
 import { supabase } from '../utils/supabase';
+import { useUser } from '../context/user-context';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [agree, setAgree] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const router = useRouter();
+  const { isLoading, user } = useUser();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace('/account');
+    }
+  }, [isLoading]);
 
   async function signIn() {
     if (!(email && agree)) {
