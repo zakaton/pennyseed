@@ -9,7 +9,10 @@ import {
   getStripeFee,
   getPledgeDollars,
   getPledgeDollarsPlusFees,
-} from '../utils/campaign-calculator';
+} from '../../utils/campaign-calculator';
+
+import { useUser } from '../../context/user-context';
+import MyLink from '../MyLink';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -19,6 +22,16 @@ const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export default function CampaignForm({ props, isExample = false }) {
+  const { isLoading, user } = useUser();
+  const [canCreateCampaign, setCanCreateCampaign] = useState(false);
+  useEffect(() => {
+    if (!isLoading) {
+      if (user?.can_create_campaigns && !user?.has_active_campaign) {
+        setCanCreateCampaign(true);
+      }
+    }
+  }, [isLoading, user]);
+
   function formatDateForInput(date) {
     return date.toISOString().slice(0, 16);
   }
@@ -138,14 +151,16 @@ export default function CampaignForm({ props, isExample = false }) {
   }, [minimumPossibleNumberOfPledgers, maximumPossibleNumberOfPledgers]);
 
   return (
-    <div {...props} className="px-4 py-2 shadow sm:rounded-lg sm:p-6">
-      <div className="py-2 sm:py-0 md:grid md:grid-cols-3 md:gap-3">
+    <div {...props} className="style-links shadow sm:rounded-lg">
+      <div className="py-3 px-5 pb-5 sm:py-4 sm:pb-5 md:grid md:grid-cols-3 md:gap-3">
         <div className="pr-2 md:col-span-1">
           <h3 className="mt-0 mb-1 text-xl font-medium leading-6 text-gray-900">
             {isExample ? 'Campaign Example' : 'Create Campaign'}
           </h3>
           <p className="mb-3 text-sm italic text-gray-500">
-            See how much your pledgers would pay for a given funding goal
+            {isExample
+              ? 'See how much your pledgers would pay for a given funding goal'
+              : 'Fill all the required fields and click "Create Campaign" below.'}
           </p>
           <p className="mt-1 mb-3 text-sm text-gray-500">
             I am raising{' '}
@@ -230,9 +245,11 @@ export default function CampaignForm({ props, isExample = false }) {
         </div>
         <div className="mt-5 md:col-span-2 md:mt-0">
           <form
+            id="createCampaignForm"
             onSubmit={(e) => {
               e.preventDefault();
               e.target.reportValidity();
+              // FILL - fetch and redirect to newly created campaign
             }}
             onInput={(e) => {
               e.target.reportValidity();
@@ -395,10 +412,51 @@ export default function CampaignForm({ props, isExample = false }) {
                   {maximumPossibleNumberOfPledgers.toLocaleString()}
                 </p>
               </div>
+
+              <div className="col-span-6">
+                <div className="relative flex items-start">
+                  <div className="flex h-5 items-center">
+                    <input
+                      required
+                      id="terms-of-use"
+                      aria-describedby="terms-of-use-description"
+                      name="terms-of-use"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label
+                      htmlFor="terms-of-use"
+                      className="font-medium text-gray-700"
+                    >
+                      I agree{' '}
+                    </label>
+                    <span
+                      id="terms-of-use-description"
+                      className="text-gray-500"
+                    >
+                      <span className="sr-only">I agree </span> to the{' '}
+                      <MyLink href="/terms">terms of use</MyLink>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </form>
         </div>
       </div>
+      {!isExample && canCreateCampaign && (
+        <div className="mt-1 flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
+          <button
+            type="submit"
+            form="createCampaignForm"
+            className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+          >
+            Create Campaign
+          </button>
+        </div>
+      )}
     </div>
   );
 }

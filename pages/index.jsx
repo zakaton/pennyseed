@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import CampaignForm from '../components/CampaignForm';
+import CampaignForm from '../components/campaign/CampaignForm';
 import MyLink from '../components/MyLink';
 
 export default function Home() {
@@ -56,7 +56,7 @@ export default function Home() {
           $1.00 after fees ($0.35).
         </p>
 
-        <p>
+        <p className="mb-6">
           Try out the Campaign Example below to see what creating a campaign is
           like:
         </p>

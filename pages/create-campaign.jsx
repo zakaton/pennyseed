@@ -1,15 +1,14 @@
 import Head from 'next/head';
-import CampaignForm from '../components/CampaignForm';
-import WarningBanner from '../components/WarningBanner';
+import CampaignForm from '../components/campaign/CampaignForm';
+import CampaignWarningBanner from '../components/campaign/CampaignWarningBanner';
 
 export default function CreateCampaign() {
-  const error = true;
   return (
     <>
       <Head>
         <title>Create Campaign - Pennyseed</title>
       </Head>
-      {error && <WarningBanner>hello</WarningBanner>}
+      <CampaignWarningBanner />
       <CampaignForm />
     </>
   );
