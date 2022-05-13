@@ -269,11 +269,10 @@ export default function CampaignForm({ props, isExample = false }) {
                 });
                 const { campaignId, error } = await response.json();
                 if (!error) {
-                  console.log(campaignId);
-                  return;
                   router.push(`/campaign/${campaignId}`);
+                } else {
+                  console.log(error);
                 }
-                console.log(error);
               }
             }}
             onInput={(e) => {
@@ -435,7 +434,7 @@ export default function CampaignForm({ props, isExample = false }) {
                 >
                   {isExample
                     ? 'Final Number of Pledgers'
-                    : 'Current Number of Pledgers'}
+                    : 'Hypothetical Final Number of Pledgers'}
                 </label>
                 <input
                   type="number"

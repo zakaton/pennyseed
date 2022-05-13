@@ -10,7 +10,7 @@ import {
 } from '../../../utils/campaign-utils';
 
 export default async function handler(req, res) {
-  const supabase = getSupabaseService(req);
+  const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
     return res.status(401).send('Unauthorized');
@@ -36,12 +36,6 @@ export default async function handler(req, res) {
     const maximumPossibleNumberOfPledgers =
       getMaximumPossibleNumberOfPledgers(fundingGoal);
 
-    console.log(
-      'minutes away',
-      (deadline.getTime() - Date.now()) / (1000 * 60)
-    );
-
-    console.log(reason, fundingGoal, minimumNumberOfPledgers, deadline);
     let errorMessage;
     if (reason.length === 0) {
       errorMessage = 'campaign must have a reason';
@@ -61,25 +55,32 @@ export default async function handler(req, res) {
       errorMessage = 'user must agree to the terms of use';
     }
 
-    console.log(errorMessage);
-
     if (errorMessage) {
       return res.status(200).json({
         error: errorMessage,
       });
     }
 
-    return res.status(200).json({
-      campaignId: 0,
-    });
-
-    const { data: campaign, error } = await supabase
-      .from('campaign')
-      .insert([{ created_by: profile.id }]);
+    const { data: campaigns, error } = await supabase.from('campaign').insert([
+      {
+        created_by: user.id,
+        reason,
+        funding_goal: fundingGoal,
+        minimum_number_of_pledgers: minimumNumberOfPledgers,
+        deadline,
+      },
+    ]);
 
     if (!error) {
+      await supabase
+        .from('profile')
+        .update({
+          has_active_campaign: true,
+        })
+        .eq('id', user.id);
+
       res.status(200).json({
-        campaignId: campaign.id,
+        campaignId: campaigns[0].id,
       });
     } else {
       res.status(200).json({
@@ -87,12 +88,4 @@ export default async function handler(req, res) {
       });
     }
   }
-
-  res.status(200).json({
-    error: `unable to create campaign: ${
-      profile?.can_create_campaigns
-        ? "user hasn't completed their stripe account"
-        : 'user already has an active campaign'
-    }`,
-  });
 }
