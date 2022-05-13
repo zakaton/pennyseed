@@ -11,6 +11,8 @@ export function dollarsToCents(dollars) {
   return Math.round(dollars * 100);
 }
 
+export const maximumCampaignReasonLength = 140;
+
 export const minimumCampaignDollars = 1;
 export const maximumCampaignDollars = 1_000_000_000;
 
@@ -27,6 +29,23 @@ export function getMinimumPossibleNumberOfPledgers(fundingGoal) {
 }
 export function getMaximumPossibleNumberOfPledgers(fundingGoal) {
   return Math.floor(fundingGoal / minimumPossiblePledgeDollars);
+}
+
+export const defaultLocale = 'en-us';
+
+export function formatDollars(dollars) {
+  return dollars.toLocaleString(defaultLocale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    style: 'currency',
+    currency: 'USD',
+  });
+}
+
+export const defaultMinutesAway = 30;
+
+export function formatDateForInput(date) {
+  return date.toISOString().slice(0, 16);
 }
 
 export function getPennyseedFee(dollars) {

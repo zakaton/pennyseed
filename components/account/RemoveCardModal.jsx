@@ -103,7 +103,7 @@ export default function RemoveCardModal({
                           data.append(key, value);
                         });
                         const response = await fetch(form.action, {
-                          method: 'post',
+                          method: form.method,
                           body: data,
                         });
                         const { status } = await response.json();

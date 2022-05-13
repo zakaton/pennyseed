@@ -1,4 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
+import { useRouter } from 'next/router';
+
 import {
   minimumCampaignDollars,
   maximumCampaignDollars,
@@ -9,7 +11,12 @@ import {
   getStripeFee,
   getPledgeDollars,
   getPledgeDollarsPlusFees,
-} from '../../utils/campaign-calculator';
+  maximumCampaignReasonLength,
+  formatDollars,
+  formatDateForInput,
+  defaultLocale,
+  defaultMinutesAway,
+} from '../../utils/campaign-utils';
 
 import { useUser } from '../../context/user-context';
 import MyLink from '../MyLink';
@@ -22,33 +29,28 @@ const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export default function CampaignForm({ props, isExample = false }) {
+  const router = useRouter();
+
   const { isLoading, user } = useUser();
   const [canCreateCampaign, setCanCreateCampaign] = useState(false);
   useEffect(() => {
     if (!isLoading) {
-      if (user?.can_create_campaigns && !user?.has_active_campaign) {
+      if (
+        !isExample &&
+        user?.can_create_campaigns &&
+        !user?.has_active_campaign
+      ) {
         setCanCreateCampaign(true);
       }
     }
   }, [isLoading, user]);
 
-  function formatDateForInput(date) {
-    return date.toISOString().slice(0, 16);
-  }
-  function formatDollars(dollars) {
-    return dollars.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
   const reasonPlaceholder = 'reason';
-  const maxReasonCharacterLimit = 140;
   const defaultFundingGoal = 1000;
 
   const [fundingGoal, setFundingGoal] = useState(defaultFundingGoal);
   const [reason, setReason] = useState(reasonPlaceholder);
-  const [deadline, setDeadline] = useState('');
+  const [deadline, setDeadline] = useState(null);
   const [minimumNumberOfPledgers, setMinimumNumberOfPledgers] =
     useState(defaultFundingGoal);
   const [currentNumberOfPledgers, setCurrentNumberOfPledgers] =
@@ -56,10 +58,13 @@ export default function CampaignForm({ props, isExample = false }) {
 
   useEffect(() => {
     const currentDate = new Date();
-    currentDate.setMinutes(
-      currentDate.getMinutes() - currentDate.getTimezoneOffset() + 30
+    const defaultFutureDate = new Date();
+    defaultFutureDate.setMinutes(
+      currentDate.getMinutes() -
+        currentDate.getTimezoneOffset() +
+        defaultMinutesAway
     );
-    setDeadline(currentDate);
+    setDeadline(defaultFutureDate);
   }, []);
 
   const [isCampaignSuccessful, setIsCampaignSuccessful] = useState(false);
@@ -158,14 +163,14 @@ export default function CampaignForm({ props, isExample = false }) {
             {isExample ? 'Campaign Example' : 'Create Campaign'}
           </h3>
           <p className="mb-3 text-sm italic text-gray-500">
-            {isExample
-              ? 'See how much your pledgers would pay for a given funding goal'
-              : 'Fill all the required fields and click "Create Campaign" below.'}
+            {canCreateCampaign
+              ? 'Fill all the required fields and click "Create Campaign" below. You cannot edit your campaign after it\'s created.'
+              : 'See how much your pledgers would pay for a given funding goal'}
           </p>
           <p className="mt-1 mb-3 text-sm text-gray-500">
             I am raising{' '}
             <span className="font-medium text-green-500">
-              ${fundingGoal.toLocaleString()}
+              {formatDollars(fundingGoal)}
             </span>{' '}
             for <span className="font-bold">{reason || reasonPlaceholder}</span>
             .
@@ -173,11 +178,11 @@ export default function CampaignForm({ props, isExample = false }) {
           <p className="m-0 mb-3 text-sm text-gray-500">
             This campaign requires a minimum of{' '}
             <span className="font-bold ">
-              {minimumNumberOfPledgers.toLocaleString()}
+              {minimumNumberOfPledgers.toLocaleString(defaultLocale)}
             </span>{' '}
             {minimumNumberOfPledgers === 1 ? 'pledger' : 'pledgers'} by{' '}
             <span className="font-bold">
-              {deadline && deadline.toLocaleString()}
+              {deadline && deadline.toLocaleString(defaultLocale)}
             </span>
             .
           </p>
@@ -185,7 +190,7 @@ export default function CampaignForm({ props, isExample = false }) {
             If there {currentNumberOfPledgers === 1 ? 'is' : 'are'}{' '}
             <span className="font-bold">
               {currentNumberOfPledgers > 0
-                ? currentNumberOfPledgers.toLocaleString()
+                ? currentNumberOfPledgers.toLocaleString(defaultLocale)
                 : 'no'}
             </span>{' '}
             {currentNumberOfPledgers === 1 ? 'pledger' : 'pledgers'} when the
@@ -203,7 +208,7 @@ export default function CampaignForm({ props, isExample = false }) {
               <>
                 each pledger is charged exactly{' '}
                 <span className="font-medium text-green-500">
-                  ${formatDollars(pledgeDollarsPlusFees)}
+                  {formatDollars(pledgeDollarsPlusFees)}
                 </span>
               </>
             ) : (
@@ -216,7 +221,7 @@ export default function CampaignForm({ props, isExample = false }) {
             <p className="m-0 mb-0 text-sm text-gray-500">
               This pledge amount results in{' '}
               <span className="font-medium text-green-500">
-                ${formatDollars(pledgeDollarsMinusStripeFee - pennyseedFee)}
+                {formatDollars(pledgeDollarsMinusStripeFee - pennyseedFee)}
               </span>{' '}
               after{' '}
               <span className="font-medium">
@@ -228,16 +233,16 @@ export default function CampaignForm({ props, isExample = false }) {
                   Stripe&apos;s processing fees
                 </a>{' '}
                 <span className="red font-medium text-red-500">
-                  (${formatDollars(stripeFee)})
+                  ({formatDollars(stripeFee)})
                 </span>
               </span>{' '}
               and Pennyseed&apos;s 1% fee{' '}
               <span className="font-medium text-red-500">
-                (${formatDollars(pennyseedFee)})
+                ({formatDollars(pennyseedFee)})
               </span>
               , adding up to{' '}
               <span className="font-medium text-green-500">
-                ${formatDollars(netPledgeDollars)}
+                {formatDollars(netPledgeDollars)}
               </span>{' '}
               for me, the campaigner
             </p>
@@ -245,11 +250,31 @@ export default function CampaignForm({ props, isExample = false }) {
         </div>
         <div className="mt-5 md:col-span-2 md:mt-0">
           <form
+            method="POST"
+            action="/api/campaign/create-campaign"
             id="createCampaignForm"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              e.target.reportValidity();
-              // FILL - fetch and redirect to newly created campaign
+              const isValid = e.target.reportValidity();
+              if (isValid) {
+                const form = e.target;
+                const formData = new FormData(form);
+                const data = new URLSearchParams();
+                formData.forEach((value, key) => {
+                  data.append(key, value);
+                });
+                const response = await fetch(form.action, {
+                  method: form.method,
+                  body: data,
+                });
+                const { campaignId, error } = await response.json();
+                if (!error) {
+                  console.log(campaignId);
+                  return;
+                  router.push(`/campaign/${campaignId}`);
+                }
+                console.log(error);
+              }
             }}
             onInput={(e) => {
               e.target.reportValidity();
@@ -258,7 +283,7 @@ export default function CampaignForm({ props, isExample = false }) {
             <div className="grid grid-cols-6 gap-4">
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  htmlFor="funding-goal"
+                  htmlFor="fundingGoal"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Funding Goal
@@ -270,8 +295,8 @@ export default function CampaignForm({ props, isExample = false }) {
                   <input
                     required
                     type="number"
-                    name="funding-goal"
-                    id="funding-goal"
+                    name="fundingGoal"
+                    id="fundingGoal"
                     min={minimumCampaignDollars}
                     max={maximumCampaignDollars}
                     value={fundingGoal}
@@ -282,25 +307,26 @@ export default function CampaignForm({ props, isExample = false }) {
                     }}
                     className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                     placeholder={fundingGoal}
-                    aria-describedby="funding-goal-currency"
+                    aria-describedby="fundingGoal-currency"
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <span
                       className="text-gray-500 sm:text-sm"
-                      id="funding-goal-currency"
+                      id="fundingGoal-currency"
                     >
                       USD
                     </span>
                   </div>
                 </div>
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                  must be below ${maximumCampaignDollars.toLocaleString()}
+                  must be below{' '}
+                  {maximumCampaignDollars.toLocaleString(defaultLocale)}
                 </p>
               </div>
 
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  htmlFor="deadline"
+                  htmlFor="deadline-local"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Deadline
@@ -308,9 +334,9 @@ export default function CampaignForm({ props, isExample = false }) {
                 <input
                   required
                   type="datetime-local"
-                  name="deadline"
-                  id="deadline"
-                  value={deadline && formatDateForInput(deadline)}
+                  name="deadline-local"
+                  id="deadline-local"
+                  value={deadline ? formatDateForInput(deadline) : ''}
                   onInput={(e) => {
                     const newDeadline = new Date(e.target.value);
                     e.target.value = formatDateForInput(newDeadline);
@@ -328,6 +354,19 @@ export default function CampaignForm({ props, isExample = false }) {
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
                   must be a future date
                 </p>
+                <input
+                  required
+                  readOnly
+                  name="deadline"
+                  id="deadline"
+                  value={
+                    deadline
+                      ? deadline.getTime() +
+                        deadline.getTimezoneOffset() * 60 * 1000
+                      : ''
+                  }
+                  className="hidden"
+                />
               </div>
 
               <div className="col-span-6">
@@ -343,13 +382,13 @@ export default function CampaignForm({ props, isExample = false }) {
                     rows="3"
                     name="reason"
                     id="reason"
-                    maxLength={maxReasonCharacterLimit}
+                    maxLength={maximumCampaignReasonLength}
                     placeholder={reason}
                     onInput={(e) => setReason(e.target.value)}
                     className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                   />
                   <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                    {reason.length}/{maxReasonCharacterLimit} characters
+                    {reason.length}/{maximumCampaignReasonLength} characters
                     remaining
                   </p>
                 </div>
@@ -357,7 +396,7 @@ export default function CampaignForm({ props, isExample = false }) {
 
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  htmlFor="minimum-number-of-pledgers"
+                  htmlFor="minimumNumberOfPledgers"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Minimum Number of Pledgers
@@ -366,8 +405,8 @@ export default function CampaignForm({ props, isExample = false }) {
                   required
                   type="number"
                   inputMode="numeric"
-                  name="minimum-number-of-pledgers"
-                  id="minimum-number-of-pledgers"
+                  name="minimumNumberOfPledgers"
+                  id="minimumNumberOfPledgers"
                   step="1"
                   value={minimumNumberOfPledgers}
                   min={minimumPossibleNumberOfPledgers}
@@ -379,8 +418,13 @@ export default function CampaignForm({ props, isExample = false }) {
                 />
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
                   must be between{' '}
-                  {minimumPossibleNumberOfPledgers.toLocaleString()} and{' '}
-                  {maximumPossibleNumberOfPledgers.toLocaleString()}
+                  {minimumPossibleNumberOfPledgers.toLocaleString(
+                    defaultLocale
+                  )}{' '}
+                  and{' '}
+                  {maximumPossibleNumberOfPledgers.toLocaleString(
+                    defaultLocale
+                  )}
                 </p>
               </div>
 
@@ -409,44 +453,48 @@ export default function CampaignForm({ props, isExample = false }) {
                 />
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
                   must be below{' '}
-                  {maximumPossibleNumberOfPledgers.toLocaleString()}
+                  {maximumPossibleNumberOfPledgers.toLocaleString(
+                    defaultLocale
+                  )}
                 </p>
               </div>
 
-              <div className="col-span-6">
-                <div className="relative flex items-start">
-                  <div className="flex h-5 items-center">
-                    <input
-                      required
-                      id="terms-of-use"
-                      aria-describedby="terms-of-use-description"
-                      name="terms-of-use"
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="terms-of-use"
-                      className="font-medium text-gray-700"
-                    >
-                      I agree{' '}
-                    </label>
-                    <span
-                      id="terms-of-use-description"
-                      className="text-gray-500"
-                    >
-                      <span className="sr-only">I agree </span> to the{' '}
-                      <MyLink href="/terms">terms of use</MyLink>
-                    </span>
+              {canCreateCampaign && (
+                <div className="col-span-6">
+                  <div className="relative flex items-start">
+                    <div className="flex h-5 items-center">
+                      <input
+                        required
+                        id="agreeToTermsOfUse"
+                        aria-describedby="agreeToTermsOfUse-description"
+                        name="agreeToTermsOfUse"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                      />
+                    </div>
+                    <div className="ml-3 text-sm">
+                      <label
+                        htmlFor="agreeToTermsOfUse"
+                        className="font-medium text-gray-700"
+                      >
+                        I agree{' '}
+                      </label>
+                      <span
+                        id="agreeToTermsOfUse-description"
+                        className="text-gray-500"
+                      >
+                        <span className="sr-only">I agree </span> to the{' '}
+                        <MyLink href="/terms">terms of use</MyLink>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </form>
         </div>
       </div>
-      {!isExample && canCreateCampaign && (
+      {canCreateCampaign && (
         <div className="mt-1 flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
           <button
             type="submit"
