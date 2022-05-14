@@ -42,10 +42,16 @@ const warnings = {
       .
     </span>
   ),
-  hasActiveCampaign: () => (
+  hasActiveCampaign: ({ activeCampaignId }) => (
     <span>
-      You already have an active campaign. You must wait for it to finish or
-      cancel it before you can create another.
+      You already have an{' '}
+      <MyLink href={`/campaign/${activeCampaignId}`}>
+        <button type="button" className="font-medium underline">
+          active campaign
+        </button>
+      </MyLink>
+      . You must wait for it to finish or cancel it before you can create
+      another.
     </span>
   ),
 };
@@ -83,7 +89,7 @@ export default function CampaignWarningBanner({ isCreatingCampaign }) {
           </div>
           <div className="ml-3">
             <h3 className="text-sm font-medium text-red-800">
-              {Warning && <Warning />}
+              {Warning && <Warning activeCampaignId={user.active_campaign} />}
             </h3>
           </div>
         </div>

@@ -2,6 +2,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Campaign404 from '../../components/campaign/Campaign404';
 import { supabase } from '../../utils/supabase';
 
 export default function Campaign() {
@@ -51,14 +52,20 @@ export default function Campaign() {
       <Head>
         <title>Campaign - Pennyseed</title>
       </Head>
-      <div className="style-links mx-auto max-w-prose text-lg">
-        <h1>
-          <span className="mt-2 block text-center text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-            Campaign
-          </span>
-        </h1>
-      </div>
-      {isGettingCampaign && <div>getting campaign...</div>}
+      {isGettingCampaign && (
+        <div className="style-links prose prose-lg mx-auto mt-6 text-center text-xl text-gray-500">
+          <p>Loading campaign...</p>
+        </div>
+      )}
+
+      {!isGettingCampaign &&
+        (campaign ? (
+          <div className="style-links prose prose-lg mx-auto mt-6 text-xl text-gray-500">
+            <p>My Campaign!</p>
+          </div>
+        ) : (
+          <Campaign404 />
+        ))}
     </>
   );
 }
