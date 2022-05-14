@@ -13,6 +13,7 @@ export default function AccountCampaigns({ isActive }) {
   const [campaigns, setCampaigns] = useState(null);
 
   const getCampaigns = async () => {
+    // eslint-disable-next-line no-shadow
     const { data: campaigns } = await supabase
       .from('campaign')
       .select('*')
@@ -51,6 +52,15 @@ export default function AccountCampaigns({ isActive }) {
     useState('succeeded');
   const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
     useState(false);
+
+  const removeNotifications = () => {
+    setShowDeleteCampaignNotification(false);
+  };
+  useEffect(() => {
+    if (!isActive) {
+      removeNotifications();
+    }
+  }, [isActive]);
 
   let campaignsContent;
   if (isLoading || isGettingCampaigns) {
@@ -150,7 +160,7 @@ export default function AccountCampaigns({ isActive }) {
           </div>
 
           <div className="mt-8 flex flex-col">
-            <div className="overflow-x-auto -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle">
                 <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
                   <table className="min-w-full divide-y divide-gray-300">

@@ -12,6 +12,7 @@ export default function Campaign() {
   const [campaign, setCampaign] = useState(null);
 
   const getCampaign = async () => {
+    // eslint-disable-next-line no-shadow
     const { data: campaign } = await supabase
       .from('campaign')
       .select('*')
@@ -57,7 +58,7 @@ export default function Campaign() {
           </span>
         </h1>
       </div>
-      <div className="style-links prose prose-lg mx-auto mt-6 text-gray-500" />
+      {isGettingCampaign && <div>getting campaign...</div>}
     </>
   );
 }
