@@ -33,10 +33,10 @@ export function getMaximumPossibleNumberOfPledgers(fundingGoal) {
 
 export const defaultLocale = 'en-us';
 
-export function formatDollars(dollars) {
+export function formatDollars(dollars, useDecimals = true) {
   return dollars.toLocaleString(defaultLocale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: useDecimals ? 2 : 0,
+    maximumFractionDigits: useDecimals ? 2 : 0,
     style: 'currency',
     currency: 'USD',
   });

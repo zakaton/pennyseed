@@ -170,7 +170,7 @@ export default function CampaignForm({ props, isExample = false }) {
           <p className="mt-1 mb-3 text-sm text-gray-500">
             I am raising{' '}
             <span className="font-medium text-green-500">
-              {formatDollars(fundingGoal)}
+              {formatDollars(fundingGoal, false)}
             </span>{' '}
             for <span className="font-bold">{reason || reasonPlaceholder}</span>
             .
@@ -182,7 +182,7 @@ export default function CampaignForm({ props, isExample = false }) {
             </span>{' '}
             {minimumNumberOfPledgers === 1 ? 'pledger' : 'pledgers'} by{' '}
             <span className="font-bold">
-              {deadline && deadline.toLocaleString(defaultLocale)}
+              {deadline && deadline.toLocaleString()}
             </span>
             .
           </p>
@@ -318,8 +318,7 @@ export default function CampaignForm({ props, isExample = false }) {
                   </div>
                 </div>
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                  must be below{' '}
-                  {maximumCampaignDollars.toLocaleString(defaultLocale)}
+                  must be below {formatDollars(maximumCampaignDollars, false)}
                 </p>
               </div>
 

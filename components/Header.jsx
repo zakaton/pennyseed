@@ -82,7 +82,8 @@ export default function Header() {
                 {!isLoading &&
                   (user ? (
                     <>
-                      <Menu as="div" className="relative z-10 ml-3">
+                      {/* Notifications Dropdown */}
+                      <Menu hidden as="div" className="relative z-10 ml-3">
                         <div>
                           <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
                             <span className="sr-only">View notifications</span>

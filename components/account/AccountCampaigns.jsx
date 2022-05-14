@@ -1,42 +1,134 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MyLink from '../MyLink';
 import DeleteCampaignModal from './DeleteCampaignModal';
+import { supabase } from '../../utils/supabase';
+import { useUser } from '../../context/user-context';
+import { formatDollars } from '../../utils/campaign-utils';
+import DeleteCampaignStatusNotification from './DeleteCampaignStatusNotification';
 
-const campaigns = [
-  {
-    reason: 'Need money plox',
-    goal: '$1,000',
-    deadline: 'Feb 27',
-    approved: 'yes',
-    minimumNumberOfPledgers: 100,
-    maximumNumberOfPledgers: 1000,
-    currentNumberOfPledgers: 0,
-    succeeded: 'yes',
-  },
-];
-campaigns.forEach((campaign, index) => {
-  // eslint-disable-next-line no-param-reassign
-  campaign.id = index + 1;
-});
-// campaigns.length = 0;
+export default function AccountCampaigns({ isActive }) {
+  const { isLoading, user } = useUser();
 
-export default function AccountCampaigns() {
-  const [showDeleteCampaign, setShowDeleteCampaign] = useState(false);
-  /*
-    TODO
-      fetch campaigns on isActive
-      "getting campaigns..." on loading
-      "no campaigns - create a campaign" if none, or "finish your stripe account" if unable to make campaigns
-  */
+  const [isGettingCampaigns, setIsGettingCampaigns] = useState(true);
+  const [campaigns, setCampaigns] = useState(null);
+
+  const getCampaigns = async () => {
+    const { data: campaigns } = await supabase
+      .from('campaign')
+      .select('*')
+      .eq('created_by', user.id);
+    console.log('setting campaigns', campaigns);
+    setCampaigns(campaigns);
+    setIsGettingCampaigns(false);
+  };
+  useEffect(() => {
+    if (!isLoading && user) {
+      getCampaigns();
+    }
+  }, [isLoading]);
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (campaigns) {
+      console.log('subscribing to campaigns updates');
+      const subscription = supabase
+        .from(`campaign:created_by=eq.${user.id}`)
+        .on('UPDATE', (payload) => {
+          console.log('updated campaigns', payload);
+          // setCampaign({ ...campaign, ...payload.new });
+        })
+        .subscribe();
+      return () => {
+        console.log('unsubscribing to campaign updates');
+        supabase.removeSubscription(subscription);
+      };
+    }
+  }, [campaigns]);
+
+  const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [deleteCampaignStatusString, setDeleteCampaignStatusString] =
+    useState('succeeded');
+  const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
+    useState(false);
+
+  let campaignsContent;
+  if (isLoading || isGettingCampaigns) {
+    campaignsContent = (
+      <tr>
+        <td>getting campaigns...</td>
+      </tr>
+    );
+  } else if (campaigns.length > 0) {
+    campaignsContent = campaigns.map((campaign) => (
+      <tr key={campaign.id}>
+        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+          {campaign.reason}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          {formatDollars(campaign.funding_goal, false)}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          {new Date(campaign.deadline).toLocaleString()}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          {campaign.approved ? 'yes' : 'no'}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          {campaign.number_of_pledgers}/{campaign.minimum_number_of_pledgers}
+        </td>
+        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+          <MyLink
+            href={`/campaign/${campaign.id}`}
+            className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+          >
+            View<span className="sr-only"> campaign</span>
+          </MyLink>
+        </td>
+        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+          <button
+            onClick={() => {
+              setSelectedCampaign(campaign);
+              setShowDeleteCampaignModal(true);
+            }}
+            type="button"
+            className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-2 py-1 text-sm font-medium leading-4 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+          >
+            Delete<span className="sr-only"> campaign</span>
+          </button>
+        </td>
+      </tr>
+    ));
+  } else if (user.can_create_campaigns) {
+    campaignsContent = (
+      <tr>
+        <td>No campaigns. make one please</td>
+      </tr>
+    );
+  } else {
+    campaignsContent = (
+      <tr>
+        <td>You can&apos;t make campaigns yet..</td>
+      </tr>
+    );
+  }
   return (
     <>
       <DeleteCampaignModal
-        open={showDeleteCampaign}
-        setOpen={setShowDeleteCampaign}
+        open={showDeleteCampaignModal}
+        setOpen={setShowDeleteCampaignModal}
+        selectedCampaign={selectedCampaign}
+        setDeleteCampaignStatusString={setDeleteCampaignStatusString}
+        setShowDeleteCampaignNotification={setShowDeleteCampaignNotification}
+      />
+      <DeleteCampaignStatusNotification
+        open={showDeleteCampaignNotification}
+        setOpen={setShowDeleteCampaignNotification}
+        statusString={deleteCampaignStatusString}
       />
       <div className="shadow sm:overflow-hidden sm:rounded-md">
-        <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
-          <div className="sm:flex sm:items-center">
+        <div className="space-y-6 bg-white px-4 pt-6 sm:px-6 sm:pt-6">
+          <div className="flex items-center">
             <div className="sm:flex-auto">
               <h3 className="text-lg font-medium leading-6 text-gray-900">
                 My Campaigns
@@ -58,9 +150,9 @@ export default function AccountCampaigns() {
           </div>
 
           <div className="mt-8 flex flex-col">
-            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <div className="overflow-x-auto -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle">
+                <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
                   <table className="min-w-full divide-y divide-gray-300">
                     <thead className="bg-gray-50">
                       <tr>
@@ -96,12 +188,6 @@ export default function AccountCampaigns() {
                         </th>
                         <th
                           scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        >
-                          Succeeded
-                        </th>
-                        <th
-                          scope="col"
                           className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                         >
                           <span className="sr-only">View</span>
@@ -115,47 +201,7 @@ export default function AccountCampaigns() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {campaigns.length > 0 &&
-                        campaigns.map((campaign) => (
-                          <tr key={campaign.id}>
-                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                              {campaign.reason}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {campaign.goal}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {campaign.deadline}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {campaign.approved}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {campaign.currentNumberOfPledgers}/
-                              {campaign.maximumNumberOfPledgers}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {campaign.succeeded}
-                            </td>
-                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <MyLink
-                                href="#"
-                                className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-                              >
-                                View<span className="sr-only"> campaign</span>
-                              </MyLink>
-                            </td>
-                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <button
-                                onClick={() => setShowDeleteCampaign(true)}
-                                type="button"
-                                className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-2 py-1 text-sm font-medium leading-4 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                              >
-                                Delete<span className="sr-only"> campaign</span>
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
+                      {campaignsContent}
                     </tbody>
                   </table>
                 </div>
