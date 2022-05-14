@@ -4,7 +4,7 @@ import MyLink from '../MyLink';
 
 const campaigns = [
   {
-    title: 'Need money plox',
+    reason: 'Need money plox',
     goal: '$1,000',
     deadline: 'Feb 27',
     approved: 'yes',
@@ -15,7 +15,7 @@ const campaigns = [
     succeeded: 'yes',
   },
   {
-    title: 'Need money plox',
+    reason: 'Need money plox',
     goal: '$1,000',
     deadline: 'Feb 27',
     approved: 'yes',
@@ -61,7 +61,7 @@ export default function AccountCampaigns() {
                           scope="col"
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                         >
-                          Title
+                          Reason
                         </th>
                         <th
                           scope="col"
@@ -117,7 +117,7 @@ export default function AccountCampaigns() {
                       {campaigns.map((campaign) => (
                         <tr key={campaign.id}>
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {campaign.title}
+                            {campaign.reason}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {campaign.goal}
