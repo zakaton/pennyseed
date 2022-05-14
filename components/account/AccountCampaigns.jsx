@@ -40,6 +40,10 @@ export default function AccountCampaigns({ isActive }) {
         })
         .on('DELETE', (payload) => {
           console.log('deleted campaigns', payload);
+          const deletedCampaign = payload.old;
+          setCampaigns(
+            campaigns.filter((campaign) => campaign.id !== deletedCampaign.id)
+          );
         })
         .subscribe();
       return () => {

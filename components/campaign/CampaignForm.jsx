@@ -28,7 +28,11 @@ function classNames(...classes) {
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-export default function CampaignForm({ props, isExample = false }) {
+export default function CampaignForm({
+  props,
+  isExample = false,
+  setIsCreatingCampaign,
+}) {
   const router = useRouter();
 
   const { isLoading, user } = useUser();
@@ -259,6 +263,7 @@ export default function CampaignForm({ props, isExample = false }) {
                 formData.forEach((value, key) => {
                   data.append(key, value);
                 });
+                setIsCreatingCampaign(true);
                 const response = await fetch(form.action, {
                   method: form.method,
                   body: data,

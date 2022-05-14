@@ -50,7 +50,7 @@ const warnings = {
   ),
 };
 
-export default function CampaignWarningBanner() {
+export default function CampaignWarningBanner({isCreatingCampaign}) {
   const { isLoading, user } = useUser();
   const [warning, setWarning] = useState(null);
 
@@ -71,7 +71,7 @@ export default function CampaignWarningBanner() {
   const Warning = warning && warnings[warning];
 
   return (
-    warning && (
+    warning && !isCreatingCampaign && (
       <div className="mb-2 rounded-md bg-red-50 p-4">
         <div className="flex justify-center">
           <div className="flex-shrink-0">
