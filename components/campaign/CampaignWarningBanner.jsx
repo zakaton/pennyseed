@@ -60,7 +60,7 @@ export default function CampaignWarningBanner() {
         setWarning('notLoggedIn');
       } else if (!user.can_create_campaigns) {
         setWarning('cantCreateCampaigns');
-      } else if (user.has_active_campaign) {
+      } else if (user.active_campaign) {
         setWarning('hasActiveCampaign');
       } else {
         setWarning(null);

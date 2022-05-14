@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   }
 
   const profile = await getUserProfile(user, supabase);
-  if (profile?.can_create_campaigns && !profile?.has_active_campaign) {
+  if (profile?.can_create_campaigns && !profile?.active_campaign) {
     let {
       reason,
       fundingGoal,
@@ -71,16 +71,18 @@ export default async function handler(req, res) {
       },
     ]);
 
+    const campaign = campaigns[0];
+
     if (!error) {
       await supabase
         .from('profile')
         .update({
-          has_active_campaign: true,
+          active_campaign: campaign.id,
         })
         .eq('id', user.id);
 
       res.status(200).json({
-        campaignId: campaigns[0].id,
+        campaignId: campaign.id,
       });
     } else {
       res.status(200).json({

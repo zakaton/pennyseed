@@ -150,10 +150,10 @@ export default function AccountPaymentInfo({ isActive }) {
     } else {
       paymentMethodsContent = (
         <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-          <dt className="text-sm font-medium text-gray-500">
+          <div className="text-sm font-medium text-gray-500">
             No cards available
-          </dt>
-          <dd className="mt-1 text-sm font-medium text-gray-500 sm:col-span-2 sm:mt-0">
+          </div>
+          <div className="mt-1 text-sm font-medium text-gray-500 sm:col-span-2 sm:mt-0">
             You need to{' '}
             <button
               type="button"
@@ -163,7 +163,7 @@ export default function AccountPaymentInfo({ isActive }) {
               add a card
             </button>{' '}
             in order to pledge to campaigns
-          </dd>
+          </div>
         </div>
       );
     }

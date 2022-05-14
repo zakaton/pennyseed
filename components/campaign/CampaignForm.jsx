@@ -35,11 +35,7 @@ export default function CampaignForm({ props, isExample = false }) {
   const [canCreateCampaign, setCanCreateCampaign] = useState(false);
   useEffect(() => {
     if (!isLoading) {
-      if (
-        !isExample &&
-        user?.can_create_campaigns &&
-        !user?.has_active_campaign
-      ) {
+      if (!isExample && user?.can_create_campaigns && !user?.active_campaign) {
         setCanCreateCampaign(true);
       }
     }
@@ -367,7 +363,7 @@ export default function CampaignForm({ props, isExample = false }) {
                 />
               </div>
 
-              <div className="col-span-6">
+              <div className="col-span-6 sm:col-span-3">
                 <label
                   htmlFor="reason"
                   className="block text-sm font-medium text-gray-700"
@@ -375,9 +371,9 @@ export default function CampaignForm({ props, isExample = false }) {
                   Reason
                 </label>
                 <div className="mt-1">
-                  <textarea
+                  <input
                     required
-                    rows="3"
+                    type="text"
                     name="reason"
                     id="reason"
                     maxLength={maximumCampaignReasonLength}

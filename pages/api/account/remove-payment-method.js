@@ -14,6 +14,8 @@ export default async function handler(req, res) {
     return res.status(400).send("requires a 'paymentMethodId' form field");
   }
 
+  // FILL - cancel pleges using that payment method
+
   const paymentMethod = await stripe.paymentMethods.detach(
     req.body.paymentMethodId
   );

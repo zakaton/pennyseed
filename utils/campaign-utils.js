@@ -11,7 +11,7 @@ export function dollarsToCents(dollars) {
   return Math.round(dollars * 100);
 }
 
-export const maximumCampaignReasonLength = 140;
+export const maximumCampaignReasonLength = 26;
 
 export const minimumCampaignDollars = 1;
 export const maximumCampaignDollars = 1_000_000_000;
