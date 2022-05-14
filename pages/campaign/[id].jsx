@@ -1,12 +1,49 @@
 /* eslint-disable no-param-reassign */
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../utils/supabase';
 
 export default function Campaign() {
   const router = useRouter();
   const { id } = router.query;
 
-  console.log(id);
+  const [isGettingCampaign, setIsGettingCampaign] = useState(true);
+  const [campaign, setCampaign] = useState(null);
+
+  const getCampaign = async () => {
+    const { data: campaign } = await supabase
+      .from('campaign')
+      .select('*')
+      .eq('id', id)
+      .single();
+    console.log('setting campaign', campaign);
+    setCampaign(campaign);
+    setIsGettingCampaign(false);
+  };
+  useEffect(() => {
+    if (id) {
+      getCampaign();
+    }
+  }, [id]);
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (campaign) {
+      console.log('subscribing to campaign updates');
+      const subscription = supabase
+        .from(`campaign:id=eq.${campaign.id}`)
+        .on('UPDATE', (payload) => {
+          console.log('updated campaign');
+          setCampaign({ ...campaign, ...payload.new });
+        })
+        .subscribe();
+      return () => {
+        console.log('unsubscribing to campaign updates');
+        supabase.removeSubscription(subscription);
+      };
+    }
+  }, [campaign]);
 
   return (
     <>
