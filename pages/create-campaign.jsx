@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import CampaignForm from '../components/campaign/CampaignForm';
-import CampaignWarningBanner from '../components/campaign/CampaignWarningBanner';
+import CreateCampaignWarningBanner from '../components/campaign/CreateCampaignWarningBanner';
 
 export default function CreateCampaign() {
   const [isCreatingCampaign, setIsCreatingCampaign] = useState(false);
@@ -10,7 +10,7 @@ export default function CreateCampaign() {
       <Head>
         <title>Create Campaign - Pennyseed</title>
       </Head>
-      <CampaignWarningBanner isCreatingCampaign={isCreatingCampaign} />
+      <CreateCampaignWarningBanner isCreatingCampaign={isCreatingCampaign} />
       <CampaignForm setIsCreatingCampaign={setIsCreatingCampaign} />
     </>
   );

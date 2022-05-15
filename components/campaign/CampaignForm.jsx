@@ -29,7 +29,6 @@ const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export default function CampaignForm({
-  props,
   isExample = false,
   setIsCreatingCampaign,
 }) {
@@ -156,7 +155,7 @@ export default function CampaignForm({
   }, [minimumPossibleNumberOfPledgers, maximumPossibleNumberOfPledgers]);
 
   return (
-    <div {...props} className="style-links shadow sm:rounded-lg">
+    <div className="style-links shadow sm:rounded-lg">
       <div className="py-3 px-5 pb-5 sm:py-4 sm:pb-5 md:grid md:grid-cols-3 md:gap-3">
         <div className="pr-2 md:col-span-1">
           <h3 className="mt-0 mb-1 text-xl font-medium leading-6 text-gray-900">
@@ -446,7 +445,7 @@ export default function CampaignForm({
                   onChange={(e) =>
                     setCurrentNumberOfPledgers(Number(e.target.value))
                   }
-                  name="current-number-of-pledgers"
+                  name="currentNumberOfPledgers"
                   id="current-number-of-pledgers"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />

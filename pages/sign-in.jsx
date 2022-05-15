@@ -70,7 +70,6 @@ export default function SignIn() {
             </p>
           </div>
           <form className="mt-8 space-y-6" action="#" method="POST">
-            <input type="hidden" name="remember" defaultValue="true" required />
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
                 <label htmlFor="email-address" className="sr-only">
@@ -96,7 +95,7 @@ export default function SignIn() {
                   name="agree"
                   type="checkbox"
                   required
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
                   onInput={(e) => setAgree(e.target.checked)}
                 />
                 <label

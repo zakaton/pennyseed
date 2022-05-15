@@ -56,7 +56,7 @@ const warnings = {
   ),
 };
 
-export default function CampaignWarningBanner({ isCreatingCampaign }) {
+export default function CreateCampaignWarningBanner({ isCreatingCampaign }) {
   const { isLoading, user } = useUser();
   const [warning, setWarning] = useState(null);
 
