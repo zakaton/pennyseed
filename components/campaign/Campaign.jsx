@@ -1,7 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabase';
-import { formatDollars } from '../../utils/campaign-utils';
+import {
+  formatDollars,
+  defaultLocale,
+  getMaximumPossibleNumberOfPledgers,
+} from '../../utils/campaign-utils';
 import { useUser } from '../../context/user-context';
 
 export default function Campaign({ campaignId, setCampaignReason }) {
@@ -58,6 +62,34 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     }
   }, [campaign]);
 
+  const [
+    hypotheticalFinalNumberOfPledgers,
+    setHypotheticalFinalNumberOfPledgers,
+  ] = useState(0);
+  const [maximumPossibleNumberOfPledgers, setMaximumPossibleNumberOfPledgers] =
+    useState(Infinity);
+  useEffect(() => {
+    if (campaign) {
+      setMaximumPossibleNumberOfPledgers(
+        getMaximumPossibleNumberOfPledgers(campaign.funding_goal)
+      );
+    }
+  }, [campaign]);
+
+  const [deadline, setDeadline] = useState('');
+  useEffect(() => {
+    if (campaign) {
+      setDeadline(new Date(campaign.deadline));
+    }
+  }, [campaign]);
+
+  const [createdDate, setCreatedDate] = useState('');
+  useEffect(() => {
+    if (campaign) {
+      setCreatedDate(new Date(campaign.created_at));
+    }
+  }, [campaign]);
+
   return (
     <div className="style-links mx-auto max-w-prose text-lg shadow sm:rounded-lg">
       <div className="py-3 px-5 pb-5 sm:py-4 sm:pb-5">
@@ -69,14 +101,75 @@ export default function Campaign({ campaignId, setCampaignReason }) {
 
         {!isGettingCampaign &&
           (campaign ? (
-            <div className="mx-auto max-w-prose text-lg">
-              <h1>
-                <span className="mt-2 block text-center text-xl font-bold leading-8 tracking-tight text-gray-900 sm:text-2xl">
-                  I am raising {formatDollars(campaign.funding_goal, false)} for{' '}
-                  {campaign.reason}
-                </span>
-              </h1>
-            </div>
+            <>
+              <div className="mx-auto max-w-prose text-lg">
+                <h1>
+                  <span className="mt-2 block text-center text-2xl font-bold leading-8 tracking-tight text-gray-900 sm:text-3xl">
+                    I am raising {formatDollars(campaign.funding_goal, false)}{' '}
+                    for {campaign.reason}
+                  </span>
+                </h1>
+              </div>
+              <div className="mx-auto max-w-prose text-lg">
+                <div className="prose prose-lg prose-yellow mx-auto mt-4 text-xl text-gray-500">
+                  <p>
+                    This campaign requires a minimum of{' '}
+                    <span className="font-bold ">
+                      {campaign.minimum_number_of_pledgers.toLocaleString(
+                        defaultLocale
+                      )}
+                    </span>{' '}
+                    {campaign.minimum_number_of_pledgers === 1
+                      ? 'pledger'
+                      : 'pledgers'}{' '}
+                    by{' '}
+                    <span className="font-bold">
+                      {deadline && deadline.toLocaleString()}
+                    </span>
+                    .
+                  </p>
+                  <p>
+                    There {campaign.number_of_pledgers === 1 ? 'is' : 'are'}{' '}
+                    currently{' '}
+                    <span className="font-bold">
+                      {campaign.number_of_pledgers > 0
+                        ? campaign.number_of_pledgers.toLocaleString(
+                            defaultLocale
+                          )
+                        : 'no'}
+                    </span>{' '}
+                    pledgers.
+                  </p>
+                  <p>
+                    This is some text with{' '}
+                    <input
+                      required
+                      type="number"
+                      inputMode="numeric"
+                      name="hypotheticalFinalNumberOfPledgers"
+                      id="hypotheticalFinalNumberOfPledgers"
+                      step="1"
+                      value={hypotheticalFinalNumberOfPledgers}
+                      min={0}
+                      max={maximumPossibleNumberOfPledgers}
+                      onInput={(e) =>
+                        setHypotheticalFinalNumberOfPledgers(
+                          Number(e.target.value)
+                        )
+                      }
+                      className="inline-block rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+                    />{' '}
+                    an input.
+                  </p>
+                  <p className="italic">
+                    This campaign was created at{' '}
+                    <span className="font-bold">
+                      {createdDate && createdDate.toLocaleString()}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </>
           ) : (
             <div className="style-links prose prose-lg mx-auto text-center text-xl text-gray-500">
               <p>Campaign not found.</p>
