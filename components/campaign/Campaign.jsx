@@ -227,7 +227,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
   ]);
 
   return (
-    <div className="style-links mx-auto max-w-prose text-lg shadow sm:rounded-lg">
+    <div className="style-links mx-auto max-w-prose bg-white text-lg shadow sm:rounded-lg">
       <div className="py-3 px-5 pb-5 sm:py-4 sm:pb-5">
         {isGettingCampaign && (
           <div className="style-links prose prose-lg mx-auto text-center text-xl text-gray-500">

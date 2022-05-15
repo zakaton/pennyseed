@@ -79,7 +79,7 @@ export default function Footer() {
   const router = useRouter();
 
   return (
-    <footer className="bg-white">
+    <footer>
       <div className="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
         <nav
           className="-mx-5 -my-2 flex flex-wrap justify-center"
@@ -115,14 +115,14 @@ export default function Footer() {
         </div>
         <p className="mt-8 text-center text-base text-gray-600">
           Pennyseed is created by{' '}
-          <MyLink
+          <a
             href="https://www.ukaton.com/"
             target="_blank"
             rel="noreferrer"
             className="text-base text-gray-600 underline hover:text-gray-900"
           >
             Ukaton Inc
-          </MyLink>
+          </a>
         </p>
       </div>
     </footer>
