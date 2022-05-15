@@ -197,7 +197,7 @@ export default function CampaignForm({
             <span
               className={classNames(
                 'font-medium',
-                isCampaignSuccessful ? 'text-green-500' : 'text-red-400'
+                isCampaignSuccessful ? 'text-green-500' : 'text-red-500'
               )}
             >
               {isCampaignSuccessful ? 'succeeds' : 'fails'}
