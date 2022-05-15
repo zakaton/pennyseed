@@ -14,7 +14,7 @@ export default function CampaignPage() {
     <>
       <Head>
         {campaignReason ? (
-          <title>Campaign for &quot;{campaignReason}&quot; - Pennyseed</title>
+          <title>Campaign for {campaignReason} - Pennyseed</title>
         ) : (
           <title>Campaign - Pennyseed</title>
         )}
