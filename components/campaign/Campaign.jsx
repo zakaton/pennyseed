@@ -12,6 +12,12 @@ import { useUser } from '../../context/user-context';
 import DeleteCampaignModal from './DeleteCampaignModal';
 import DeleteCampaignStatusNotification from './DeleteCampaignStatusNotification';
 
+import PledgeModal from './PledgeModal';
+import PledgeStatusNotification from './PledgeStatusNotification';
+
+import RemovePledgeModal from './RemovePledgeModal';
+import RemovePledgeStatusNotification from './RemovePledgeStatusNotification';
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -228,18 +234,28 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     hypotheticalFinalNumberOfPledgers,
   ]);
 
-  const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const [deleteCampaignStatusString, setDeleteCampaignStatusString] =
-    useState('succeeded');
-  const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
-    useState(false);
-
   useEffect(() => {
     if (campaign) {
       setSelectedCampaign(campaign);
     }
   }, [campaign]);
+
+  const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
+  const [deleteCampaignStatusString, setDeleteCampaignStatusString] =
+    useState('succeeded');
+  const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
+    useState(false);
+
+  const [showPledgeModal, setShowPledgeModal] = useState(false);
+  const [pledgeStatusString, setPledgeStatusString] = useState('succeeded');
+  const [showPledgeNotification, setShowPledgeNotification] = useState(false);
+
+  const [showRemovePledgeModal, setShowRemovePledgeModal] = useState(false);
+  const [removePledgeStatusString, setRemovePledgeStatusString] =
+    useState('succeeded');
+  const [showRemovePledgeNotification, setShowRemovePledgeNotification] =
+    useState(false);
 
   return (
     <>
@@ -255,6 +271,33 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         setOpen={setShowDeleteCampaignNotification}
         statusString={deleteCampaignStatusString}
       />
+
+      <PledgeModal
+        open={showPledgeModal}
+        setOpen={setShowPledgeModal}
+        selectedCampaign={selectedCampaign}
+        setPledgeStatusString={setPledgeStatusString}
+        setShowPledgeNotification={setShowPledgeNotification}
+      />
+      <PledgeStatusNotification
+        open={showPledgeNotification}
+        setOpen={setShowPledgeNotification}
+        statusString={pledgeStatusString}
+      />
+
+      <RemovePledgeModal
+        open={showRemovePledgeModal}
+        setOpen={setShowRemovePledgeModal}
+        selectedCampaign={selectedCampaign}
+        setPledgeStatusString={setRemovePledgeStatusString}
+        setShowPledgeNotification={setShowRemovePledgeNotification}
+      />
+      <RemovePledgeStatusNotification
+        open={showRemovePledgeNotification}
+        setOpen={setShowRemovePledgeNotification}
+        statusString={removePledgeStatusString}
+      />
+
       <div className="style-links mx-auto max-w-prose bg-white text-lg shadow sm:rounded-lg">
         <div className="py-3 px-5 pb-5 sm:py-4 sm:pb-5">
           {isGettingCampaign && (
@@ -457,18 +500,20 @@ export default function Campaign({ campaignId, setCampaignReason }) {
               </div>
             ))}
         </div>
-        {campaign && user && (
+        {campaign && (
           <div className="mt-1 flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
-            {!isMyCampaign && (
+            {user && !isMyCampaign && (
               <>
                 <button
                   type="button"
+                  onClick={() => setShowPledgeModal(true)}
                   className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Pledge
                 </button>
                 <button
                   type="button"
+                  onClick={() => setShowRemovePledgeModal(true)}
                   className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
                   Remove Pledge
