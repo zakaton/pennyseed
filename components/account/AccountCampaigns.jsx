@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import MyLink from '../MyLink';
-import DeleteCampaignModal from './DeleteCampaignModal';
+import DeleteCampaignModal from '../campaign/DeleteCampaignModal';
 import { supabase } from '../../utils/supabase';
 import { useUser } from '../../context/user-context';
 import { formatDollars } from '../../utils/campaign-utils';
-import DeleteCampaignStatusNotification from './DeleteCampaignStatusNotification';
+import DeleteCampaignStatusNotification from '../campaign/DeleteCampaignStatusNotification';
 
 export default function AccountCampaigns({ isActive }) {
   const { isLoading, user } = useUser();
@@ -52,8 +52,6 @@ export default function AccountCampaigns({ isActive }) {
       };
     }
   }, [isActive, campaigns]);
-
-  window.s = window.s || supabase;
 
   const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
