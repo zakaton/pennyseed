@@ -5,6 +5,7 @@ import { getSupabaseService } from '../../../../utils/supabase';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_CUSTOMER_WEBHOOK_SECRET;
+// eslint-disable-next-line no-unused-vars
 const supabase = getSupabaseService();
 
 export const config = {
