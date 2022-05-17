@@ -58,6 +58,9 @@ export default async function handler(req, res) {
           }
         }
         break;
+      case 'payment_method.attached':
+      case 'payment_method.detached':
+        break;
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
