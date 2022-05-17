@@ -4,7 +4,7 @@ import { useUser } from '../../context/user-context';
 import MyLink from '../MyLink';
 
 const warnings = {
-  notLoggedIn: () => (
+  notSignedIn: () => (
     <span>
       You must be{' '}
       <MyLink href="/sign-in">
@@ -63,7 +63,7 @@ export default function CreateCampaignWarningBanner({ isCreatingCampaign }) {
   useEffect(() => {
     if (!isLoading) {
       if (!user) {
-        setWarning('notLoggedIn');
+        setWarning('notSignedIn');
       } else if (!user.can_create_campaigns) {
         setWarning('cantCreateCampaigns');
       } else if (user.active_campaign) {

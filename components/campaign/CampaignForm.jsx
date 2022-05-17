@@ -475,14 +475,16 @@ export default function CampaignForm({
                         htmlFor="agreeToTermsOfUse"
                         className="font-medium text-gray-700"
                       >
-                        I agree{' '}
+                        By creating a campaign I agree{' '}
                       </label>
                       <span
                         id="agreeToTermsOfUse-description"
                         className="text-gray-500"
                       >
-                        <span className="sr-only">I agree </span> to the{' '}
-                        <MyLink href="/terms">terms of use</MyLink>
+                        <span className="sr-only">
+                          By creating a campaign I agree{' '}
+                        </span>{' '}
+                        to the <MyLink href="/terms">terms of use</MyLink>
                       </span>
                     </div>
                   </div>

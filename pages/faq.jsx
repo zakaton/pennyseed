@@ -342,11 +342,6 @@ const faqs = [
   },
 ];
 
-faqs.forEach((item, index) => {
-  // eslint-disable-next-line no-param-reassign
-  item.id = index + 1;
-});
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -384,7 +379,7 @@ export default function FAQ() {
                   </dt>
                   <Disclosure.Panel
                     as="dd"
-                    className="prose mt-2 text-base text-gray-500"
+                    className="prose mt-4 text-base text-gray-500"
                   >
                     <faq.answer />
                   </Disclosure.Panel>

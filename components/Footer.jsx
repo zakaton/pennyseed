@@ -115,14 +115,14 @@ export default function Footer() {
         </div>
         <p className="mt-8 text-center text-base text-gray-600">
           Pennyseed is created by{' '}
-          <a
+          <MyLink
             href="https://www.ukaton.com/"
             target="_blank"
             rel="noreferrer"
             className="text-base text-gray-600 underline hover:text-gray-900"
           >
             Ukaton Inc
-          </a>
+          </MyLink>
         </p>
       </div>
     </footer>

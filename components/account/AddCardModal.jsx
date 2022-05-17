@@ -92,18 +92,15 @@ export default function AddCardModal({ open, setOpen }) {
                     >
                       Add Card
                     </Dialog.Title>
-                    {clientSecret && (
-                      <div className="py-2">
-                        <Elements
-                          stripe={stripePromise}
-                          options={{ clientSecret }}
-                        >
-                          <ElementsForm />
-                        </Elements>
-                      </div>
-                    )}
                   </div>
                 </div>
+                {clientSecret && (
+                  <div className="py-2">
+                    <Elements stripe={stripePromise} options={{ clientSecret }}>
+                      <ElementsForm />
+                    </Elements>
+                  </div>
+                )}
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                   <button
                     type="submit"

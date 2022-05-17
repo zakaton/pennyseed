@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { useEffect, useState } from 'react';
+import MyLink from '../MyLink';
 import { supabase } from '../../utils/supabase';
 import {
   getMaximumPossibleNumberOfPledgers,
@@ -27,7 +28,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
   const [campaign, setCampaign] = useState(null);
   const { user } = useUser();
 
-  const [isMyCampaign, setIsMyCampaign] = useState(false);
+  const [isMyCampaign, setIsMyCampaign] = useState(null);
   useEffect(() => {
     if (user && campaign) {
       setIsMyCampaign(user.id === campaign.created_by);
@@ -75,6 +76,47 @@ export default function Campaign({ campaignId, setCampaignReason }) {
       };
     }
   }, [campaign]);
+
+  const [pledge, setPledge] = useState(null);
+  const [isGettingPledge, setIsGettingPledge] = useState(true);
+  const getPledge = async () => {
+    console.log('fetching pledge');
+    // eslint-disable-next-line no-shadow
+    const { data: pledge } = await supabase
+      .from('pledge')
+      .select('*')
+      .eq('pledger', user.id)
+      .single();
+    console.log('setting pledge', pledge);
+    setPledge(pledge);
+    setIsGettingPledge(false);
+  };
+  useEffect(() => {
+    if (campaign && user && isMyCampaign === false && !pledge) {
+      getPledge();
+    }
+  }, [campaign, user, isMyCampaign, pledge]);
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (pledge) {
+      console.log('subscribing to pledge updates');
+      const subscription = supabase
+        .from(`pledge:id=eq.${pledge.id}`)
+        .on('UPDATE', (payload) => {
+          console.log('updated pledge');
+          setPledge({ ...pledge, ...payload.new });
+        })
+        .on('DELETE', (payload) => {
+          console.log('deleted pledge', payload);
+          setPledge(null);
+        })
+        .subscribe();
+      return () => {
+        console.log('unsubscribing to pledge updates');
+        supabase.removeSubscription(subscription);
+      };
+    }
+  }, [pledge]);
 
   const [
     hypotheticalFinalNumberOfPledgers,
@@ -278,6 +320,8 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         selectedCampaign={selectedCampaign}
         setPledgeStatusString={setPledgeStatusString}
         setShowPledgeNotification={setShowPledgeNotification}
+        pledge={pledge}
+        setPledge={setPledge}
       />
       <PledgeStatusNotification
         open={showPledgeNotification}
@@ -502,15 +546,10 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         </div>
         {campaign && (
           <div className="mt-1 flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
-            {user && !isMyCampaign && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setShowPledgeModal(true)}
-                  className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Pledge
-                </button>
+            {user &&
+              !isMyCampaign &&
+              !isGettingPledge &&
+              (pledge ? (
                 <button
                   type="button"
                   onClick={() => setShowRemovePledgeModal(true)}
@@ -518,8 +557,15 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                 >
                   Remove Pledge
                 </button>
-              </>
-            )}
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowPledgeModal(true)}
+                  className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                >
+                  Pledge
+                </button>
+              ))}
             {isMyCampaign && (
               <button
                 type="button"
@@ -528,6 +574,18 @@ export default function Campaign({ campaignId, setCampaignReason }) {
               >
                 Delete Campaign
               </button>
+            )}
+            {!isMyCampaign && (
+              <MyLink
+                href={`mailto:contact@pennyseed.fund?subject=Report Campaign [${campaign.id}]&body=I'd like to report this campaign because [YOUR REASON HERE]`}
+              >
+                <button
+                  type="button"
+                  className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                >
+                  Report Campaign
+                </button>
+              </MyLink>
             )}
           </div>
         )}
