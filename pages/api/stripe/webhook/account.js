@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 import { buffer } from 'micro';
 import Stripe from 'stripe';
-import { getSupabaseService } from '../../../utils/supabase';
+import { getSupabaseService } from '../../../../utils/supabase';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const webhookSecret = process.env.STRIPE_ACCOUNT_WEBHOOK_SECRET;
 const supabase = getSupabaseService();
 
 export const config = {
@@ -57,9 +57,6 @@ export default async function handler(req, res) {
             }
           }
         }
-        break;
-      case 'payment_method.attached':
-      case 'payment_method.detached':
         break;
       default:
         console.log(`Unhandled event type ${event.type}`);
