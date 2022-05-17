@@ -1,5 +1,6 @@
 export const numberOfPaymentMethodsPerPage = 5;
 export const numberOfMorePaymentMethodsToShow = 5;
+export const maxNumberOfPaymentMethods = 10;
 
 let getStripePaymentMethodsPromise;
 const getStripePaymentMethods = (

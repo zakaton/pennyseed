@@ -2,10 +2,10 @@
 import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../../utils/supabase';
+import { maxNumberOfPaymentMethods } from '../../../../utils/get-stripe-payment-methods';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_CUSTOMER_WEBHOOK_SECRET;
-// eslint-disable-next-line no-unused-vars
 const supabase = getSupabaseService();
 
 export const config = {
@@ -31,6 +31,25 @@ export default async function handler(req, res) {
     switch (event.type) {
       case 'payment_method.attached':
       case 'payment_method.detached':
+        {
+          const customer = event.data.object;
+          const { data: profile } = await supabase
+            .from('profile')
+            .select('*')
+            .eq('stripe_customer', customer.id)
+            .single();
+          if (profile) {
+            const paymentMethods = await stripe.paymentMethods.list({
+              customer: profile.stripe_customer,
+              type: 'card',
+              limit: maxNumberOfPaymentMethods,
+            });
+            await supabase
+              .from('profile')
+              .update({ number_of_payment_methods: paymentMethods.data.length })
+              .eq('stripe_customer', profile.stripe_customer);
+          }
+        }
         break;
       default:
         console.log(`Unhandled event type ${event.type}`);
