@@ -1,5 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
 
@@ -9,8 +9,17 @@ export default function RemoveCardModal({
   selectedPaymentMethod,
   setShowRemoveCardNotification,
   setRemoveCardStatusString,
-  updateStripePaymentMethods,
 }) {
+  const [isRemovingCard, setIsRemovingCard] = useState(false);
+  const [didRemoveCard, setDidRemoveCard] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setIsRemovingCard(false);
+      setDidRemoveCard(false);
+    }
+  }, [open]);
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -102,14 +111,15 @@ export default function RemoveCardModal({
                         formData.forEach((value, key) => {
                           data.append(key, value);
                         });
+                        setIsRemovingCard(true);
                         const response = await fetch(form.action, {
                           method: form.method,
                           body: data,
                         });
                         const { status } = await response.json();
+                        setDidRemoveCard(true);
                         setRemoveCardStatusString(status);
                         setShowRemoveCardNotification(true);
-                        updateStripePaymentMethods(true);
                         setOpen(false);
                       }}
                     >
@@ -124,7 +134,12 @@ export default function RemoveCardModal({
                         type="submit"
                         className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                       >
-                        Remove Card
+                        {/* eslint-disable-next-line no-nested-ternary */}
+                        {isRemovingCard
+                          ? 'Removing Card...'
+                          : didRemoveCard
+                          ? 'Removed Card!'
+                          : 'Remove Card'}
                       </button>
                     </form>
                   )}

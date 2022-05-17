@@ -1,13 +1,15 @@
 /* eslint-disable camelcase */
 import { useState, useEffect } from 'react';
+import { useUser } from '../../context/user-context';
 import AddCardModal from './AddCardModal';
 import RemoveCardModal from './RemoveCardModal';
 import AddCardStatusNotification from './AddCardStatusNotification';
 import RemoveCardStatusNotification from './RemoveCardStatusNotification';
-import getStripePaymentMethods, {
-  numberOfPaymentMethodsPerPage,
-} from '../../utils/get-stripe-payment-methods';
 import cardIcons from './CardIcons';
+import {
+  numberOfPaymentMethodsPerPage,
+  maxNumberOfPaymentMethods,
+} from '../../utils/get-payment-methods';
 
 const capitalizeString = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
@@ -17,6 +19,15 @@ function classNames(...classes) {
 }
 
 export default function AccountPaymentInfo({ isActive }) {
+  const { paymentMethods, numberOfPaymentMethods, getPaymentMethods } =
+    useUser();
+
+  useEffect(() => {
+    if (!paymentMethods && isActive) {
+      getPaymentMethods(false, numberOfPaymentMethodsPerPage);
+    }
+  }, [isActive]);
+
   const [showAddCardModal, setShowAddCardModal] = useState(false);
   const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
@@ -48,55 +59,47 @@ export default function AccountPaymentInfo({ isActive }) {
   const [removeCardStatusString, setRemoveCardStatusString] =
     useState('succeeded');
 
-  const [stripePaymentMethods, setStripePaymentMethods] = useState(null);
   const [showPagination, setShowPagination] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [hasNextPage, setHasNextPage] = useState(false);
-  const updateStripePaymentMethods = async (refresh, options) => {
-    if (!options) {
-      setPageIndex(0);
-    }
-    const data = await getStripePaymentMethods(refresh, options);
-    if (options?.endingBefore) {
-      data.stripePaymentMethods.push(stripePaymentMethods[0]);
-    }
-    setStripePaymentMethods(data.stripePaymentMethods);
-  };
 
   useEffect(() => {
-    if (!stripePaymentMethods && isActive) {
-      updateStripePaymentMethods();
-    }
-  }, [isActive]);
-
-  useEffect(() => {
-    setShowPagination(
-      stripePaymentMethods?.length === numberOfPaymentMethodsPerPage + 1 ||
-        pageIndex > 0
-    );
+    setShowPagination(paymentMethods && numberOfPaymentMethods > 0);
     setHasNextPage(
-      stripePaymentMethods?.length === numberOfPaymentMethodsPerPage + 1
+      numberOfPaymentMethods > (pageIndex + 1) * numberOfPaymentMethodsPerPage
     );
-  }, [stripePaymentMethods, pageIndex]);
+  }, [numberOfPaymentMethods, paymentMethods, pageIndex]);
+
+  useEffect(() => {
+    if (
+      numberOfPaymentMethods !== null &&
+      pageIndex * numberOfPaymentMethodsPerPage >= numberOfPaymentMethods
+    ) {
+      setPageIndex(pageIndex - 1);
+    }
+  }, [numberOfPaymentMethods]);
 
   const showPreviousPaymentMethods = async () => {
-    await updateStripePaymentMethods(true, {
-      endingBefore: stripePaymentMethods[0].id,
-    });
     setPageIndex(pageIndex - 1);
   };
   const showNextPaymentMethods = async () => {
-    await updateStripePaymentMethods(true, {
-      startingAfter: stripePaymentMethods[numberOfPaymentMethodsPerPage - 1].id,
-    });
+    if (
+      paymentMethods.length <=
+      (pageIndex + 1) * numberOfPaymentMethodsPerPage
+    ) {
+      await getPaymentMethods(false, numberOfPaymentMethodsPerPage, true);
+    }
     setPageIndex(pageIndex + 1);
   };
 
   let paymentMethodsContent;
-  if (stripePaymentMethods) {
-    if (stripePaymentMethods.length > 0) {
-      paymentMethodsContent = stripePaymentMethods
-        .slice(0, numberOfPaymentMethodsPerPage)
+  if (paymentMethods) {
+    if (numberOfPaymentMethods > 0) {
+      paymentMethodsContent = paymentMethods
+        .slice(
+          pageIndex * numberOfPaymentMethodsPerPage,
+          (pageIndex + 1) * numberOfPaymentMethodsPerPage
+        )
         .map((paymentMethod) => {
           const { brand } = paymentMethod.card;
           const capitalizedBrand = capitalizeString(brand);
@@ -190,7 +193,6 @@ export default function AccountPaymentInfo({ isActive }) {
         selectedPaymentMethod={selectedPaymentMethod}
         setShowRemoveCardNotification={setShowRemoveCardNotification}
         setRemoveCardStatusString={setRemoveCardStatusString}
-        updateStripePaymentMethods={updateStripePaymentMethods}
       />
       <RemoveCardStatusNotification
         open={showRemoveCardNotification}
@@ -205,18 +207,21 @@ export default function AccountPaymentInfo({ isActive }) {
                 Payment Info
               </h3>
               <p className="mt-1 text-sm text-gray-500">
-                Add and remove payment methods.
+                Add and remove payment methods. (max {maxNumberOfPaymentMethods}
+                )
               </p>
             </div>
-            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              <button
-                type="button"
-                onClick={() => setShowAddCardModal(true)}
-                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-              >
-                Add card
-              </button>
-            </div>
+            {numberOfPaymentMethods < maxNumberOfPaymentMethods && (
+              <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                <button
+                  type="button"
+                  onClick={() => setShowAddCardModal(true)}
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                >
+                  Add card
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="mt-5 border-t border-gray-200">
@@ -238,12 +243,12 @@ export default function AccountPaymentInfo({ isActive }) {
                 </span>{' '}
                 to{' '}
                 <span className="font-medium">
-                  {pageIndex * numberOfPaymentMethodsPerPage +
-                    Math.min(
-                      numberOfPaymentMethodsPerPage,
-                      stripePaymentMethods?.length || 0
-                    )}
-                </span>
+                  {Math.min(
+                    numberOfPaymentMethods,
+                    (pageIndex + 1) * numberOfPaymentMethodsPerPage
+                  )}
+                </span>{' '}
+                of {numberOfPaymentMethods}
               </p>
             </div>
             <div className="flex flex-1 justify-between sm:justify-end">
@@ -252,7 +257,7 @@ export default function AccountPaymentInfo({ isActive }) {
                 onClick={showPreviousPaymentMethods}
                 className={classNames(
                   pageIndex > 0 ? 'visible' : 'invisible',
-                  'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+                  'inline-flex relative items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
                 )}
               >
                 Previous
@@ -262,7 +267,7 @@ export default function AccountPaymentInfo({ isActive }) {
                 onClick={showNextPaymentMethods}
                 className={classNames(
                   hasNextPage ? 'visible' : 'hidden',
-                  'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+                  'inline-flex relative items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
                 )}
               >
                 Next

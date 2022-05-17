@@ -2,7 +2,7 @@
 import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../../utils/supabase';
-import { maxNumberOfPaymentMethods } from '../../../../utils/get-stripe-payment-methods';
+import { maxNumberOfPaymentMethods } from '../../../../utils/get-payment-methods';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_CUSTOMER_WEBHOOK_SECRET;
@@ -43,14 +43,14 @@ export default async function handler(req, res) {
             .eq('stripe_customer', customerId)
             .single();
           if (profile) {
-            const paymentMethods = await stripe.paymentMethods.list({
+            const { data: paymentMethods } = await stripe.paymentMethods.list({
               customer: profile.stripe_customer,
               type: 'card',
               limit: maxNumberOfPaymentMethods,
             });
             await supabase
               .from('profile')
-              .update({ number_of_payment_methods: paymentMethods.data.length })
+              .update({ number_of_payment_methods: paymentMethods.length })
               .eq('stripe_customer', profile.stripe_customer);
           }
         }

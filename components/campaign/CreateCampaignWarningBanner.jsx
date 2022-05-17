@@ -89,7 +89,7 @@ export default function CreateCampaignWarningBanner({ isCreatingCampaign }) {
           </div>
           <div className="ml-3">
             <h3 className="text-sm font-medium text-red-800">
-              {Warning && <Warning activeCampaignId={user.active_campaign} />}
+              {Warning && <Warning activeCampaignId={user?.active_campaign} />}
             </h3>
           </div>
         </div>

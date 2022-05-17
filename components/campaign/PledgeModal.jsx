@@ -2,6 +2,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon, CreditCardIcon } from '@heroicons/react/outline';
+import { useUser } from '../../context/user-context';
 
 import MyLink from '../MyLink';
 
@@ -17,6 +18,8 @@ export default function PledgeModal({
   const [isPledging, setIsPledging] = useState(false);
   const [didPledge, setDidPledge] = useState(false);
 
+  const { user, paymentMethods } = useUser();
+
   useEffect(() => {
     if (open) {
       setIsPledging(false);
@@ -25,8 +28,6 @@ export default function PledgeModal({
   }, [open]);
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  const [hasAtLeastOnePaymentMethod, setHasAtLeastOnePaymentMethod] =
-    useState(false);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -97,11 +98,10 @@ export default function PledgeModal({
                   open={open}
                   selectedPaymentMethod={selectedPaymentMethod}
                   setSelectedPaymentMethod={setSelectedPaymentMethod}
-                  setHasAtLeastOnePaymentMethod={setHasAtLeastOnePaymentMethod}
                 />
 
-                {hasAtLeastOnePaymentMethod && (
-                  <div className="style-links relative mt-3 flex items-start">
+                {paymentMethods && (
+                  <div className="style-links relative mt-4 flex items-start">
                     <div className="flex h-5 items-center">
                       <input
                         required
@@ -129,9 +129,9 @@ export default function PledgeModal({
                     </div>
                   </div>
                 )}
-                {hasAtLeastOnePaymentMethod && (
+                {
                   <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                    {selectedCampaign && (
+                    {selectedCampaign && paymentMethods && (
                       <form
                         method="POST"
                         action="/api/campaign/pledge-to-campaign"
@@ -193,7 +193,7 @@ export default function PledgeModal({
                       Cancel
                     </button>
                   </div>
-                )}
+                }
               </Dialog.Panel>
             </Transition.Child>
           </div>

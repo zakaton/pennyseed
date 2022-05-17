@@ -1,13 +1,18 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { supabase, getUserProfile } from '../utils/supabase';
+import {
+  numberOfPaymentMethodsPerPage,
+  maxNumberOfPaymentMethods,
+  fetchPaymentMethods,
+} from '../utils/get-payment-methods';
 
 export const UserContext = createContext();
 
 export function UserContextProvider(props) {
   const router = useRouter();
-  const [user, setUser] = useState(supabase.auth.user());
   const [session, setSession] = useState(null);
+  const [user, setUser] = useState(supabase.auth.user());
   const [isLoading, setIsLoading] = useState(true);
   const [didDeleteAccount, setDidDeleteAccount] = useState(false);
 
@@ -111,6 +116,40 @@ export function UserContextProvider(props) {
     setDidDeleteAccount(true);
   };
 
+  const [paymentMethods, setPaymentMethods] = useState(null);
+  const [isGettingPaymentMethods, setIsGettingPaymentMethods] = useState(false);
+  const [numberOfPaymentMethods, setNumberOfPaymentMethods] = useState(null);
+  const getPaymentMethods = async (refresh, limit, getMore) => {
+    if (!paymentMethods || refresh) {
+      setIsGettingPaymentMethods(true);
+      const newPaymentMethods = await fetchPaymentMethods({ limit });
+      setPaymentMethods(newPaymentMethods);
+      setIsGettingPaymentMethods(false);
+    } else if (getMore) {
+      setIsGettingPaymentMethods(true);
+      const newPaymentMethods = await fetchPaymentMethods({
+        limit,
+        startingAfter: paymentMethods[paymentMethods.length - 1].id,
+      });
+      setPaymentMethods(paymentMethods.concat(newPaymentMethods));
+      setIsGettingPaymentMethods(false);
+    }
+  };
+  useEffect(() => {
+    if (user) {
+      if (user.number_of_payment_methods !== numberOfPaymentMethods) {
+        setNumberOfPaymentMethods(user.number_of_payment_methods);
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (paymentMethods) {
+      getPaymentMethods(true);
+    }
+  }, [numberOfPaymentMethods]);
+
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = {
     user,
     session,
@@ -118,6 +157,11 @@ export function UserContextProvider(props) {
     deleteAccount,
     isLoading,
     didDeleteAccount,
+
+    isGettingPaymentMethods,
+    paymentMethods,
+    getPaymentMethods,
+    numberOfPaymentMethods,
   };
 
   return <UserContext.Provider value={value} {...props} />;

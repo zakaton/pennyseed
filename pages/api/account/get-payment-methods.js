@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
 import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
-import { numberOfPaymentMethodsPerPage } from '../../../utils/get-stripe-payment-methods';
+import { numberOfPaymentMethodsPerPage } from '../../../utils/get-payment-methods';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -25,11 +25,11 @@ export default async function handler(req, res) {
   const paymentMethods = await stripe.paymentMethods.list({
     customer: profile.stripe_customer,
     type: 'card',
-    limit: numberOfPaymentMethodsPerPage + 1,
+    limit: numberOfPaymentMethodsPerPage,
     ...options,
   });
   res.status(200).json({
-    stripePaymentMethods: paymentMethods.data.map(
+    paymentMethods: paymentMethods.data.map(
       ({ id, card: { brand, last4, exp_month, exp_year } }) => ({
         card: { brand, last4, exp_month, exp_year },
         id,
