@@ -32,11 +32,11 @@ export default async function handler(req, res) {
       case 'payment_method.attached':
       case 'payment_method.detached':
         {
-          const customer = event.data.object;
+          const payment_method = event.data.object;
           const { data: profile } = await supabase
             .from('profile')
             .select('*')
-            .eq('stripe_customer', customer.id)
+            .eq('stripe_customer', payment_method.customer)
             .single();
           if (profile) {
             const paymentMethods = await stripe.paymentMethods.list({
