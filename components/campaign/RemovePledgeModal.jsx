@@ -7,8 +7,8 @@ export default function RemovePledgeModal({
   open,
   setOpen,
   selectedCampaign,
-  setDeleteCampaignStatusString,
-  setShowDeleteCampaignNotification,
+  setRemovePledgeStatusString,
+  setShowRemovePledgeNotification,
 }) {
   const [isRemoving, setIsRemoving] = useState(false);
   const [didRemove, setDidRemove] = useState(false);
@@ -108,8 +108,8 @@ export default function RemovePledgeModal({
                         setIsRemoving(false);
                         setDidRemove(true);
                         const { status } = await response.json();
-                        setDeleteCampaignStatusString(status);
-                        setShowDeleteCampaignNotification(true);
+                        setRemovePledgeStatusString(status);
+                        setShowRemovePledgeNotification(true);
                         setOpen(false);
                       }}
                     >

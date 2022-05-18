@@ -124,6 +124,13 @@ export default function PledgeModal({
                     selectedPaymentMethod={selectedPaymentMethod}
                     setSelectedPaymentMethod={setSelectedPaymentMethod}
                   />
+                  <input
+                    required
+                    name="paymentMethodId"
+                    type="text"
+                    defaultValue={selectedPaymentMethod?.id || ''}
+                    className="invisible m-0 block h-0 w-0 p-0"
+                  />
                   {paymentMethods && (
                     <div className="style-links relative mt-4 flex items-start">
                       <div className="flex h-5 items-center">
@@ -159,22 +166,29 @@ export default function PledgeModal({
                         <>
                           <input
                             required
+                            readOnly
                             name="campaignId"
                             type="text"
                             defaultValue={selectedCampaign.id}
-                            hidden
-                            className="hidden"
-                          />
-                          <input
-                            required
-                            name="paymentMethodId"
-                            type="text"
-                            defaultValue={selectedPaymentMethod?.id}
-                            hidden
                             className="hidden"
                           />
                           <button
                             type="submit"
+                            onClick={(e) => {
+                              const { form } = e.target;
+                              const paymentMethodInput = form.querySelector(
+                                "input[name='paymentMethodId']"
+                              );
+                              if (!selectedPaymentMethod) {
+                                paymentMethodInput.setCustomValidity(
+                                  'you must select a payment method to pledge'
+                                );
+                                paymentMethodInput.reportValidity();
+                                e.preventDefault();
+                              } else {
+                                paymentMethodInput.setCustomValidity('');
+                              }
+                            }}
                             className="inline-flex w-full justify-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                           >
                             {/* eslint-disable-next-line no-nested-ternary */}

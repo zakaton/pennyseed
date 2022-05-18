@@ -78,6 +78,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
   }, [campaign]);
 
   const [pledge, setPledge] = useState(null);
+  const [didGetPledge, setDidGetPledge] = useState(false);
   const [isGettingPledge, setIsGettingPledge] = useState(true);
   const getPledge = async () => {
     console.log('fetching pledge');
@@ -90,18 +91,31 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     console.log('setting pledge', pledge);
     setPledge(pledge);
     setIsGettingPledge(false);
+    setDidGetPledge(true);
   };
   useEffect(() => {
-    if (campaign && user && isMyCampaign === false && !pledge) {
+    if (
+      campaign &&
+      user &&
+      isMyCampaign === false &&
+      !pledge &&
+      !didGetPledge
+    ) {
       getPledge();
     }
-  }, [campaign, user, isMyCampaign, pledge]);
+  }, [campaign, user, isMyCampaign, pledge, didGetPledge]);
+
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    if (pledge) {
+    if (isMyCampaign === false) {
+      // FILL - subscribe to pledge insertions...
       console.log('subscribing to pledge updates');
       const subscription = supabase
-        .from(`pledge:id=eq.${pledge.id}`)
+        .from(`pledge:campaign=eq.${campaignId}`)
+        .on('INSERT', (payload) => {
+          console.log('inserted pledge', payload);
+          setPledge(payload.new);
+        })
         .on('UPDATE', (payload) => {
           console.log('updated pledge');
           setPledge({ ...pledge, ...payload.new });
@@ -116,7 +130,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         supabase.removeSubscription(subscription);
       };
     }
-  }, [pledge]);
+  }, [isMyCampaign]);
 
   const [
     hypotheticalFinalNumberOfPledgers,
@@ -299,6 +313,17 @@ export default function Campaign({ campaignId, setCampaignReason }) {
   const [showRemovePledgeNotification, setShowRemovePledgeNotification] =
     useState(false);
 
+  const removeNotifications = () => {
+    setShowPledgeNotification(false);
+    setShowRemovePledgeNotification(false);
+    setShowDeleteCampaignNotification(false);
+  };
+  useEffect(() => {
+    if (showPledgeModal || showRemovePledgeModal || showDeleteCampaignModal) {
+      removeNotifications();
+    }
+  }, [showPledgeModal, showRemovePledgeModal, showDeleteCampaignModal]);
+
   return (
     <>
       <DeleteCampaignModal
@@ -333,8 +358,8 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         open={showRemovePledgeModal}
         setOpen={setShowRemovePledgeModal}
         selectedCampaign={selectedCampaign}
-        setPledgeStatusString={setRemovePledgeStatusString}
-        setShowPledgeNotification={setShowRemovePledgeNotification}
+        setRemovePledgeStatusString={setRemovePledgeStatusString}
+        setShowRemovePledgeNotification={setShowRemovePledgeNotification}
       />
       <RemovePledgeStatusNotification
         open={showRemovePledgeNotification}
