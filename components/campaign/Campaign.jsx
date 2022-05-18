@@ -599,6 +599,24 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         </div>
         {campaign && (
           <div className="mt-1 flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
+            {navigator.canShare && (
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.share({
+                    title: `Pennyseed Campaign`,
+                    text: `Help raise ${formatDollars(
+                      campaign.funding_goal,
+                      false
+                    )} for ${campaign.reason}!`,
+                    url: `https://pennyseed.me/${campaign.id}`,
+                  });
+                }}
+                className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              >
+                Share
+              </button>
+            )}
             {user &&
               !isMyCampaign &&
               !isGettingPledge &&
@@ -619,24 +637,6 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                   Pledge
                 </button>
               ))}
-            {navigator.canShare && (
-              <button
-                type="button"
-                onClick={() => {
-                  navigator.share({
-                    title: `Pennyseed Campaign`,
-                    text: `Help raise ${formatDollars(
-                      campaign.funding_goal,
-                      false
-                    )} for ${campaign.reason}!`,
-                    url: `https://pennyseed.me/${campaign.id}`,
-                  });
-                }}
-                className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-              >
-                Share
-              </button>
-            )}
             {isMyCampaign && (
               <button
                 type="button"
