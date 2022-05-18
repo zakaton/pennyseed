@@ -53,7 +53,7 @@ function SetupForm() {
         Submit
       </button>
       {errorMessage && (
-        <span className="mt-3 inlint-flex items-center rounded-md bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800">
+        <span className="inlint-flex mt-3 items-center rounded-md bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800">
           {errorMessage}
         </span>
       )}
