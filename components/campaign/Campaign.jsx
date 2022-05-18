@@ -628,7 +628,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                 Delete Campaign
               </button>
             )}
-            {navigator.canShare && navigator.canShare() && (
+            {navigator.canShare && (
               <button
                 type="button"
                 onClick={() => {
