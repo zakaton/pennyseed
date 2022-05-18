@@ -3,6 +3,7 @@
 import Stripe from 'stripe';
 import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 import { numberOfPaymentMethodsPerPage } from '../../../utils/get-payment-methods';
+import stripPaymentMethod from '../../../utils/strip-payment-method';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -29,11 +30,8 @@ export default async function handler(req, res) {
     ...options,
   });
   res.status(200).json({
-    paymentMethods: paymentMethods.data.map(
-      ({ id, card: { brand, last4, exp_month, exp_year } }) => ({
-        card: { brand, last4, exp_month, exp_year },
-        id,
-      })
+    paymentMethods: paymentMethods.data.map((paymentMethod) =>
+      stripPaymentMethod(paymentMethod)
     ),
   });
 }

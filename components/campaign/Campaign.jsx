@@ -23,10 +23,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
+const capitalizeString = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
+
 export default function Campaign({ campaignId, setCampaignReason }) {
   const [isGettingCampaign, setIsGettingCampaign] = useState(true);
   const [campaign, setCampaign] = useState(null);
-  const { user } = useUser();
+  const { user, paymentMethodsObject, getPaymentMethod } = useUser();
 
   const [isMyCampaign, setIsMyCampaign] = useState(null);
   useEffect(() => {
@@ -105,10 +108,24 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     }
   }, [campaign, user, isMyCampaign, pledge, didGetPledge]);
 
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  useEffect(() => {
+    if (pledge) {
+      if (paymentMethodsObject[pledge.payment_method]) {
+        setPaymentMethod(paymentMethodsObject[pledge.payment_method]);
+      } else {
+        getPaymentMethod(pledge.payment_method);
+      }
+    }
+  }, [pledge, paymentMethodsObject]);
+
+  useEffect(() => {
+    console.log('paymentMethod', paymentMethod);
+  }, [paymentMethod]);
+
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (isMyCampaign === false) {
-      // FILL - subscribe to pledge insertions...
       console.log('subscribing to pledge updates');
       const subscription = supabase
         .from(`pledge:campaign=eq.${campaignId}`)
@@ -560,6 +577,17 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                         {createdDate && createdDate.toLocaleString()}
                       </span>
                     </p>
+
+                    {pledge && paymentMethod && (
+                      <p className="italic">
+                        You pledged to this campaign using your{' '}
+                        <span className="font-bold">
+                          {capitalizeString(paymentMethod.card.brand)} ending in{' '}
+                          {paymentMethod.card.last4}
+                        </span>
+                        .
+                      </p>
+                    )}
                   </div>
                 </div>
               </>

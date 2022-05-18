@@ -10,3 +10,14 @@ export const fetchPaymentMethods = async (options = {}) => {
   const { paymentMethods } = await response.json();
   return paymentMethods;
 };
+
+export const fetchPaymentMethod = async (paymentMethodId) => {
+  console.log('fetching payment method');
+  const response = await fetch(
+    `/api/account/get-payment-method?${new URLSearchParams({
+      paymentMethodId,
+    })}`
+  );
+  const { paymentMethod } = await response.json();
+  return paymentMethod;
+};

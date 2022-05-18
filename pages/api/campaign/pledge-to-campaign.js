@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
 import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -73,25 +74,7 @@ export default async function handler(req, res) {
     ]);
   console.log('create pledge result', createdPledge, createPledgeError);
 
-  const { error: getNumberOfPledgersError, count: numberOfPledgers } =
-    await supabase
-      .from(`pledge`)
-      .select('*', { count: 'exact', head: true })
-      .match({ campaign: campaignId });
-  console.log(
-    'get number of pledgers result',
-    numberOfPledgers,
-    getNumberOfPledgersError
-  );
-
-  const updateCampaignResult = await supabase
-    .from('campaign')
-    .update({
-      number_of_pledgers: numberOfPledgers,
-    })
-    .match({ id: campaignId });
-
-  console.log('update campaign result', updateCampaignResult);
+  await updateCampaignNumberOfPledgers(campaignId, supabase);
 
   res.status(200).json({ status: 'succeeded' });
 }

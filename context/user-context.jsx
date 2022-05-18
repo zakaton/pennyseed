@@ -2,9 +2,8 @@ import { useEffect, useState, createContext, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { supabase, getUserProfile } from '../utils/supabase';
 import {
-  numberOfPaymentMethodsPerPage,
-  maxNumberOfPaymentMethods,
   fetchPaymentMethods,
+  fetchPaymentMethod,
 } from '../utils/get-payment-methods';
 
 export const UserContext = createContext();
@@ -49,11 +48,9 @@ export function UserContextProvider(props) {
     setSession(session);
 
     window.s = supabase;
-
-    // when to call this?
-    // supabase.auth.refreshSession()
-    // https://github.com/supabase/gotrue-js/pull/72
-    // https://github.com/supabase/supabase-js/issues/178
+    if (session.expires_at * 1000 < Date.now()) {
+      supabase.auth.refreshSession();
+    }
 
     updateUserProfile();
     setAuthCookie(session);
@@ -124,6 +121,7 @@ export function UserContextProvider(props) {
   };
 
   const [paymentMethods, setPaymentMethods] = useState(null);
+  const [paymentMethodsObject, setPaymentMethodsObject] = useState({});
   const [isGettingPaymentMethods, setIsGettingPaymentMethods] = useState(false);
   const [numberOfPaymentMethods, setNumberOfPaymentMethods] = useState(null);
   const getPaymentMethods = async (refresh, limit, getMore) => {
@@ -156,6 +154,44 @@ export function UserContextProvider(props) {
     }
   }, [numberOfPaymentMethods]);
 
+  const getPaymentMethod = async (paymentMethodId) => {
+    if (!paymentMethodsObject[paymentMethodId]) {
+      const paymentMethod = await fetchPaymentMethod(paymentMethodId);
+      const addedPaymentMethod = { [paymentMethodId]: paymentMethod };
+      // eslint-disable-next-line no-shadow
+      setPaymentMethodsObject((paymentMethodsObject) => ({
+        ...paymentMethodsObject,
+        ...addedPaymentMethod,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    console.log('paymentMethodsObject', paymentMethodsObject);
+  }, [paymentMethodsObject]);
+
+  useEffect(() => {
+    let needsUpdate = false;
+    const addedPaymentMethods = {};
+    paymentMethods?.forEach((paymentMethod) => {
+      if (!paymentMethodsObject[paymentMethod.id]) {
+        needsUpdate = true;
+        addedPaymentMethods[paymentMethod.id] = paymentMethod;
+      }
+    });
+    if (needsUpdate) {
+      // eslint-disable-next-line no-shadow
+      setPaymentMethodsObject((paymentMethodsObject) => ({
+        ...paymentMethodsObject,
+        ...addedPaymentMethods,
+      }));
+    }
+  }, [paymentMethods]);
+
+  useEffect(() => {
+    console.log('payment methods', paymentMethods);
+  }, [paymentMethods]);
+
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = {
     user,
@@ -169,6 +205,9 @@ export function UserContextProvider(props) {
     paymentMethods,
     getPaymentMethods,
     numberOfPaymentMethods,
+
+    paymentMethodsObject,
+    getPaymentMethod,
   };
 
   return <UserContext.Provider value={value} {...props} />;

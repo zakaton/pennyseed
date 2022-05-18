@@ -13,7 +13,7 @@ const statuses = {
       <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
     ),
     title: 'Successfully Removed Pledge',
-    message: 'Your pledge has been removed.',
+    message: '',
   },
   warning: {
     icon: () => (
@@ -23,14 +23,14 @@ const statuses = {
       />
     ),
     title: 'Warning',
-    message: 'warning',
+    message: '',
   },
   failed: {
     icon: () => (
       <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
     ),
     title: 'Failed to Unpledge to Campaign',
-    message: 'Try again later',
+    message: 'Please try again later',
   },
 };
 

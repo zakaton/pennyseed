@@ -131,7 +131,7 @@ export default function PledgeModal({
                     defaultValue={selectedPaymentMethod?.id || ''}
                     className="invisible m-0 block h-0 w-0 p-0"
                   />
-                  {paymentMethods && (
+                  {paymentMethods?.length > 0 && (
                     <div className="style-links relative mt-4 flex items-start">
                       <div className="flex h-5 items-center">
                         <input
@@ -162,7 +162,7 @@ export default function PledgeModal({
                   )}
                   {
                     <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                      {selectedCampaign && paymentMethods && (
+                      {selectedCampaign && paymentMethods?.length > 0 && (
                         <>
                           <input
                             required
@@ -205,7 +205,7 @@ export default function PledgeModal({
                         className="inlint-flex mt-3 w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
                         onClick={() => setOpen(false)}
                       >
-                        Cancel
+                        {paymentMethods?.length > 0 ? 'Cancel' : 'Close'}
                       </button>
                     </div>
                   }

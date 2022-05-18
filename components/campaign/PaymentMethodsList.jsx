@@ -146,7 +146,7 @@ export default function PaymentMethodsList({
 
     return (
       <div className="text-md min-w-fit text-center font-medium text-gray-500">
-        No payment methods found. You must add one to
+        No payment methods found. Add one to
         <MyLink href="/account#payment-info">
           <button
             type="button"
@@ -155,7 +155,6 @@ export default function PaymentMethodsList({
             your account
           </button>
         </MyLink>
-        to pledge.
       </div>
     );
   }

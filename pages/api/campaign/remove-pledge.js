@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService();
@@ -50,25 +51,7 @@ export default async function handler(req, res) {
     .match({ campaign: campaignId, pledger: user.id });
   console.log('delete pledge result', deletePledgeResult);
 
-  const { error: getNumberOfPledgersError, count: numberOfPledgers } =
-    await supabase
-      .from(`pledge`)
-      .select('*', { count: 'exact', head: true })
-      .match({ campaign: campaignId });
-  console.log(
-    'get number of pledgers result',
-    numberOfPledgers,
-    getNumberOfPledgersError
-  );
-
-  const updateCampaignResult = await supabase
-    .from('campaign')
-    .update({
-      number_of_pledgers: numberOfPledgers,
-    })
-    .match({ id: campaignId });
-
-  console.log('update campaign result', updateCampaignResult);
+  await updateCampaignNumberOfPledgers(campaignId, supabase);
 
   res.status(200).json({ status: 'succeeded' });
 }

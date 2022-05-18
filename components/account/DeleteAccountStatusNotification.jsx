@@ -14,7 +14,7 @@ const statuses = {
       <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
     ),
     title: 'Successfully Deleted Account',
-    message: 'Your account has been deleted.',
+    message: '',
   },
   warning: {
     icon: () => (
@@ -31,7 +31,7 @@ const statuses = {
       <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
     ),
     title: 'Unable to delete Account',
-    message: 'We were unable to delete your account',
+    message: 'Please try again later',
   },
 };
 

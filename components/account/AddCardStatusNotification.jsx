@@ -16,7 +16,7 @@ const statuses = {
       <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
     ),
     title: 'Successfully Added Card',
-    message: 'Your card has been saved.',
+    message: '',
   },
   processing: {
     icon: () => (

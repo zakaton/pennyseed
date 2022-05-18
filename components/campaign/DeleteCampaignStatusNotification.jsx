@@ -13,7 +13,7 @@ const statuses = {
       <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
     ),
     title: 'Successfully Deleted Campaign',
-    message: 'Your campaign has been deleted.',
+    message: '',
   },
   warning: {
     icon: () => (
@@ -30,7 +30,7 @@ const statuses = {
       <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
     ),
     title: 'Failed to Delete Campaign',
-    message: 'We were unable to delete your campaign',
+    message: 'Please try again later',
   },
 };
 
