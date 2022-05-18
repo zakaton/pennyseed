@@ -18,7 +18,7 @@ export default function PledgeModal({
   const [isPledging, setIsPledging] = useState(false);
   const [didPledge, setDidPledge] = useState(false);
 
-  const { user, paymentMethods } = useUser();
+  const { paymentMethods } = useUser();
 
   useEffect(() => {
     if (open) {
