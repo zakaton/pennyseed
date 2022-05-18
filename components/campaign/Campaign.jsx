@@ -41,7 +41,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
       .from('campaign')
       .select('*')
       .eq('id', campaignId)
-      .single();
+      .maybeSingle();
     console.log('setting campaign', campaign);
     if (campaign) {
       setCampaignReason(campaign.reason);
@@ -85,8 +85,8 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     const { data: pledge } = await supabase
       .from('pledge')
       .select('*')
-      .eq('pledger', user.id)
-      .single();
+      .match({ pledger: user.id, campaign: campaignId })
+      .maybeSingle();
     console.log('setting pledge', pledge);
     setPledge(pledge);
     setIsGettingPledge(false);

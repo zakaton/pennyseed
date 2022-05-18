@@ -48,6 +48,13 @@ export function UserContextProvider(props) {
     const session = supabase.auth.session();
     setSession(session);
 
+    window.s = supabase;
+
+    // when to call this?
+    // supabase.auth.refreshSession()
+    // https://github.com/supabase/gotrue-js/pull/72
+    // https://github.com/supabase/supabase-js/issues/178
+
     updateUserProfile();
     setAuthCookie(session);
 
