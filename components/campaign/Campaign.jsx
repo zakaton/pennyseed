@@ -628,6 +628,24 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                 Delete Campaign
               </button>
             )}
+            {navigator.canShare && navigator.canShare() && (
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.share({
+                    title: `Pennyseed Campaign`,
+                    text: `someone is raising ${formatDollars(
+                      campaign.funding_goal,
+                      false
+                    )} for ${campaign.reason}`,
+                    url: `https://pennyseed.me/${campaign.id}`,
+                  });
+                }}
+                className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              >
+                Share
+              </button>
+            )}
             {!isMyCampaign && (
               <MyLink
                 href={`mailto:contact@pennyseed.fund?subject=Report Campaign [${campaign.id}]&body=I'd like to report this campaign because [YOUR REASON HERE]`}
@@ -636,7 +654,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                   type="button"
                   className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
-                  Report Campaign
+                  Report
                 </button>
               </MyLink>
             )}
