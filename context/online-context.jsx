@@ -11,10 +11,10 @@ export function OnlineContextProvider(props) {
     setOnline(online);
 
     window.ononline = () => {
+      setIsShowingOfflinePage(false);
       setOnline(true);
     };
     window.onoffline = () => {
-      setIsShowingOfflinePage(false);
       setOnline(false);
     };
   }, []);
