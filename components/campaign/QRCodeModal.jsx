@@ -5,7 +5,7 @@ import { XIcon, QrcodeIcon } from '@heroicons/react/outline';
 import { useQRCode } from 'next-qrcode';
 
 export default function QRCodeModal({ open, setOpen, campaign }) {
-  const { Canvas } = useQRCode();
+  const { Image } = useQRCode();
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -74,8 +74,8 @@ export default function QRCodeModal({ open, setOpen, campaign }) {
                   </div>
                 </div>
                 {campaign && (
-                  <div className="mt-4 mb-2 flex justify-center">
-                    <Canvas
+                  <div className="mt-5 mb-3 flex justify-center">
+                    <Image
                       text={`https://pennyseed.me/${campaign.id}`}
                       options={{
                         type: 'image/jpeg',
