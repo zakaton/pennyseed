@@ -74,14 +74,14 @@ export default function QRCodeModal({ open, setOpen, campaign }) {
                   </div>
                 </div>
                 {campaign && (
-                  <div className="mt-5 mb-3 flex justify-center">
+                  <div className="mt-0 mb-0 flex justify-center">
                     <Image
                       text={`https://pennyseed.me/${campaign.id}`}
                       options={{
                         type: 'image/jpeg',
                         quality: 0.3,
                         level: 'M',
-                        margin: 0,
+                        margin: 2,
                         scale: 4,
                         width: 250,
                       }}
