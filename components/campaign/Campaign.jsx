@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { useEffect, useState } from 'react';
+import { QrcodeIcon } from '@heroicons/react/outline';
 import MyLink from '../MyLink';
 import { supabase } from '../../utils/supabase';
 import {
@@ -18,6 +19,8 @@ import PledgeStatusNotification from './PledgeStatusNotification';
 
 import RemovePledgeModal from './RemovePledgeModal';
 import RemovePledgeStatusNotification from './RemovePledgeStatusNotification';
+
+import QRCodeModal from './QRCodeModal';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -341,6 +344,8 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     }
   }, [showPledgeModal, showRemovePledgeModal, showDeleteCampaignModal]);
 
+  const [showQRCodeModal, setShowQRCodeModal] = useState(false);
+
   return (
     <>
       <DeleteCampaignModal
@@ -382,6 +387,12 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         open={showRemovePledgeNotification}
         setOpen={setShowRemovePledgeNotification}
         statusString={removePledgeStatusString}
+      />
+
+      <QRCodeModal
+        open={showQRCodeModal}
+        setOpen={setShowQRCodeModal}
+        campaign={campaign}
       />
 
       <div className="style-links mx-auto max-w-prose bg-white text-lg shadow sm:rounded-lg">
@@ -599,6 +610,16 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         </div>
         {campaign && (
           <div className="mt-1 flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
+            <button
+              type="button"
+              onClick={() => {
+                setShowQRCodeModal(true);
+              }}
+              className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-3 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+            >
+              <span className="sr-only">QR Code</span>
+              <QrcodeIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
             {navigator.canShare && (
               <button
                 type="button"
