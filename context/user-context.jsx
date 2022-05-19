@@ -48,9 +48,9 @@ export function UserContextProvider(props) {
     setSession(session);
 
     window.s = supabase;
-    if (session.expires_at * 1000 < Date.now()) {
-      supabase.auth.refreshSession();
-    }
+    console.log(session);
+    // FIX THIS ISSUE!
+    // supabase.auth.refreshSession();
 
     updateUserProfile();
     setAuthCookie(session);
