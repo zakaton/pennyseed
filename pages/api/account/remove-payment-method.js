@@ -17,19 +17,6 @@ export default async function handler(req, res) {
     return res.status(400).send("requires a 'paymentMethodId' form field");
   }
 
-  /*
-  console.log('payment method', paymentMethodId);
-  const { data: pledges, error: deletePledgesError } = await supabase
-    .from('pledge')
-    .delete()
-    .eq('payment_method', paymentMethodId);
-  console.log('delete pledges result', deletePledgesError, pledges);
-
-  await pledges.forEach(async (pledge) => {
-    updateCampaignNumberOfPledgers(pledge.campaign, supabase);
-  });
-  */
-
   const paymentMethod = await stripe.paymentMethods.detach(paymentMethodId);
 
   const status = paymentMethod.customer == null ? 'succeeded' : 'failed';

@@ -669,7 +669,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
             )}
             {!isMyCampaign && (
               <MyLink
-                href={`mailto:contact@pennyseed.fund?subject=Report Campaign [${campaign.id}]&body=I'd like to report this campaign because [YOUR REASON HERE]`}
+                href={`mailto:contact@pennyseed.fund?subject=Report Campaign [${campaign.id}]&body=I'd like to report the campaign found at https://pennyseed.me/${campaign.id} because [YOUR REASON HERE]`}
               >
                 <button
                   type="button"
