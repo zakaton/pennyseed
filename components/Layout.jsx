@@ -7,14 +7,14 @@ import OfflineBanner from './OfflineBanner';
 import DeleteAccountStatusNotification from './account/DeleteAccountStatusNotification';
 
 export default function Layout({ children }) {
-  const { online } = useOnline();
+  const { online, isShowingOfflinePage } = useOnline();
   return (
     <>
       <Head>
         <title>Pennyseed</title>
       </Head>
       <Header />
-      {!online && <OfflineBanner />}
+      {!online && !isShowingOfflinePage && <OfflineBanner />}
       <DeleteAccountStatusNotification />
       <main className="relative mx-auto max-w-7xl py-4 px-4 sm:px-6 lg:px-8">
         {children}
