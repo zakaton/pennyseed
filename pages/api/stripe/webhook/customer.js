@@ -3,6 +3,7 @@ import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../../utils/supabase';
 import { maxNumberOfPaymentMethods } from '../../../../utils/get-payment-methods';
+import updateCampaignNumberOfPledgers from '../../../../utils/update-campaign-number-of-pledgers';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_CUSTOMER_WEBHOOK_SECRET;
@@ -52,6 +53,19 @@ export default async function handler(req, res) {
               .from('profile')
               .update({ number_of_payment_methods: paymentMethods.length })
               .eq('stripe_customer', profile.stripe_customer);
+
+            if (event.type === 'payment_method.detached') {
+              const { data: pledges, error: deletePledgesError } =
+                await supabase
+                  .from('pledge')
+                  .delete()
+                  .eq('payment_method', payment_method.id);
+              console.log('delete pledges result', deletePledgesError, pledges);
+
+              await pledges.forEach(async (pledge) => {
+                updateCampaignNumberOfPledgers(pledge.campaign, supabase);
+              });
+            }
           }
         }
         break;

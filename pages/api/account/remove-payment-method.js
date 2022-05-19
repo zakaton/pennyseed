@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../utils/supabase';
-import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
+// import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -17,6 +17,7 @@ export default async function handler(req, res) {
     return res.status(400).send("requires a 'paymentMethodId' form field");
   }
 
+  /*
   console.log('payment method', paymentMethodId);
   const { data: pledges, error: deletePledgesError } = await supabase
     .from('pledge')
@@ -27,6 +28,7 @@ export default async function handler(req, res) {
   await pledges.forEach(async (pledge) => {
     updateCampaignNumberOfPledgers(pledge.campaign, supabase);
   });
+  */
 
   const paymentMethod = await stripe.paymentMethods.detach(paymentMethodId);
 
