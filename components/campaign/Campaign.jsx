@@ -615,10 +615,10 @@ export default function Campaign({ campaignId, setCampaignReason }) {
               onClick={() => {
                 setShowQRCodeModal(true);
               }}
-              className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-3 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-1 px-1 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
             >
               <span className="sr-only">QR Code</span>
-              <QrcodeIcon className="h-6 w-6" aria-hidden="true" />
+              <QrcodeIcon className="h-7 w-7" aria-hidden="true" />
             </button>
             {navigator.canShare && (
               <button
