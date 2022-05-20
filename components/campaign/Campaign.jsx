@@ -641,6 +641,8 @@ export default function Campaign({ campaignId, setCampaignReason }) {
             {user &&
               !isMyCampaign &&
               !isGettingPledge &&
+              !campaign.processed &&
+              campaign.number_of_pledgers < maximumPossibleNumberOfPledgers &&
               (pledge ? (
                 <button
                   type="button"

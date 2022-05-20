@@ -2,6 +2,7 @@
 import Stripe from 'stripe';
 import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
+import { getMaximumPossibleNumberOfPledgers } from '../../../utils/campaign-utils';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -37,6 +38,15 @@ export default async function handler(req, res) {
   }
   if (campaign.created_by === user.id) {
     return sendErrorMessage('you cannot pledge to your own campaign');
+  }
+  if (campaign.processed) {
+    return sendErrorMessage('campaign was already processed');
+  }
+  if (
+    campaign.number_of_pledgers >=
+    getMaximumPossibleNumberOfPledgers(campaign.funding_goal)
+  ) {
+    return sendErrorMessage('maximum number of pledgers has been reached');
   }
 
   const profile = await getUserProfile(user, supabase);
