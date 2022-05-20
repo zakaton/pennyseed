@@ -4,14 +4,12 @@ export const OnlineContext = createContext();
 
 export function OnlineContextProvider(props) {
   const [online, setOnline] = useState(true);
-  const [isShowingOfflinePage, setIsShowingOfflinePage] = useState(false);
 
   useEffect(() => {
     const online = navigator.onLine;
     setOnline(online);
 
     window.ononline = () => {
-      setIsShowingOfflinePage(false);
       setOnline(true);
     };
     window.onoffline = () => {
@@ -19,7 +17,7 @@ export function OnlineContextProvider(props) {
     };
   }, []);
 
-  const value = { online, isShowingOfflinePage, setIsShowingOfflinePage };
+  const value = { online };
 
   return <OnlineContext.Provider value={value} {...props} />;
 }

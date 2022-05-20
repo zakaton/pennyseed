@@ -1,10 +1,6 @@
 import Head from 'next/head';
-import { useOnline } from '../context/online-context';
 
 export default function Offline() {
-  const { setIsShowingOfflinePage } = useOnline();
-  setIsShowingOfflinePage(true);
-
   return (
     <>
       <Head>
