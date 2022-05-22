@@ -14,7 +14,7 @@ export default function Pagination({
   showPrevious,
   showNext,
   isSimple,
-  maxNumberOfPageButtons = 5,
+  maxNumberOfPageButtons = 7,
 }) {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [showPagination, setShowPagination] = useState(false);

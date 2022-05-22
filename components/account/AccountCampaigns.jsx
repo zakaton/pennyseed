@@ -8,7 +8,7 @@ import DeleteCampaignStatusNotification from '../campaign/DeleteCampaignStatusNo
 import CampaignFilters from './CampaignFilters';
 import Pagination from '../Pagination';
 
-const numberOfCampaignsPerPage = 1;
+const numberOfCampaignsPerPage = 4;
 
 export default function AccountCampaigns({ isActive }) {
   const { isLoading, user } = useUser();
