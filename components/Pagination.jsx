@@ -42,50 +42,52 @@ export default function Pagination({
   }, [numberOfResults, numberOfResultsPerPage]);
 
   const pageButtons = [];
-  if (numberOfPages > 1) {
-    const lastPageButtonIndex = numberOfPages - 1;
-    let numberOfPageButtons = numberOfPages;
-    let basePageButtonIndex = 1;
-    let nextPageButtonsIndex = 0;
-    let previousPageButtonsIndex = 0;
+  if (!isSimple && numberOfPages > 1) {
     let includePreviousNavigation = false;
     let includeNextNavigation = false;
-    if (numberOfPageButtons > maxNumberOfPageButtons) {
-      numberOfPageButtons = maxNumberOfPageButtons;
 
-      const isOnFirstPageButtons = pageIndex < maxNumberOfPageButtons - 2;
+    let basePageButtonIndex = 1;
+    let previousPageButtonsIndex = 0;
+    let nextPageButtonsIndex = 0;
+
+    const numberOfMiddlePageButtons = maxNumberOfPageButtons - 2;
+    let numberOfNumberedMiddePageButtons = numberOfMiddlePageButtons;
+
+    if (numberOfPages > maxNumberOfPageButtons) {
+      const isOnFirstPageButtons = pageIndex < numberOfMiddlePageButtons;
       if (!isOnFirstPageButtons) {
         includePreviousNavigation = true;
       }
       const isOnLastPageButtons =
-        numberOfPages - pageIndex - 1 < maxNumberOfPageButtons - 2;
+        numberOfPages - pageIndex <= numberOfMiddlePageButtons;
       if (!isOnLastPageButtons) {
         includeNextNavigation = true;
       }
 
       if (includePreviousNavigation) {
-        numberOfPageButtons -= 1;
+        numberOfNumberedMiddePageButtons -= 1;
       }
       if (includeNextNavigation) {
-        numberOfPageButtons -= 1;
+        numberOfNumberedMiddePageButtons -= 1;
       }
 
       if (isOnFirstPageButtons) {
         basePageButtonIndex = 1;
       } else if (isOnLastPageButtons) {
-        basePageButtonIndex = numberOfPages - (maxNumberOfPageButtons - 2);
+        basePageButtonIndex = numberOfPages - numberOfMiddlePageButtons;
       } else {
-        basePageButtonIndex = maxNumberOfPageButtons - 2;
-        while (basePageButtonIndex + maxNumberOfPageButtons - 4 <= pageIndex) {
-          basePageButtonIndex += maxNumberOfPageButtons - 4;
-        }
+        basePageButtonIndex = numberOfMiddlePageButtons;
+        basePageButtonIndex += Math.floor(
+          (pageIndex - basePageButtonIndex) / numberOfNumberedMiddePageButtons
+        );
       }
 
       if (includePreviousNavigation) {
         previousPageButtonsIndex = basePageButtonIndex - 1;
       }
       if (includeNextNavigation) {
-        nextPageButtonsIndex = basePageButtonIndex + numberOfPageButtons - 2;
+        nextPageButtonsIndex =
+          basePageButtonIndex + numberOfNumberedMiddePageButtons;
       }
     }
 
@@ -100,7 +102,7 @@ export default function Pagination({
           pageIndex === 0
             ? 'z-10 border-yellow-500 bg-yellow-50 text-yellow-600'
             : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50',
-          'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium'
+          'inline-flex relative z-10 items-center border px-4 py-2 text-sm font-medium'
         )}
       >
         1
@@ -111,7 +113,7 @@ export default function Pagination({
         <button
           key="previous"
           type="button"
-          className="relative inline-flex items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+          className="inline-flex relative items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
           onClick={() => setPageIndex(previousPageButtonsIndex)}
         >
           <span className="sr-only">Previous</span>
@@ -122,7 +124,7 @@ export default function Pagination({
 
     for (
       let pageButtonIndex = 0;
-      pageButtonIndex < numberOfPageButtons - 2;
+      pageButtonIndex < numberOfNumberedMiddePageButtons;
       pageButtonIndex += 1
     ) {
       const pageButtonPageIndex = basePageButtonIndex + pageButtonIndex;
@@ -138,7 +140,7 @@ export default function Pagination({
             isActive
               ? 'z-10 border-yellow-500 bg-yellow-50 text-yellow-600'
               : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50',
-            'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium'
+            'inline-flex relative z-10 items-center border px-4 py-2 text-sm font-medium'
           )}
         >
           {pageButtonPageIndex + 1}
@@ -151,7 +153,7 @@ export default function Pagination({
         <button
           key="next"
           type="button"
-          className="relative inline-flex items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+          className="inline-flex relative items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
           onClick={() => setPageIndex(nextPageButtonsIndex)}
         >
           <span className="sr-only">Next</span>
@@ -159,6 +161,8 @@ export default function Pagination({
         </button>
       );
     }
+
+    const lastPageButtonIndex = numberOfPages - 1;
     pageButtons.push(
       <button
         key="last"
@@ -170,7 +174,7 @@ export default function Pagination({
           pageIndex === lastPageButtonIndex
             ? 'z-10 border-yellow-500 bg-yellow-50 text-yellow-600'
             : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50',
-          'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium'
+          'inline-flex relative z-10 items-center border px-4 py-2 text-sm font-medium'
         )}
       >
         {numberOfPages}
@@ -219,7 +223,7 @@ export default function Pagination({
               onClick={showPrevious}
               className={classNames(
                 pageIndex > 0 ? 'visible' : 'invisible',
-                'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+                'inline-flex relative items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
               )}
             >
               Previous
@@ -229,7 +233,7 @@ export default function Pagination({
               onClick={showNext}
               className={classNames(
                 hasNextPage ? 'visible' : 'hidden',
-                'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+                'inline-flex relative items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
               )}
             >
               Next
