@@ -13,7 +13,7 @@ const statuses = {
       <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
     ),
     title: 'Successfully Removed Card',
-    message: 'Your card has been removed.',
+    message: '',
   },
   warning: {
     icon: () => (
@@ -30,7 +30,7 @@ const statuses = {
       <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
     ),
     title: 'Failed to Remove Card',
-    message: 'We were unable to remove your card',
+    message: 'Please try again later',
   },
 };
 
@@ -77,7 +77,7 @@ export default function RemoveCardStatusNotification({
                   <div className="ml-4 flex flex-shrink-0">
                     <button
                       type="button"
-                      className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
                       onClick={() => {
                         setOpen(false);
                       }}

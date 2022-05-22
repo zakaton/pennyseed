@@ -5,11 +5,9 @@ import {
   PaymentElement,
 } from '@stripe/react-stripe-js';
 
-function SetupForm() {
+function SetupForm({ errorMessage, setErrorMessage }) {
   const stripe = useStripe();
   const elements = useElements();
-
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
@@ -39,6 +37,7 @@ function SetupForm() {
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
+      setErrorMessage(null);
     }
   };
 
@@ -52,7 +51,7 @@ function SetupForm() {
       >
         Submit
       </button>
-      {errorMessage && (
+      {false && errorMessage && (
         <span className="inlint-flex mt-3 items-center rounded-md bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800">
           {errorMessage}
         </span>

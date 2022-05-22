@@ -17,7 +17,7 @@ export default function Home() {
       </div>
       <div className="style-links prose prose-lg prose-yellow mx-auto mt-6 text-xl text-gray-500">
         <p>
-          PennySeed is a crowdfunding platform where{' '}
+          Pennyseed is a crowdfunding platform where{' '}
           <span className="font-bold">
             the funding goal is divided by the number of pledgers
           </span>

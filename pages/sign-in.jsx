@@ -6,7 +6,8 @@ import { useUser } from '../context/user-context';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
-  const [agree, setAgree] = useState(false);
+  const [agree, setAgree] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const router = useRouter();
@@ -19,10 +20,10 @@ export default function SignIn() {
   }, [isLoading, user]);
 
   async function signIn() {
-    if (!(email && agree)) {
+    if (!(email && agree) || isSubmitting) {
       return;
     }
-
+    setIsSubmitting(true);
     // eslint-disable-next-line no-unused-vars
     const { error, data } = await supabase.auth.signIn(
       {
@@ -38,6 +39,7 @@ export default function SignIn() {
     } else {
       setSubmitted(true);
     }
+    setIsSubmitting(false);
   }
 
   if (submitted) {
@@ -69,7 +71,7 @@ export default function SignIn() {
               We&apos;ll send a link to your email - no password required
             </p>
           </div>
-          <form className="mt-8 space-y-6" action="#" method="POST">
+          <form className="mt-8 space-y-5" action="#" method="POST">
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
                 <label htmlFor="email-address" className="sr-only">
@@ -88,13 +90,13 @@ export default function SignIn() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex hidden items-center justify-between">
               <div className="flex items-center">
                 <input
                   id="agree"
                   name="agree"
                   type="checkbox"
-                  required
+                  required={false}
                   className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
                   onInput={(e) => setAgree(e.target.checked)}
                 />
@@ -102,7 +104,7 @@ export default function SignIn() {
                   htmlFor="agree"
                   className="ml-2 block text-sm text-gray-900"
                 >
-                  By signing in you agree to the{' '}
+                  By signing in I agree to the{' '}
                   <MyLink href="/terms" className="font-medium">
                     terms of use
                   </MyLink>
@@ -121,8 +123,14 @@ export default function SignIn() {
                   signIn();
                 }}
               >
-                Send link
+                {isSubmitting ? 'Sending Link...' : 'Send Link'}
               </button>
+              <div className="flex items-center justify-between pt-3">
+                <span className="text-center text-sm text-gray-500">
+                  By signing in you agree to the{' '}
+                  <MyLink href="/terms">terms of use</MyLink>.
+                </span>
+              </div>
             </div>
           </form>
         </div>

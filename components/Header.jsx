@@ -83,12 +83,12 @@ export default function Header() {
                   (user ? (
                     <>
                       {/* Notifications Dropdown */}
-                      <Menu hidden as="div" className="relative z-10 ml-3">
+                      <Menu hidden as="div" className="relative z-20 ml-3">
                         <div>
                           <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
                             <span className="sr-only">View notifications</span>
                             <span className="absolute top-0 right-0 block h-3.5 w-3.5 rounded-full bg-red-400 ring-2 ring-white" />
-                            <BellIcon className="h-8 w-8" aria-hidden="true" />
+                            <BellIcon className="h-9 w-9" aria-hidden="true" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -119,12 +119,12 @@ export default function Header() {
                       </Menu>
 
                       {/* Profile dropdown */}
-                      <Menu as="div" className="relative z-10 ml-3">
+                      <Menu as="div" className="relative z-20 ml-3">
                         <div>
                           <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
                             <span className="sr-only">Open user menu</span>
                             <UserCircleIcon
-                              className="h-8 w-8"
+                              className="h-9 w-9"
                               aria-hidden="true"
                             />
                           </Menu.Button>

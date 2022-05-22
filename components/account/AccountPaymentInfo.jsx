@@ -5,18 +5,16 @@ import AddCardModal from './AddCardModal';
 import RemoveCardModal from './RemoveCardModal';
 import AddCardStatusNotification from './AddCardStatusNotification';
 import RemoveCardStatusNotification from './RemoveCardStatusNotification';
-import cardIcons from './CardIcons';
 import {
   numberOfPaymentMethodsPerPage,
   maxNumberOfPaymentMethods,
 } from '../../utils/get-payment-methods';
+import Pagination from '../Pagination';
+import MyLink from '../MyLink';
+import cardIcons from './CardIcons';
 
 const capitalizeString = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export default function AccountPaymentInfo({ isActive }) {
   const { paymentMethods, numberOfPaymentMethods, getPaymentMethods } =
@@ -59,37 +57,25 @@ export default function AccountPaymentInfo({ isActive }) {
   const [removeCardStatusString, setRemoveCardStatusString] =
     useState('succeeded');
 
-  const [showPagination, setShowPagination] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
-  const [hasNextPage, setHasNextPage] = useState(false);
-
-  useEffect(() => {
-    setShowPagination(paymentMethods && numberOfPaymentMethods > 0);
-    setHasNextPage(
-      numberOfPaymentMethods > (pageIndex + 1) * numberOfPaymentMethodsPerPage
-    );
-  }, [numberOfPaymentMethods, paymentMethods, pageIndex]);
-
-  useEffect(() => {
-    if (
-      numberOfPaymentMethods !== null &&
-      pageIndex * numberOfPaymentMethodsPerPage >= numberOfPaymentMethods
-    ) {
+  const showPreviousPaymentMethods = async () => {
+    if (pageIndex > 0) {
       setPageIndex(pageIndex - 1);
     }
-  }, [numberOfPaymentMethods]);
-
-  const showPreviousPaymentMethods = async () => {
-    setPageIndex(pageIndex - 1);
   };
   const showNextPaymentMethods = async () => {
     if (
-      paymentMethods.length <=
-      (pageIndex + 1) * numberOfPaymentMethodsPerPage
+      (pageIndex + 1) * numberOfPaymentMethodsPerPage <
+      numberOfPaymentMethods
     ) {
-      await getPaymentMethods(false, numberOfPaymentMethodsPerPage, true);
+      if (
+        paymentMethods.length <=
+        (pageIndex + 1) * numberOfPaymentMethodsPerPage
+      ) {
+        await getPaymentMethods(false, numberOfPaymentMethodsPerPage, true);
+      }
+      setPageIndex(pageIndex + 1);
     }
-    setPageIndex(pageIndex + 1);
   };
 
   let paymentMethodsContent;
@@ -107,45 +93,53 @@ export default function AccountPaymentInfo({ isActive }) {
           return (
             <div
               key={paymentMethod.id}
-              className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5"
+              className="border-t border-gray-200 px-4 py-5 sm:px-6"
             >
               <h4 className="sr-only">{capitalizedBrand}</h4>
-              <div className="sm:flex sm:items-start">
-                <CardIcon width={42} height="100%" />
-                <div className="mt-0 sm:mt-0 sm:ml-4">
-                  <div className="text-sm font-medium text-gray-900">
-                    {brand in cardIcons
-                      ? 'Ending'
-                      : `${capitalizedBrand} ending`}{' '}
-                    with {paymentMethod.card.last4}
-                  </div>
-                  <div className="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
-                    <div>
-                      Expires {paymentMethod.card.exp_month}/
-                      {paymentMethod.card.exp_year.toString().slice(2)}
+              <div className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 md:grid-cols-3">
+                <div className="sm:col-span-1">
+                  <div className="sm:flex sm:items-start">
+                    <CardIcon width={42} height="100%" />
+                    <div className="mt-0 sm:mt-0 sm:ml-4">
+                      <div className="text-sm font-medium text-gray-900">
+                        {brand in cardIcons
+                          ? 'Ending'
+                          : `${capitalizedBrand} ending`}{' '}
+                        with {paymentMethod.card.last4}
+                      </div>
+                      <div className="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
+                        <div>
+                          Expires {paymentMethod.card.exp_month}/
+                          {paymentMethod.card.exp_year.toString().slice(2)}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
-                <button
-                  type="button"
-                  className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-                >
-                  view pledges using this card
-                </button>
-              </div>
-              <div className="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedPaymentMethod(paymentMethod);
-                    setShowRemoveCardModal(true);
-                  }}
-                  className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-2 py-1 text-sm font-medium leading-4 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                >
-                  remove card
-                </button>
+                <div className="sm:col-span-1">
+                  <MyLink
+                    href={`/account?payment-method=${paymentMethod.id}#my-pledges`}
+                  >
+                    <button
+                      type="button"
+                      className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                    >
+                      View Pledges
+                    </button>
+                  </MyLink>
+                </div>
+                <div className="sm:col-span-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedPaymentMethod(paymentMethod);
+                      setShowRemoveCardModal(true);
+                    }}
+                    className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  >
+                    Remove Card
+                  </button>
+                </div>
               </div>
             </div>
           );
@@ -174,7 +168,7 @@ export default function AccountPaymentInfo({ isActive }) {
     paymentMethodsContent = (
       <div className="py-4 text-center sm:py-5">
         <div className="text-sm font-medium text-gray-500">
-          loading payment info...
+          Loading payment info...
         </div>
       </div>
     );
@@ -199,82 +193,44 @@ export default function AccountPaymentInfo({ isActive }) {
         setOpen={setShowRemoveCardNotification}
         statusString={removeCardStatusString}
       />
-      <div className="shadow sm:overflow-hidden sm:rounded-md">
-        <div className="space-y-6 bg-white px-4 pb-1 pt-6 sm:px-6 sm:pt-6">
-          <div className="sm:flex sm:items-center">
-            <div className="sm:flex-auto">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                Payment Info
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Add and remove payment methods. (max {maxNumberOfPaymentMethods}
-                )
-              </p>
-            </div>
-            {numberOfPaymentMethods < maxNumberOfPaymentMethods && (
-              <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                <button
-                  type="button"
-                  onClick={() => setShowAddCardModal(true)}
-                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                >
-                  Add card
-                </button>
-              </div>
-            )}
+      <div className="bg-white px-4 pb-1 pt-6 sm:px-6 sm:pt-6">
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              Payment Info
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Add and remove payment methods. (max {maxNumberOfPaymentMethods})
+            </p>
           </div>
-
-          <div className="mt-5 border-t border-gray-200">
-            <div className="divide-y divide-gray-200">
-              {paymentMethodsContent}
+          {numberOfPaymentMethods < maxNumberOfPaymentMethods && (
+            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+              <button
+                type="button"
+                onClick={() => setShowAddCardModal(true)}
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+              >
+                Add card
+              </button>
             </div>
+          )}
+        </div>
+
+        <div className="mt-5 border-t border-gray-200">
+          <div className="divide-y divide-gray-200">
+            {paymentMethodsContent}
           </div>
         </div>
-        {showPagination && (
-          <nav
-            className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
-            aria-label="Pagination"
-          >
-            <div className="hidden sm:block">
-              <p className="text-sm text-gray-700">
-                Showing{' '}
-                <span className="font-medium">
-                  {pageIndex * numberOfPaymentMethodsPerPage + 1}
-                </span>{' '}
-                to{' '}
-                <span className="font-medium">
-                  {Math.min(
-                    numberOfPaymentMethods,
-                    (pageIndex + 1) * numberOfPaymentMethodsPerPage
-                  )}
-                </span>{' '}
-                of {numberOfPaymentMethods}
-              </p>
-            </div>
-            <div className="flex flex-1 justify-between sm:justify-end">
-              <button
-                type="button"
-                onClick={showPreviousPaymentMethods}
-                className={classNames(
-                  pageIndex > 0 ? 'visible' : 'invisible',
-                  'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
-                )}
-              >
-                Previous
-              </button>
-              <button
-                type="button"
-                onClick={showNextPaymentMethods}
-                className={classNames(
-                  hasNextPage ? 'visible' : 'hidden',
-                  'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
-                )}
-              >
-                Next
-              </button>
-            </div>
-          </nav>
-        )}
+        <Pagination
+          name="card"
+          numberOfResults={numberOfPaymentMethods}
+          numberOfResultsPerPage={numberOfPaymentMethodsPerPage}
+          pageIndex={pageIndex}
+          setPageIndex={setPageIndex}
+          showPrevious={showPreviousPaymentMethods}
+          showNext={showNextPaymentMethods}
+          isSimple
+        />
       </div>
     </>
   );

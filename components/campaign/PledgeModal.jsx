@@ -126,6 +126,7 @@ export default function PledgeModal({
                   />
                   <input
                     required
+                    readOnly
                     name="paymentMethodId"
                     type="text"
                     defaultValue={selectedPaymentMethod?.id || ''}

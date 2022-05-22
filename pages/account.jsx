@@ -103,7 +103,7 @@ export default function Account() {
                         : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
                       'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
                     )}
-                    aria-current={current ? 'page' : undefined}
+                    {...(current ? { 'aria-current': 'page' } : {})}
                   >
                     <item.icon
                       className={classNames(
@@ -126,7 +126,9 @@ export default function Account() {
               const isActive = item.hash === hash;
               return (
                 <div key={item.id} hidden={!isActive}>
-                  <item.component isActive={isActive} />
+                  <div className="shadow sm:overflow-hidden sm:rounded-md">
+                    <item.component isActive={isActive} />
+                  </div>
                 </div>
               );
             })}

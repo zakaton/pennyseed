@@ -35,6 +35,11 @@ export default function PaymentMethodsList({
   useEffect(() => {
     setHasMorePaymentMethods(paymentMethods?.length !== numberOfPaymentMethods);
   }, [paymentMethods, numberOfPaymentMethods]);
+  useEffect(() => {
+    if (paymentMethods?.length > 0 && !selectedPaymentMethod) {
+      setSelectedPaymentMethod(paymentMethods[0]);
+    }
+  }, [paymentMethods, selectedPaymentMethod]);
 
   // eslint-disable-next-line no-unused-vars
   const showMorePaymentMethods = async () => {

@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon, CreditCardIcon } from '@heroicons/react/outline';
 import { Elements } from '@stripe/react-stripe-js';
@@ -8,6 +8,12 @@ import getStripe from '../../utils/get-stripe';
 export default function AddCardModal({ open, setOpen }) {
   const [stripePromise] = useState(() => getStripe());
   const [isAddingCard, setIsAddingCard] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  useEffect(() => {
+    if (errorMessage) {
+      setIsAddingCard(false);
+    }
+  }, [errorMessage]);
 
   const [clientSecret, setClientSecret] = useState(null);
   const createSetupIntent = async () => {
@@ -97,7 +103,10 @@ export default function AddCardModal({ open, setOpen }) {
                 {clientSecret && (
                   <div className="py-2 pt-3">
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
-                      <ElementsForm />
+                      <ElementsForm
+                        errorMessage={errorMessage}
+                        setErrorMessage={setErrorMessage}
+                      />
                     </Elements>
                   </div>
                 )}
@@ -112,7 +121,7 @@ export default function AddCardModal({ open, setOpen }) {
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                    className="inline-flex mt-3 w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
                     onClick={() => setOpen(false)}
                   >
                     Cancel
