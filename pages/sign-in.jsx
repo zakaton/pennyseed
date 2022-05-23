@@ -125,7 +125,7 @@ export default function SignIn() {
               >
                 {isSubmitting ? 'Sending Link...' : 'Send Link'}
               </button>
-              <div className="flex items-center justify-between pt-3">
+              <div className="flex items-center justify-center pt-3">
                 <span className="text-center text-sm text-gray-500">
                   By signing in you agree to the{' '}
                   <MyLink href="/terms">terms of use</MyLink>.

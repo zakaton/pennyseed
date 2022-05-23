@@ -4,7 +4,7 @@ import { ChevronDownIcon, AdjustmentsIcon } from '@heroicons/react/solid';
 
 const filterTypes = [
   {
-    name: 'Approved',
+    name: 'Campaign Approved',
     column: 'approved',
     radios: [
       { value: true, label: 'approved', defaultChecked: false },
@@ -13,7 +13,7 @@ const filterTypes = [
     ],
   },
   {
-    name: 'Active',
+    name: 'Campaign Active',
     column: 'processed',
     radios: [
       { value: false, label: 'active', defaultChecked: false },
@@ -34,8 +34,8 @@ const filterTypes = [
 
 const sortOptions = [
   {
-    label: 'Date Created',
-    value: ['created_at', { ascending: false }],
+    label: 'Date Pledged',
+    value: ['created_at', { ascending: true }],
     current: true,
   },
   {
@@ -59,7 +59,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function CampaignFilters({ filters, setFilters, setOrder }) {
+export default function PledgeFilters({ filters, setFilters, setOrder }) {
   const [numberOfActiveFilters, setNumberOfActiveFilters] = useState(0);
   useEffect(() => {
     setNumberOfActiveFilters(Object.keys(filters).length);
@@ -118,7 +118,7 @@ export default function CampaignFilters({ filters, setFilters, setOrder }) {
                       {filterType.name}
                     </legend>
                     <div className="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
-                      {filterType.radios.map((radio, radioIndex) => {
+                      {filterType.radios?.map((radio, radioIndex) => {
                         const id = `${filterType.column}-${radioIndex}`;
                         const checked =
                           filterType.column in filters

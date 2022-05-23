@@ -58,6 +58,7 @@ export default async function handler(req, res) {
     .from('pledge')
     .select('*')
     .eq('pledger', profile.id)
+    .match({ campaign: campaignId })
     .maybeSingle();
 
   if (existingPledge) {

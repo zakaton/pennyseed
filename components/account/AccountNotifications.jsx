@@ -27,10 +27,11 @@ export default function AccountNotifications() {
               </div>
               <div className="ml-3 text-sm">
                 <label htmlFor="comments" className="font-medium text-gray-700">
-                  Campaign succeed/fail
+                  Campaign Succeeds or Fails
                 </label>
                 <p className="text-gray-500">
-                  Get notified when your campaign succeeds or fails
+                  Get notified when a campaign you&apos;ve created or pledged to
+                  succeeds/fails.
                 </p>
               </div>
             </div>
@@ -49,10 +50,11 @@ export default function AccountNotifications() {
                     htmlFor="candidates"
                     className="font-medium text-gray-700"
                   >
-                    Pledger Updates
+                    Day Before Campaign Deadline
                   </label>
                   <p className="text-gray-500">
-                    Get notified when campaigns receive or lose a pledger
+                    Get notified 24 hours before a campaign you&apos;ve pledged
+                    to ends.
                   </p>
                 </div>
               </div>
@@ -69,11 +71,11 @@ export default function AccountNotifications() {
                 </div>
                 <div className="ml-3 text-sm">
                   <label htmlFor="offers" className="font-medium text-gray-700">
-                    About to Charge
+                    Campaign is Deleted
                   </label>
                   <p className="text-gray-500">
-                    Get notified when a campaign you&apos;ve pledged to is about
-                    to succeed and you&apos;ll be charged
+                    Get notified when a campaign you&apos;ve pledged to is
+                    deleted by the creator.
                   </p>
                 </div>
               </div>

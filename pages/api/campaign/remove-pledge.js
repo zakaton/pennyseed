@@ -38,7 +38,8 @@ export default async function handler(req, res) {
   const { data: existingPledge } = await supabase
     .from('pledge')
     .select('*')
-    .eq('pledger', profile.id)
+    .eq('pledger', user.id)
+    .match({ campaign: campaignId })
     .maybeSingle();
 
   if (!existingPledge) {
