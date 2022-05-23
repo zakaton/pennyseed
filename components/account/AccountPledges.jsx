@@ -29,11 +29,15 @@ export default function AccountPledges({ isActive }) {
   const getNumberOfPledges = async () => {
     setIsGettingNumberOfPledges(true);
     // eslint-disable-next-line no-shadow
-    const { count: numberOfPledges } = await supabase
+    const { error, count: numberOfPledges } = await supabase
       .from('pledge')
-      .select('*', { count: 'exact', head: true })
+      .select('*, campaign!inner(*)', { count: 'exact', head: true })
       .eq('pledger', user.id)
       .match(pledgeFilters);
+    console.log('number of pledges', numberOfPledges);
+    if (error) {
+      console.error(error);
+    }
     setPageIndex(0);
     setNumberOfPledges(numberOfPledges);
     setIsGettingNumberOfPledges(false);
@@ -55,9 +59,9 @@ export default function AccountPledges({ isActive }) {
       setIsGettingPledges(true);
       console.log('fetching pledges!', pageIndex);
       // eslint-disable-next-line no-shadow
-      const { data: pledges } = await supabase
+      const { error, data: pledges } = await supabase
         .from('pledge')
-        .select('*, campaign(*)')
+        .select('*, campaign!inner(*)')
         .eq('pledger', user.id)
         .match(pledgeFilters)
         .order(...pledgeOrder)
@@ -67,6 +71,9 @@ export default function AccountPledges({ isActive }) {
           (pageIndex + 1) * numberOfPledgesPerPage - 1
         );
       console.log('setting pledges', pledges);
+      if (error) {
+        console.error(error);
+      }
       setPledges(pledges);
       setIsGettingPledges(false);
       setPreviousPageIndex(pageIndex);
@@ -285,22 +292,23 @@ export default function AccountPledges({ isActive }) {
             <div className="divide-y divide-gray-200">
               <div className="py-4 text-center sm:py-5">
                 <div className="text-sm font-medium text-gray-500">
-                  {user.number_of_payment_methods ? (
-                    <>No pledges found.</>
-                  ) : (
-                    <>
-                      You need to{' '}
-                      <MyLink href="/account#payment-info">
-                        <button
-                          type="button"
-                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                          add a payment method
-                        </button>
-                      </MyLink>{' '}
-                      before you can pledge to a campaign.
-                    </>
-                  )}
+                  {!isGettingPledges &&
+                    (user.number_of_payment_methods ? (
+                      <>No pledges found.</>
+                    ) : (
+                      <>
+                        You need to{' '}
+                        <MyLink href="/account#payment-info">
+                          <button
+                            type="button"
+                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            add a payment method
+                          </button>
+                        </MyLink>{' '}
+                        before you can pledge to a campaign.
+                      </>
+                    ))}
                 </div>
               </div>
             </div>

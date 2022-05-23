@@ -70,14 +70,17 @@ export default function Account() {
 
   const [hash, setHash] = useState(router.asPath.split('#')[1] || '');
   useEffect(() => {
-    const handleRouteChange = (url) => {
-      const newHash = url.split('#')[1] || '';
+    const handleRouteChange = (path) => {
+      const url = new URL(path, window.location.origin);
+      const newHash = url.hash.replace('#', '');
       setHash(newHash);
     };
 
     router.events.on('hashChangeStart', handleRouteChange);
+    router.events.on('routeChangeStart', handleRouteChange);
     return () => {
       router.events.off('hashChangeStart', handleRouteChange);
+      router.events.off('routeChangeStart', handleRouteChange);
     };
   }, []);
 
@@ -126,7 +129,7 @@ export default function Account() {
               const isActive = item.hash === hash;
               return (
                 <div key={item.id} hidden={!isActive}>
-                  <div className="shadow sm:overflow-hidden sm:rounded-md">
+                  <div className="shadow sm:rounded-md">
                     <item.component isActive={isActive} />
                   </div>
                 </div>

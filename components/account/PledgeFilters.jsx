@@ -1,11 +1,14 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, AdjustmentsIcon } from '@heroicons/react/solid';
+import { useRouter } from 'next/router';
+import PaymentMethodsSelect from './PaymentMethodsSelect';
+import { useUser } from '../../context/user-context';
 
 const filterTypes = [
   {
     name: 'Campaign Approved',
-    column: 'approved',
+    column: 'campaign.approved',
     radios: [
       { value: true, label: 'approved', defaultChecked: false },
       { value: false, label: 'not approved', defaultChecked: false },
@@ -14,7 +17,7 @@ const filterTypes = [
   },
   {
     name: 'Campaign Active',
-    column: 'processed',
+    column: 'campaign.processed',
     radios: [
       { value: false, label: 'active', defaultChecked: false },
       { value: true, label: 'ended', defaultChecked: false },
@@ -23,7 +26,7 @@ const filterTypes = [
   },
   {
     name: 'Successful',
-    column: 'successful',
+    column: 'campaign.successful',
     radios: [
       { value: true, label: 'successful', defaultChecked: false },
       { value: false, label: 'failed', defaultChecked: false },
@@ -35,22 +38,25 @@ const filterTypes = [
 const sortOptions = [
   {
     label: 'Date Pledged',
-    value: ['created_at', { ascending: true }],
+    value: ['created_at', { ascending: false }],
     current: true,
   },
   {
     label: 'Ending Soonest',
-    value: ['deadline', { ascending: true }],
+    value: ['deadline', { ascending: true, foreignTable: 'campaign' }],
     current: false,
   },
   {
     label: 'Funding Goal',
-    value: ['funding_goal', { ascending: false }],
+    value: ['funding_goal', { ascending: false, foreignTable: 'campaign' }],
     current: false,
   },
   {
     label: 'Number of Pledgers',
-    value: ['number_of_pledgers', { ascending: false }],
+    value: [
+      'number_of_pledgers',
+      { ascending: false, foreignTable: 'campaign' },
+    ],
     current: false,
   },
 ];
@@ -60,6 +66,8 @@ function classNames(...classes) {
 }
 
 export default function PledgeFilters({ filters, setFilters, setOrder }) {
+  const { paymentMethodsObject, getPaymentMethod } = useUser();
+
   const [numberOfActiveFilters, setNumberOfActiveFilters] = useState(0);
   useEffect(() => {
     setNumberOfActiveFilters(Object.keys(filters).length);
@@ -67,9 +75,74 @@ export default function PledgeFilters({ filters, setFilters, setOrder }) {
 
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  useEffect(() => {
+    const newFilters = { ...filters };
+    if (!selectedPaymentMethod) {
+      delete newFilters.payment_method;
+    } else {
+      newFilters.payment_method = selectedPaymentMethod.id;
+    }
+    setFilters(newFilters);
+  }, [selectedPaymentMethod]);
+
+  const [paymentMethodIdQuery, setPaymentMethodIdQuery] = useState(null);
+  const router = useRouter();
+  const checkQuery = () => {
+    console.log('CHECKING');
+    const paymentMethodId = new URLSearchParams(window.location.search).get(
+      'payment-method'
+    );
+    console.log('paymentMethodId', paymentMethodId);
+    if (paymentMethodId) {
+      setPaymentMethodIdQuery(paymentMethodId);
+      const urlWithoutQuery =
+        window.location.origin +
+        window.location.pathname +
+        window.location.hash;
+      router.replace(urlWithoutQuery, undefined, { shallow: true });
+    }
+  };
+  useEffect(() => {
+    checkQuery();
+  }, []);
+  useEffect(() => {
+    const handleRouteChange = () => {
+      checkQuery();
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, []);
+
+  const [isFetchingPaymentMethodId, setIsFetchingPaymentMethodId] =
+    useState(false);
+  useEffect(() => {
+    if (paymentMethodIdQuery && !isFetchingPaymentMethodId) {
+      setIsFetchingPaymentMethodId(true);
+      console.log('getting payment method');
+      getPaymentMethod(paymentMethodIdQuery);
+    }
+  }, [paymentMethodIdQuery, isFetchingPaymentMethodId]);
+
+  useEffect(() => {
+    if (paymentMethodIdQuery && paymentMethodsObject[paymentMethodIdQuery]) {
+      console.log(
+        'got payment method',
+        paymentMethodsObject[paymentMethodIdQuery]
+      );
+      setSelectedPaymentMethod(paymentMethodsObject[paymentMethodIdQuery]);
+      setPaymentMethodIdQuery(null);
+      setIsFetchingPaymentMethodId(false);
+    }
+  }, [paymentMethodIdQuery, paymentMethodsObject]);
+
   const clearFilters = () => {
     if (Object.keys(filters).length > 0) {
       setFilters({});
+      setSelectedPaymentMethod(null);
     }
   };
 
@@ -158,6 +231,15 @@ export default function PledgeFilters({ filters, setFilters, setOrder }) {
                   </fieldset>
                 );
               })}
+              <fieldset id="paymentMethodId">
+                <legend className="block font-medium">Payment Method</legend>
+                <div className="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
+                  <PaymentMethodsSelect
+                    selectedPaymentMethod={selectedPaymentMethod}
+                    setSelectedPaymentMethod={setSelectedPaymentMethod}
+                  />
+                </div>
+              </fieldset>
             </div>
           </div>
         </Disclosure.Panel>

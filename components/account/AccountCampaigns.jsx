@@ -296,42 +296,43 @@ export default function AccountCampaigns({ isActive }) {
             <div className="divide-y divide-gray-200">
               <div className="py-4 text-center sm:py-5">
                 <div className="text-sm font-medium text-gray-500">
-                  {user.can_create_campaigns ? (
-                    <>
-                      No campaigns found.{' '}
-                      {Object.keys(campaignFilters).length === 0 &&
-                        !isGettingCampaigns && (
-                          <>
-                            <MyLink href="/create-campaign">
-                              <button
-                                type="button"
-                                className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-                              >
-                                Create a Campaign
-                              </button>
-                            </MyLink>{' '}
-                            to get started.
-                          </>
-                        )}
-                    </>
-                  ) : (
-                    <>
-                      You need to{' '}
-                      <MyLink
-                        href="/api/account/stripe-onboarding"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <button
-                          type="button"
-                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  {!isGettingCampaigns &&
+                    (user.can_create_campaigns ? (
+                      <>
+                        No campaigns found.{' '}
+                        {Object.keys(campaignFilters).length === 0 &&
+                          !isGettingCampaigns && (
+                            <>
+                              <MyLink href="/create-campaign">
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                                >
+                                  Create a Campaign
+                                </button>
+                              </MyLink>{' '}
+                              to get started.
+                            </>
+                          )}
+                      </>
+                    ) : (
+                      <>
+                        You need to{' '}
+                        <MyLink
+                          href="/api/account/stripe-onboarding"
+                          target="_blank"
+                          rel="noreferrer"
                         >
-                          set up your Stripe Account
-                        </button>
-                      </MyLink>{' '}
-                      before you can create a campaign.
-                    </>
-                  )}
+                          <button
+                            type="button"
+                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            set up your Stripe Account
+                          </button>
+                        </MyLink>{' '}
+                        before you can create a campaign.
+                      </>
+                    ))}
                 </div>
               </div>
             </div>

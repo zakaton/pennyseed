@@ -2,9 +2,9 @@ import { forwardRef } from 'react';
 import Link from 'next/link';
 
 const MyLink = forwardRef((props, ref) => {
-  const { href, children, ...rest } = props;
+  const { href, as, children, ...rest } = props;
   return (
-    <Link href={href}>
+    <Link href={href} as={as}>
       <a ref={ref} {...rest}>
         {children}
       </a>

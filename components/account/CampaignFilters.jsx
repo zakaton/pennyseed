@@ -36,7 +36,7 @@ const sortOptions = [
   {
     label: 'Date Created',
     value: ['created_at', { ascending: false }],
-    current: true,
+    current: false,
   },
   {
     label: 'Ending Soonest',
