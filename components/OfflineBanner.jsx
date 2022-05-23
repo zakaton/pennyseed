@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 export default function OfflineBanner() {
-  const [isOnOfflinePage, setIsOnOfflinePage] = useState(false);
+  const [isOnOfflinePage, setIsOnOfflinePage] = useState(null);
 
   const router = useRouter();
   const handleRouteChange = () => {
@@ -23,6 +23,7 @@ export default function OfflineBanner() {
     };
   }, []);
   return (
+    isOnOfflinePage !== null &&
     !isOnOfflinePage && (
       <div className="rounded-md bg-red-50 p-4">
         <div className="flex justify-center">
