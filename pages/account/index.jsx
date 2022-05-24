@@ -9,7 +9,7 @@ import { getAccountLayout } from '../../components/layouts/AccountLayout';
 export default function AccountGeneral() {
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
-  
+
   return (
     <>
       <DeleteAccountModal

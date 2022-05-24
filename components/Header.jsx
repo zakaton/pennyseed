@@ -167,7 +167,7 @@ export default function Header() {
                   ) : (
                     <MyLink
                       href="/sign-in"
-                      className="inline-flex ml-8 items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700"
+                      className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700"
                     >
                       Sign in
                     </MyLink>

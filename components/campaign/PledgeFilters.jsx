@@ -143,6 +143,7 @@ export default function PledgeFilters({
 
     const query = {};
     Object.keys(filters).forEach((column) => {
+      // eslint-disable-next-line no-shadow
       const filter = filterTypes.find((filter) => filter.column === column);
       if (filter) {
         query[filter.query] = filters[column];
@@ -154,6 +155,7 @@ export default function PledgeFilters({
     }
 
     const sortOption = sortOptions.find(
+      // eslint-disable-next-line no-shadow
       (sortOption) => sortOption.value === order
     );
     if (sortOption) {
