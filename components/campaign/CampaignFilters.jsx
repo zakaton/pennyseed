@@ -12,8 +12,10 @@ export default function CampaignFilters({
   setFilters,
   order,
   setOrder,
-  sortOptions,
+  orderTypes,
   filterTypes,
+  children,
+  clearFilters,
 }) {
   const router = useRouter();
 
@@ -21,8 +23,6 @@ export default function CampaignFilters({
   useEffect(() => {
     setNumberOfActiveFilters(Object.keys(filters).length);
   }, [filters]);
-
-  const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
 
   const checkQuery = () => {
     const { 'sort-by': sortBy } = router.query;
@@ -42,52 +42,18 @@ export default function CampaignFilters({
     }
 
     if (sortBy) {
-      const sortOptionIndex = sortOptions.findIndex(
-        (sortOption) => sortOption.query === sortBy
+      const orderType = orderTypes.find(
+        // eslint-disable-next-line no-shadow
+        (orderType) => orderType.query === sortBy
       );
-      if (sortOptionIndex >= 0) {
-        const sortOption = sortOptions[sortOptionIndex];
-        setSelectedOrderIndex(sortOptionIndex);
-        setOrder(sortOption.value);
+      if (orderType) {
+        setOrder(orderType.value);
       }
     }
   };
   useEffect(() => {
     checkQuery();
   }, []);
-
-  useEffect(() => {
-    console.log('filters', filters);
-    console.log('order', order);
-
-    const query = {};
-    Object.keys(filters).forEach((column) => {
-      // eslint-disable-next-line no-shadow
-      const filter = filterTypes.find((filter) => filter.column === column);
-      if (filter) {
-        query[filter.query] = filters[column];
-      }
-    });
-
-    const sortOption = sortOptions.find(
-      // eslint-disable-next-line no-shadow
-      (sortOption) => sortOption.value === order
-    );
-    if (sortOption) {
-      query['sort-by'] = sortOption.query;
-    }
-
-    console.log('final query', query);
-    router.replace({ query: { ...router.query, ...query } }, undefined, {
-      shallow: true,
-    });
-  }, [filters, order]);
-
-  const clearFilters = () => {
-    if (Object.keys(filters).length > 0) {
-      setFilters({});
-    }
-  };
 
   return (
     <>
@@ -174,6 +140,7 @@ export default function CampaignFilters({
                   </fieldset>
                 );
               })}
+              {children}
             </div>
           </div>
         </Disclosure.Panel>
@@ -201,15 +168,14 @@ export default function CampaignFilters({
               >
                 <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="py-1">
-                    {sortOptions.map((option, optionIndex) => (
-                      <Menu.Item key={option.label}>
+                    {orderTypes.map((orderType) => (
+                      <Menu.Item key={orderType.label}>
                         {({ active }) => {
-                          const isSelected = selectedOrderIndex === optionIndex;
+                          const isSelected = orderType.value === order;
                           return (
                             <button
                               onClick={() => {
-                                setSelectedOrderIndex(optionIndex);
-                                setOrder(option.value);
+                                setOrder(orderType.value);
                               }}
                               type="button"
                               className={classNames(
@@ -220,7 +186,7 @@ export default function CampaignFilters({
                                 'block w-full px-4 py-2 text-left text-sm'
                               )}
                             >
-                              {option.label}
+                              {orderType.label}
                             </button>
                           );
                         }}

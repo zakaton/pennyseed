@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import MyLink from '../../components/MyLink';
 import DeleteCampaignModal from '../../components/campaign/DeleteCampaignModal';
 import { supabase } from '../../utils/supabase';
@@ -45,7 +46,7 @@ const filterTypes = [
   },
 ];
 
-const sortOptions = [
+const orderTypes = [
   {
     label: 'Date Created',
     query: 'date-pledged',
@@ -73,15 +74,13 @@ const sortOptions = [
 ];
 
 export default function MyCampaigns() {
+  const router = useRouter();
   const { isLoading, user } = useUser();
 
   const [isGettingCampaigns, setIsGettingCampaigns] = useState(true);
   const [campaigns, setCampaigns] = useState(null);
-  const [campaignFilters, setCampaignFilters] = useState({});
-  const [campaignOrder, setCampaignOrder] = useState([
-    'created_at',
-    { ascending: false },
-  ]);
+  const [filters, setFilters] = useState({});
+  const [order, setOrder] = useState(orderTypes[0].value);
 
   const [numberOfCampaigns, setNumberOfCampaigns] = useState(null);
   const [isGettingNumberOfCampaigns, setIsGettingNumberOfCampaigns] =
@@ -95,7 +94,7 @@ export default function MyCampaigns() {
       .from('campaign')
       .select('*', { count: 'exact', head: true })
       .eq('created_by', user.id)
-      .match(campaignFilters);
+      .match(filters);
     setPageIndex(0);
     setNumberOfCampaigns(numberOfCampaigns);
     setIsGettingNumberOfCampaigns(false);
@@ -105,7 +104,7 @@ export default function MyCampaigns() {
       console.log('update number of campaigns');
       getNumberOfCampaigns();
     }
-  }, [campaignFilters, campaignOrder]);
+  }, [filters, order]);
   useEffect(() => {
     if (!isLoading && user && numberOfCampaigns === null) {
       getNumberOfCampaigns();
@@ -121,8 +120,8 @@ export default function MyCampaigns() {
         .from('campaign')
         .select('*')
         .eq('created_by', user.id)
-        .match(campaignFilters)
-        .order(...campaignOrder)
+        .match(filters)
+        .order(...order)
         .limit(numberOfCampaignsPerPage)
         .range(
           pageIndex * numberOfCampaignsPerPage,
@@ -140,7 +139,7 @@ export default function MyCampaigns() {
       console.log('update campaigns!');
       getCampaigns(true);
     }
-  }, [campaignFilters, campaignOrder]);
+  }, [filters, order]);
 
   useEffect(() => {
     if (!isLoading && user && numberOfCampaigns !== null) {
@@ -218,6 +217,39 @@ export default function MyCampaigns() {
     }
   };
 
+  useEffect(() => {
+    const query = {};
+    filterTypes.forEach((filterType) => {
+      delete router.query[filterType.query];
+    });
+    Object.keys(filters).forEach((column) => {
+      // eslint-disable-next-line no-shadow
+      const filter = filterTypes.find((filter) => filter.column === column);
+      if (filter) {
+        query[filter.query] = filters[column];
+      }
+    });
+
+    const sortOption = orderTypes.find(
+      // eslint-disable-next-line no-shadow
+      (sortOption) => sortOption.value === order
+    );
+    if (sortOption) {
+      query['sort-by'] = sortOption.query;
+    }
+
+    console.log(query);
+    router.replace({ query: { ...router.query, ...query } }, undefined, {
+      shallow: true,
+    });
+  }, [filters, order]);
+
+  const clearFilters = () => {
+    if (Object.keys(filters).length > 0) {
+      setFilters({});
+    }
+  };
+
   return (
     <>
       <Head>
@@ -258,12 +290,13 @@ export default function MyCampaigns() {
         </div>
 
         <CampaignFilters
-          filters={campaignFilters}
-          setFilters={setCampaignFilters}
-          order={campaignOrder}
-          setOrder={setCampaignOrder}
+          filters={filters}
+          setFilters={setFilters}
+          order={order}
+          setOrder={setOrder}
           filterTypes={filterTypes}
-          sortOptions={sortOptions}
+          orderTypes={orderTypes}
+          clearFilters={clearFilters}
         />
 
         {campaigns?.length > 0 &&
@@ -365,7 +398,7 @@ export default function MyCampaigns() {
                     (user.can_create_campaigns ? (
                       <>
                         No campaigns found.{' '}
-                        {Object.keys(campaignFilters).length === 0 &&
+                        {Object.keys(filters).length === 0 &&
                           !isGettingCampaigns && (
                             <>
                               <MyLink href="/create-campaign">

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import MyLink from '../../components/MyLink';
 import RemovePledgeModal from '../../components/campaign/RemovePledgeModal';
 import { supabase } from '../../utils/supabase';
 import { useUser } from '../../context/user-context';
 import { formatDollars } from '../../utils/campaign-utils';
 import RemovePledgeStatusNotification from '../../components/campaign/RemovePledgeStatusNotification';
-import PledgeFilters from '../../components/campaign/PledgeFilters';
+import CampaignFilters from '../../components/campaign/CampaignFilters';
 import Pagination from '../../components/Pagination';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
+import PaymentMethodsSelect from '../../components/account/PaymentMethodsSelect';
 
 const numberOfPledgesPerPage = 4;
 
@@ -45,7 +47,7 @@ const filterTypes = [
   },
 ];
 
-const sortOptions = [
+const orderTypes = [
   {
     label: 'Date Pledged',
     query: 'date-pledged',
@@ -76,15 +78,14 @@ const sortOptions = [
 ];
 
 export default function MyPledges() {
+  const router = useRouter();
+
   const { isLoading, user } = useUser();
 
   const [isGettingPledges, setIsGettingPledges] = useState(true);
   const [pledges, setPledges] = useState(null);
-  const [pledgeFilters, setPledgeFilters] = useState({});
-  const [pledgeOrder, setPledgeOrder] = useState([
-    'created_at',
-    { ascending: false },
-  ]);
+  const [filters, setFilters] = useState({});
+  const [order, setOrder] = useState(orderTypes[0].value);
 
   const [numberOfPledges, setNumberOfPledges] = useState(null);
   const [isGettingNumberOfPledges, setIsGettingNumberOfPledges] =
@@ -98,7 +99,7 @@ export default function MyPledges() {
       .from('pledge')
       .select('*, campaign!inner(*)', { count: 'exact', head: true })
       .eq('pledger', user.id)
-      .match(pledgeFilters);
+      .match(filters);
     console.log('number of pledges', numberOfPledges);
     if (error) {
       console.error(error);
@@ -112,7 +113,7 @@ export default function MyPledges() {
       console.log('update number of pledges');
       getNumberOfPledges();
     }
-  }, [pledgeFilters, pledgeOrder]);
+  }, [filters, order]);
   useEffect(() => {
     if (!isLoading && user && numberOfPledges === null) {
       getNumberOfPledges();
@@ -128,8 +129,8 @@ export default function MyPledges() {
         .from('pledge')
         .select('*, campaign!inner(*)')
         .eq('pledger', user.id)
-        .match(pledgeFilters)
-        .order(...pledgeOrder)
+        .match(filters)
+        .order(...order)
         .limit(numberOfPledgesPerPage)
         .range(
           pageIndex * numberOfPledgesPerPage,
@@ -150,7 +151,7 @@ export default function MyPledges() {
       console.log('update pledges!');
       getPledges(true);
     }
-  }, [pledgeFilters, pledgeOrder]);
+  }, [filters, order]);
 
   useEffect(() => {
     if (!isLoading && user && numberOfPledges !== null) {
@@ -225,6 +226,92 @@ export default function MyPledges() {
     }
   };
 
+  const { paymentMethodsObject, getPaymentMethod } = useUser();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  useEffect(() => {
+    const newFilters = { ...filters };
+    if (!selectedPaymentMethod) {
+      delete newFilters.payment_method;
+    } else {
+      newFilters.payment_method = selectedPaymentMethod.id;
+    }
+    setFilters(newFilters);
+  }, [selectedPaymentMethod]);
+  const [paymentMethodIdQuery, setPaymentMethodIdQuery] = useState(null);
+
+  const checkQuery = () => {
+    const { 'payment-method': paymentMethodId } = router.query;
+    console.log('paymentMethodId', paymentMethodId);
+    if (paymentMethodId) {
+      setPaymentMethodIdQuery(paymentMethodId);
+    }
+  };
+  useEffect(() => {
+    checkQuery();
+  }, []);
+
+  useEffect(() => {
+    const query = {};
+    filterTypes.forEach((filterType) => {
+      delete router.query[filterType.query];
+    });
+    Object.keys(filters).forEach((column) => {
+      // eslint-disable-next-line no-shadow
+      const filter = filterTypes.find((filter) => filter.column === column);
+      if (filter) {
+        query[filter.query] = filters[column];
+      }
+    });
+
+    if (selectedPaymentMethod) {
+      query['payment-method'] = selectedPaymentMethod.id;
+    } else {
+      delete router.query['payment-method'];
+    }
+
+    const sortOption = orderTypes.find(
+      // eslint-disable-next-line no-shadow
+      (sortOption) => sortOption.value === order
+    );
+    if (sortOption) {
+      query['sort-by'] = sortOption.query;
+    }
+
+    console.log('final query', query);
+    router.replace({ query: { ...router.query, ...query } }, undefined, {
+      shallow: true,
+    });
+  }, [filters, order, selectedPaymentMethod]);
+
+  const [isFetchingPaymentMethodId, setIsFetchingPaymentMethodId] =
+    useState(false);
+  useEffect(() => {
+    if (paymentMethodIdQuery && !isFetchingPaymentMethodId) {
+      setIsFetchingPaymentMethodId(true);
+      console.log('getting payment method');
+      getPaymentMethod(paymentMethodIdQuery);
+    }
+  }, [paymentMethodIdQuery, isFetchingPaymentMethodId]);
+
+  useEffect(() => {
+    if (paymentMethodIdQuery && paymentMethodsObject[paymentMethodIdQuery]) {
+      console.log(
+        'got payment method',
+        paymentMethodsObject[paymentMethodIdQuery]
+      );
+      setSelectedPaymentMethod(paymentMethodsObject[paymentMethodIdQuery]);
+      setPaymentMethodIdQuery(null);
+      setIsFetchingPaymentMethodId(false);
+    }
+  }, [paymentMethodIdQuery, paymentMethodsObject]);
+
+  const clearFilters = () => {
+    if (Object.keys(filters).length > 0) {
+      setFilters({});
+      setSelectedPaymentMethod(null);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -254,14 +341,25 @@ export default function MyPledges() {
           </div>
         </div>
 
-        <PledgeFilters
-          filters={pledgeFilters}
-          setFilters={setPledgeFilters}
-          order={pledgeOrder}
-          setOrder={setPledgeOrder}
+        <CampaignFilters
+          filters={filters}
+          setFilters={setFilters}
+          order={order}
+          setOrder={setOrder}
           filterTypes={filterTypes}
-          sortOptions={sortOptions}
-        />
+          orderTypes={orderTypes}
+          clearFilters={clearFilters}
+        >
+          <fieldset id="paymentMethodId">
+            <legend className="block font-medium">Payment Method</legend>
+            <div className="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
+              <PaymentMethodsSelect
+                selectedPaymentMethod={selectedPaymentMethod}
+                setSelectedPaymentMethod={setSelectedPaymentMethod}
+              />
+            </div>
+          </fieldset>
+        </CampaignFilters>
 
         {pledges?.length > 0 &&
           pledges.map((pledge) => (
