@@ -1,10 +1,12 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, AdjustmentsIcon } from '@heroicons/react/solid';
+import { useRouter } from 'next/router';
 
 const filterTypes = [
   {
     name: 'Approved',
+    query: 'approved',
     column: 'approved',
     radios: [
       { value: true, label: 'approved', defaultChecked: false },
@@ -14,6 +16,7 @@ const filterTypes = [
   },
   {
     name: 'Active',
+    query: 'active',
     column: 'processed',
     radios: [
       { value: false, label: 'active', defaultChecked: false },
@@ -23,6 +26,7 @@ const filterTypes = [
   },
   {
     name: 'Successful',
+    query: 'successful',
     column: 'successful',
     radios: [
       { value: true, label: 'successful', defaultChecked: false },
@@ -35,21 +39,25 @@ const filterTypes = [
 const sortOptions = [
   {
     label: 'Date Created',
+    query: 'date-pledged',
     value: ['created_at', { ascending: false }],
     current: false,
   },
   {
     label: 'Ending Soonest',
+    query: 'ending-soonest',
     value: ['deadline', { ascending: true }],
     current: false,
   },
   {
     label: 'Funding Goal',
+    query: 'funding-goal',
     value: ['funding_goal', { ascending: false }],
     current: false,
   },
   {
     label: 'Number of Pledgers',
+    query: 'number-of-pledgers',
     value: ['number_of_pledgers', { ascending: false }],
     current: false,
   },
@@ -59,13 +67,76 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function CampaignFilters({ filters, setFilters, setOrder }) {
+export default function CampaignFilters({
+  filters,
+  setFilters,
+  order,
+  setOrder,
+}) {
   const [numberOfActiveFilters, setNumberOfActiveFilters] = useState(0);
   useEffect(() => {
     setNumberOfActiveFilters(Object.keys(filters).length);
   }, [filters]);
 
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
+
+  const router = useRouter();
+  const checkQuery = () => {
+    const { 'sort-by': sortBy } = router.query;
+
+    console.log('query', router.query);
+    const newFilters = {};
+    filterTypes.forEach((filterType) => {
+      console.log('checking', filterType.query);
+      if (filterType.query in router.query) {
+        newFilters[filterType.column] =
+          router.query[filterType.query] === 'true';
+      }
+    });
+    console.log('newFilters', newFilters);
+    if (Object.keys(newFilters).length > 0) {
+      setFilters(newFilters);
+    }
+
+    if (sortBy) {
+      const sortOptionIndex = sortOptions.findIndex(
+        (sortOption) => sortOption.query === sortBy
+      );
+      if (sortOptionIndex >= 0) {
+        const sortOption = sortOptions[sortOptionIndex];
+        setSelectedOrderIndex(sortOptionIndex);
+        setOrder(sortOption.value);
+      }
+    }
+  };
+  useEffect(() => {
+    checkQuery();
+  }, []);
+
+  useEffect(() => {
+    console.log('filters', filters);
+    console.log('order', order);
+
+    const query = {};
+    Object.keys(filters).forEach((column) => {
+      const filter = filterTypes.find((filter) => filter.column === column);
+      if (filter) {
+        query[filter.query] = filters[column];
+      }
+    });
+
+    const sortOption = sortOptions.find(
+      (sortOption) => sortOption.value === order
+    );
+    if (sortOption) {
+      query['sort-by'] = sortOption.query;
+    }
+
+    console.log('final query', query);
+    router.replace({ query: { ...router.query, ...query } }, undefined, {
+      shallow: true,
+    });
+  }, [filters, order]);
 
   const clearFilters = () => {
     if (Object.keys(filters).length > 0) {
@@ -165,7 +236,7 @@ export default function CampaignFilters({ filters, setFilters, setOrder }) {
           <div className="mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8">
             <Menu as="div" className="relative inline-block">
               <div className="flex">
-                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                <Menu.Button className="inline-flex group justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                   Sort
                   <ChevronDownIcon
                     className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"

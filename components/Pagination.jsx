@@ -1,5 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -16,6 +17,25 @@ export default function Pagination({
   isSimple,
   maxNumberOfPageButtons = 7,
 }) {
+  const router = useRouter();
+  useEffect(() => {
+    if ('page' in router.query) {
+      let newPageIndex = router.query.page;
+      if (!Number.isNaN(newPageIndex)) {
+        newPageIndex = Number(newPageIndex);
+        setPageIndex(newPageIndex);
+      }
+    }
+  }, []);
+  useEffect(() => {
+    if (!Number.isNaN(pageIndex)) {
+      const query = { page: pageIndex };
+      router.replace({ query: { ...router.query, ...query } }, undefined, {
+        shallow: true,
+      });
+    }
+  }, [pageIndex]);
+
   const [hasNextPage, setHasNextPage] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
   useEffect(() => {
@@ -105,7 +125,7 @@ export default function Pagination({
           pageIndex === 0
             ? 'z-10 border-yellow-500 bg-yellow-50 text-yellow-600'
             : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50',
-          'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium'
+          'inline-flex relative z-10 items-center border px-4 py-2 text-sm font-medium'
         )}
       >
         1
@@ -116,7 +136,7 @@ export default function Pagination({
         <button
           key="previous"
           type="button"
-          className="relative inline-flex items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+          className="inline-flex relative items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
           onClick={() => setPageIndex(previousPageButtonsIndex)}
         >
           <span className="sr-only">Previous</span>
@@ -143,7 +163,7 @@ export default function Pagination({
             isActive
               ? 'z-10 border-yellow-500 bg-yellow-50 text-yellow-600'
               : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50',
-            'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium'
+            'inline-flex relative z-10 items-center border px-4 py-2 text-sm font-medium'
           )}
         >
           {pageButtonPageIndex + 1}
@@ -156,7 +176,7 @@ export default function Pagination({
         <button
           key="next"
           type="button"
-          className="relative inline-flex items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+          className="inline-flex relative items-center border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
           onClick={() => setPageIndex(nextPageButtonsIndex)}
         >
           <span className="sr-only">Next</span>
@@ -177,7 +197,7 @@ export default function Pagination({
           pageIndex === lastPageButtonIndex
             ? 'z-10 border-yellow-500 bg-yellow-50 text-yellow-600'
             : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50',
-          'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium'
+          'inline-flex relative z-10 items-center border px-4 py-2 text-sm font-medium'
         )}
       >
         {numberOfPages}
@@ -226,7 +246,7 @@ export default function Pagination({
               onClick={showPrevious}
               className={classNames(
                 pageIndex > 0 ? 'visible' : 'invisible',
-                'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+                'inline-flex relative items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
               )}
             >
               Previous
@@ -236,7 +256,7 @@ export default function Pagination({
               onClick={showNext}
               className={classNames(
                 hasNextPage ? 'visible' : 'hidden',
-                'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+                'inline-flex relative items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
               )}
             >
               Next

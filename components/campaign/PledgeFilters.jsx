@@ -9,6 +9,7 @@ const filterTypes = [
   {
     name: 'Campaign Approved',
     column: 'campaign.approved',
+    query: 'approved',
     radios: [
       { value: true, label: 'approved', defaultChecked: false },
       { value: false, label: 'not approved', defaultChecked: false },
@@ -18,6 +19,7 @@ const filterTypes = [
   {
     name: 'Campaign Active',
     column: 'campaign.processed',
+    query: 'active',
     radios: [
       { value: false, label: 'active', defaultChecked: false },
       { value: true, label: 'ended', defaultChecked: false },
@@ -27,6 +29,7 @@ const filterTypes = [
   {
     name: 'Successful',
     column: 'campaign.successful',
+    query: 'successful',
     radios: [
       { value: true, label: 'successful', defaultChecked: false },
       { value: false, label: 'failed', defaultChecked: false },
@@ -38,21 +41,25 @@ const filterTypes = [
 const sortOptions = [
   {
     label: 'Date Pledged',
+    query: 'date-pledged',
     value: ['created_at', { ascending: false }],
     current: true,
   },
   {
     label: 'Ending Soonest',
+    query: 'ending-soonest',
     value: ['deadline', { ascending: true, foreignTable: 'campaign' }],
     current: false,
   },
   {
     label: 'Funding Goal',
+    query: 'funding-goal',
     value: ['funding_goal', { ascending: false, foreignTable: 'campaign' }],
     current: false,
   },
   {
     label: 'Number of Pledgers',
+    query: 'number-of-pledgers',
     value: [
       'number_of_pledgers',
       { ascending: false, foreignTable: 'campaign' },
@@ -65,7 +72,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function PledgeFilters({ filters, setFilters, setOrder }) {
+export default function PledgeFilters({
+  filters,
+  setFilters,
+  order,
+  setOrder,
+}) {
+  const router = useRouter();
   const { paymentMethodsObject, getPaymentMethod } = useUser();
 
   const [numberOfActiveFilters, setNumberOfActiveFilters] = useState(0);
@@ -87,34 +100,71 @@ export default function PledgeFilters({ filters, setFilters, setOrder }) {
   }, [selectedPaymentMethod]);
 
   const [paymentMethodIdQuery, setPaymentMethodIdQuery] = useState(null);
-  const router = useRouter();
   const checkQuery = () => {
-    const paymentMethodId = new URLSearchParams(window.location.search).get(
-      'payment-method'
-    );
+    const { 'payment-method': paymentMethodId, 'sort-by': sortBy } =
+      router.query;
+
+    console.log('query', router.query);
     console.log('paymentMethodId', paymentMethodId);
     if (paymentMethodId) {
       setPaymentMethodIdQuery(paymentMethodId);
-      const urlWithoutQuery =
-        window.location.origin +
-        window.location.pathname +
-        window.location.hash;
-      router.replace(urlWithoutQuery, undefined, { shallow: true });
+    }
+    const newFilters = {};
+    filterTypes.forEach((filterType) => {
+      console.log('checking', filterType.query);
+      if (filterType.query in router.query) {
+        newFilters[filterType.column] =
+          router.query[filterType.query] === 'true';
+      }
+    });
+    console.log('newFilters', newFilters);
+    if (Object.keys(newFilters).length > 0) {
+      setFilters(newFilters);
+    }
+
+    if (sortBy) {
+      const sortOptionIndex = sortOptions.findIndex(
+        (sortOption) => sortOption.query === sortBy
+      );
+      if (sortOptionIndex >= 0) {
+        const sortOption = sortOptions[sortOptionIndex];
+        setSelectedOrderIndex(sortOptionIndex);
+        setOrder(sortOption.value);
+      }
     }
   };
   useEffect(() => {
     checkQuery();
   }, []);
-  useEffect(() => {
-    const handleRouteChange = () => {
-      checkQuery();
-    };
 
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, []);
+  useEffect(() => {
+    console.log('filters', filters);
+    console.log('order', order);
+
+    const query = {};
+    Object.keys(filters).forEach((column) => {
+      const filter = filterTypes.find((filter) => filter.column === column);
+      if (filter) {
+        query[filter.query] = filters[column];
+      }
+    });
+
+    if (selectedPaymentMethod) {
+      query['payment-method'] = selectedPaymentMethod.id;
+    }
+
+    const sortOption = sortOptions.find(
+      (sortOption) => sortOption.value === order
+    );
+    if (sortOption) {
+      query['sort-by'] = sortOption.query;
+    }
+
+    console.log('final query', query);
+    router.replace({ query: { ...router.query, ...query } }, undefined, {
+      shallow: true,
+    });
+  }, [filters, order, selectedPaymentMethod]);
 
   const [isFetchingPaymentMethodId, setIsFetchingPaymentMethodId] =
     useState(false);
