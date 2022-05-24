@@ -103,10 +103,7 @@ export default function AddCardModal({ open, setOpen }) {
                 {clientSecret && (
                   <div className="py-2 pt-3">
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
-                      <ElementsForm
-                        error={error}
-                        setError={setError}
-                      />
+                      <ElementsForm error={error} setError={setError} />
                     </Elements>
                   </div>
                 )}

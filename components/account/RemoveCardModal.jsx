@@ -3,13 +3,6 @@ import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
 
-const removeCardNotificationStatuses = {
-  succeeded: {
-    type: 'succeeded',
-    title: 'Successfully removed card',
-  },
-};
-
 export default function RemoveCardModal({
   open,
   setOpen,
