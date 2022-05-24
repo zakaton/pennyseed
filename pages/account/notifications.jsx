@@ -1,4 +1,6 @@
-export default function AccountNotifications() {
+import { getAccountLayout } from '../../components/layouts/AccountLayout';
+
+export default function Notifications() {
   return (
     <form action="#" method="POST">
       <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
@@ -101,3 +103,5 @@ export default function AccountNotifications() {
     </form>
   );
 }
+
+Notifications.getLayout = getAccountLayout;

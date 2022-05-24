@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Head from 'next/head';
 import {
   CreditCardIcon,
@@ -8,57 +8,42 @@ import {
   HandIcon,
   PencilAltIcon,
 } from '@heroicons/react/outline';
-import MyLink from '../components/MyLink';
-import { useUser } from '../context/user-context';
-import AccountPaymentInfo from '../components/account/AccountPaymentInfo';
-import AccountNotifications from '../components/account/AccountNotifications';
-import AccountGeneral from '../components/account/AccountGeneral';
-import AccountPledges from '../components/account/AccountPledges';
-import AccountCampaigns from '../components/account/AccountCampaigns';
+import MyLink from '../MyLink';
+import { useUser } from '../../context/user-context';
 
 const navigation = [
   {
     name: 'General',
-    hash: '',
+    href: '/account',
     icon: UserCircleIcon,
-    component: AccountGeneral,
   },
   {
     name: 'My Campaigns',
-    hash: 'my-campaigns',
+    href: '/account/my-campaigns',
     icon: PencilAltIcon,
-    component: AccountCampaigns,
   },
   {
     name: 'My Pledges',
-    hash: 'my-pledges',
+    href: '/account/my-pledges',
     icon: HandIcon,
-    component: AccountPledges,
   },
   {
     name: 'Payment Info',
-    hash: 'payment-info',
+    href: '/account/payment-info',
     icon: CreditCardIcon,
-    component: AccountPaymentInfo,
   },
   {
     name: 'Notifications',
-    hash: 'notifications',
+    href: '/account/notifications',
     icon: BellIcon,
-    component: AccountNotifications,
   },
 ];
-
-navigation.forEach((item, index) => {
-  // eslint-disable-next-line no-param-reassign
-  item.id = index + 1;
-});
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Account() {
+export default function AccountLayout({ children }) {
   const router = useRouter();
   const { isLoading, user } = useUser();
 
@@ -67,22 +52,6 @@ export default function Account() {
       router.replace('/sign-in');
     }
   }, [isLoading, user]);
-
-  const [hash, setHash] = useState(router.asPath.split('#')[1] || '');
-  useEffect(() => {
-    const handleRouteChange = (path) => {
-      const url = new URL(path, window.location.origin);
-      const newHash = url.hash.replace('#', '');
-      setHash(newHash);
-    };
-
-    router.events.on('hashChangeStart', handleRouteChange);
-    router.events.on('routeChangeStart', handleRouteChange);
-    return () => {
-      router.events.off('hashChangeStart', handleRouteChange);
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
-  }, []);
 
   return (
     !isLoading &&
@@ -95,11 +64,11 @@ export default function Account() {
           <aside className="px-2 sm:px-6 lg:col-span-2 lg:py-0 lg:px-0">
             <nav className="space-y-1">
               {navigation.map((item) => {
-                const current = hash === item.hash;
+                const current = router.route === item.href;
                 return (
                   <MyLink
-                    key={item.name}
-                    href={`/account#${item.hash}`}
+                    key={item.href}
+                    href={item.href}
                     className={classNames(
                       current
                         ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
@@ -125,19 +94,14 @@ export default function Account() {
           </aside>
 
           <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
-            {navigation.map((item) => {
-              const isActive = item.hash === hash;
-              return (
-                <div key={item.id} hidden={!isActive}>
-                  <div className="shadow sm:rounded-md">
-                    <item.component isActive={isActive} />
-                  </div>
-                </div>
-              );
-            })}
+            <div className="shadow sm:rounded-md">{children}</div>
           </div>
         </div>
       </>
     )
   );
+}
+
+export function getAccountLayout(page) {
+  return <AccountLayout>{page}</AccountLayout>;
 }

@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
-import MyLink from '../MyLink';
-import RemovePledgeModal from '../campaign/RemovePledgeModal';
+import MyLink from '../../components/MyLink';
+import RemovePledgeModal from '../../components/campaign/RemovePledgeModal';
 import { supabase } from '../../utils/supabase';
 import { useUser } from '../../context/user-context';
 import { formatDollars } from '../../utils/campaign-utils';
-import RemovePledgeStatusNotification from '../campaign/RemovePledgeStatusNotification';
-import PledgeFilters from './PledgeFilters';
-import Pagination from '../Pagination';
+import RemovePledgeStatusNotification from '../../components/campaign/RemovePledgeStatusNotification';
+import PledgeFilters from '../../components/campaign/PledgeFilters';
+import Pagination from '../../components/Pagination';
+import { getAccountLayout } from '../../components/layouts/AccountLayout';
 
 const numberOfPledgesPerPage = 4;
 
-export default function AccountPledges({ isActive }) {
+export default function MyPledges() {
   const { isLoading, user } = useUser();
 
   const [isGettingPledges, setIsGettingPledges] = useState(true);
@@ -101,7 +102,7 @@ export default function AccountPledges({ isActive }) {
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    if (isActive && pledges) {
+    if (pledges) {
       console.log('subscribing to pledge updates');
       const subscription = supabase
         .from(`pledge:pledger=eq.${user.id}`)
@@ -131,7 +132,7 @@ export default function AccountPledges({ isActive }) {
         supabase.removeSubscription(subscription);
       };
     }
-  }, [isActive, pledges]);
+  }, [pledges]);
 
   const [showRemovePledgeModal, setShowRemovePledgeModal] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState(null);
@@ -144,10 +145,8 @@ export default function AccountPledges({ isActive }) {
     setShowRemovePledgeNotification(false);
   };
   useEffect(() => {
-    if (!isActive) {
-      removeNotifications();
-    }
-  }, [isActive]);
+    removeNotifications();
+  }, []);
 
   const showPrevious = async () => {
     console.log('showPrevious');
@@ -329,3 +328,5 @@ export default function AccountPledges({ isActive }) {
     </>
   );
 }
+
+MyPledges.getLayout = getAccountLayout;

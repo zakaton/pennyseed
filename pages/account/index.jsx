@@ -2,13 +2,14 @@
 /* eslint-disable camelcase */
 import { useState } from 'react';
 import { useUser } from '../../context/user-context';
-import DeleteAccountModal from './DeleteAccountModal';
-import MyLink from '../MyLink';
+import DeleteAccountModal from '../../components/account/DeleteAccountModal';
+import MyLink from '../../components/MyLink';
+import { getAccountLayout } from '../../components/layouts/AccountLayout';
 
 export default function AccountGeneral() {
   const { user, isLoading } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
-
+  
   return (
     <>
       <DeleteAccountModal
@@ -101,3 +102,5 @@ export default function AccountGeneral() {
     </>
   );
 }
+
+AccountGeneral.getLayout = getAccountLayout;

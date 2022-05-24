@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
-import MyLink from '../MyLink';
-import DeleteCampaignModal from '../campaign/DeleteCampaignModal';
+import MyLink from '../../components/MyLink';
+import DeleteCampaignModal from '../../components/campaign/DeleteCampaignModal';
 import { supabase } from '../../utils/supabase';
 import { useUser } from '../../context/user-context';
 import { formatDollars } from '../../utils/campaign-utils';
-import DeleteCampaignStatusNotification from '../campaign/DeleteCampaignStatusNotification';
-import CampaignFilters from './CampaignFilters';
-import Pagination from '../Pagination';
+import DeleteCampaignStatusNotification from '../../components/campaign/DeleteCampaignStatusNotification';
+import CampaignFilters from '../../components/campaign/CampaignFilters';
+import Pagination from '../../components/Pagination';
+import { getAccountLayout } from '../../components/layouts/AccountLayout';
 
 const numberOfCampaignsPerPage = 4;
 
-export default function AccountCampaigns({ isActive }) {
+export default function MyCampaigns() {
   const { isLoading, user } = useUser();
 
   const [isGettingCampaigns, setIsGettingCampaigns] = useState(true);
@@ -94,7 +95,7 @@ export default function AccountCampaigns({ isActive }) {
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    if (isActive && campaigns) {
+    if (campaigns) {
       console.log('subscribing to campaigns updates');
       const subscription = supabase
         .from(`campaign:created_by=eq.${user.id}`)
@@ -127,7 +128,7 @@ export default function AccountCampaigns({ isActive }) {
         supabase.removeSubscription(subscription);
       };
     }
-  }, [isActive, campaigns]);
+  }, [campaigns]);
 
   const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
@@ -140,10 +141,8 @@ export default function AccountCampaigns({ isActive }) {
     setShowDeleteCampaignNotification(false);
   };
   useEffect(() => {
-    if (!isActive) {
-      removeNotifications();
-    }
-  }, [isActive]);
+    removeNotifications();
+  }, []);
 
   const showPrevious = async () => {
     console.log('showPrevious');
@@ -353,3 +352,5 @@ export default function AccountCampaigns({ isActive }) {
     </>
   );
 }
+
+MyCampaigns.getLayout = getAccountLayout;

@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, AdjustmentsIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
-import PaymentMethodsSelect from './PaymentMethodsSelect';
+import PaymentMethodsSelect from '../account/PaymentMethodsSelect';
 import { useUser } from '../../context/user-context';
 
 const filterTypes = [

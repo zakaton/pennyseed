@@ -1,30 +1,31 @@
 /* eslint-disable camelcase */
 import { useState, useEffect } from 'react';
 import { useUser } from '../../context/user-context';
-import AddCardModal from './AddCardModal';
-import RemoveCardModal from './RemoveCardModal';
-import AddCardStatusNotification from './AddCardStatusNotification';
-import RemoveCardStatusNotification from './RemoveCardStatusNotification';
+import AddCardModal from '../../components/account/AddCardModal';
+import RemoveCardModal from '../../components/account/RemoveCardModal';
+import AddCardStatusNotification from '../../components/account/AddCardStatusNotification';
+import RemoveCardStatusNotification from '../../components/account/RemoveCardStatusNotification';
 import {
   numberOfPaymentMethodsPerPage,
   maxNumberOfPaymentMethods,
 } from '../../utils/get-payment-methods';
-import Pagination from '../Pagination';
-import MyLink from '../MyLink';
-import cardIcons from './CardIcons';
+import Pagination from '../../components/Pagination';
+import MyLink from '../../components/MyLink';
+import cardIcons from '../../components/account/CardIcons';
+import { getAccountLayout } from '../../components/layouts/AccountLayout';
 
 const capitalizeString = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
-export default function AccountPaymentInfo({ isActive }) {
+export default function PaymentInfo() {
   const { paymentMethods, numberOfPaymentMethods, getPaymentMethods } =
     useUser();
 
   useEffect(() => {
-    if (!paymentMethods && isActive) {
+    if (!paymentMethods) {
       getPaymentMethods(false, numberOfPaymentMethodsPerPage);
     }
-  }, [isActive]);
+  }, []);
 
   const [showAddCardModal, setShowAddCardModal] = useState(false);
   const [showRemoveCardModal, setShowRemoveCardModal] = useState(false);
@@ -44,10 +45,8 @@ export default function AccountPaymentInfo({ isActive }) {
     setShowRemoveCardNotification(false);
   };
   useEffect(() => {
-    if (!isActive) {
-      removeNotifications();
-    }
-  }, [isActive]);
+    removeNotifications();
+  }, []);
   useEffect(() => {
     if (showAddCardModal || showRemoveCardModal) {
       removeNotifications();
@@ -118,7 +117,7 @@ export default function AccountPaymentInfo({ isActive }) {
                 </div>
                 <div className="sm:col-span-1">
                   <MyLink
-                    href={`/account?payment-method=${paymentMethod.id}#my-pledges`}
+                    href={`/account/my-pledges?payment-method=${paymentMethod.id}`}
                   >
                     <button
                       type="button"
@@ -235,3 +234,5 @@ export default function AccountPaymentInfo({ isActive }) {
     </>
   );
 }
+
+PaymentInfo.getLayout = getAccountLayout;

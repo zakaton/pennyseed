@@ -1,10 +1,10 @@
 import Head from 'next/head';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../Header';
+import Footer from '../Footer';
 
-import { useOnline } from '../context/online-context';
-import OfflineBanner from './OfflineBanner';
-import DeleteAccountStatusNotification from './account/DeleteAccountStatusNotification';
+import { useOnline } from '../../context/online-context';
+import OfflineBanner from '../OfflineBanner';
+import DeleteAccountStatusNotification from '../account/DeleteAccountStatusNotification';
 
 export default function Layout({ children }) {
   const { online } = useOnline();
