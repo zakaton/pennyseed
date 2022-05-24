@@ -22,8 +22,8 @@ const icons = {
   ),
 };
 
-export default function Notification({ open, setOpen, status }) {
-  const Icon = icons[status.title];
+export default function Notification({ open, setOpen, status = {} }) {
+  const Icon = icons[status.type] || icons.failed;
   return (
     <>
       {/* Global notification live region, render this permanently at the end of the document */}

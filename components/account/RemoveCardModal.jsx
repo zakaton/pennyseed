@@ -3,12 +3,19 @@ import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
 
+const removeCardNotificationStatuses = {
+  succeeded: {
+    type: 'succeeded',
+    title: 'Successfully removed card',
+  },
+};
+
 export default function RemoveCardModal({
   open,
   setOpen,
   selectedPaymentMethod,
   setShowRemoveCardNotification,
-  setRemoveCardStatusString,
+  setRemoveCardStatus,
 }) {
   const [isRemovingCard, setIsRemovingCard] = useState(false);
   const [didRemoveCard, setDidRemoveCard] = useState(false);
@@ -118,7 +125,7 @@ export default function RemoveCardModal({
                         });
                         const { status } = await response.json();
                         setDidRemoveCard(true);
-                        setRemoveCardStatusString(status);
+                        setRemoveCardStatus(status);
                         setShowRemoveCardNotification(true);
                         setOpen(false);
                       }}

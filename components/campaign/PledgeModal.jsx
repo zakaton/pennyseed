@@ -12,7 +12,7 @@ export default function PledgeModal({
   open,
   setOpen,
   selectedCampaign,
-  setPledgeStatusString,
+  setPledgeStatus,
   setShowPledgeNotification,
 }) {
   const [isPledging, setIsPledging] = useState(false);
@@ -81,11 +81,8 @@ export default function PledgeModal({
                     });
                     setIsPledging(false);
                     setDidPledge(true);
-                    const { status, error } = await response.json();
-                    if (error) {
-                      console.error(error);
-                    }
-                    setPledgeStatusString(status);
+                    const { status } = await response.json();
+                    setPledgeStatus(status);
                     setShowPledgeNotification(true);
                     setOpen(false);
                   }}

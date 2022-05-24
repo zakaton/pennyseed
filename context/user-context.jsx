@@ -127,16 +127,22 @@ export function UserContextProvider(props) {
   const getPaymentMethods = async (refresh, limit, getMore) => {
     if (!paymentMethods || refresh) {
       setIsGettingPaymentMethods(true);
-      const newPaymentMethods = await fetchPaymentMethods({ limit });
-      setPaymentMethods(newPaymentMethods);
+      const { paymentMethods: newPaymentMethods, status } =
+        await fetchPaymentMethods({ limit });
+      if (status.type === 'succeeded') {
+        setPaymentMethods(newPaymentMethods);
+      }
       setIsGettingPaymentMethods(false);
     } else if (getMore) {
       setIsGettingPaymentMethods(true);
-      const newPaymentMethods = await fetchPaymentMethods({
-        limit,
-        startingAfter: paymentMethods[paymentMethods.length - 1].id,
-      });
-      setPaymentMethods(paymentMethods.concat(newPaymentMethods));
+      const { paymentMethods: newPaymentMethods, status } =
+        await fetchPaymentMethods({
+          limit,
+          startingAfter: paymentMethods[paymentMethods.length - 1].id,
+        });
+      if (status.type === 'succeeded') {
+        setPaymentMethods(paymentMethods.concat(newPaymentMethods));
+      }
       setIsGettingPaymentMethods(false);
     }
   };
@@ -156,13 +162,17 @@ export function UserContextProvider(props) {
 
   const getPaymentMethod = async (paymentMethodId) => {
     if (!paymentMethodsObject[paymentMethodId]) {
-      const paymentMethod = await fetchPaymentMethod(paymentMethodId);
-      const addedPaymentMethod = { [paymentMethodId]: paymentMethod };
-      // eslint-disable-next-line no-shadow
-      setPaymentMethodsObject((paymentMethodsObject) => ({
-        ...paymentMethodsObject,
-        ...addedPaymentMethod,
-      }));
+      const { paymentMethod, status } = await fetchPaymentMethod(
+        paymentMethodId
+      );
+      if (status.type === 'succeded') {
+        const addedPaymentMethod = { [paymentMethodId]: paymentMethod };
+        // eslint-disable-next-line no-shadow
+        setPaymentMethodsObject((paymentMethodsObject) => ({
+          ...paymentMethodsObject,
+          ...addedPaymentMethod,
+        }));
+      }
     }
   };
 

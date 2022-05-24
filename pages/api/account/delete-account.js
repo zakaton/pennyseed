@@ -8,7 +8,9 @@ export default async function handler(req, res) {
   const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res.status(401).send('Unauthorized');
+    return res
+      .status(200)
+      .json({ status: { type: 'failed', title: 'you are not signed in' } });
   }
   console.log('user to delete', user);
 
@@ -43,5 +45,11 @@ export default async function handler(req, res) {
   );
   console.log('delete user result', deleteUserError);
 
-  res.status(200).send('deleted user');
+  res.status(200).json({
+    status: {
+      type: 'succeeded',
+      title: 'Deleted User',
+      message: 'Successfully deleted User',
+    },
+  });
 }

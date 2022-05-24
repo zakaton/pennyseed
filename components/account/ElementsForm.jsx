@@ -4,7 +4,7 @@ import {
   PaymentElement,
 } from '@stripe/react-stripe-js';
 
-function SetupForm({ errorMessage, setErrorMessage }) {
+function SetupForm({ error, setError }) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -19,24 +19,24 @@ function SetupForm({ errorMessage, setErrorMessage }) {
       return;
     }
 
-    const { error } = await stripe.confirmSetup({
+    const { error: stripeError } = await stripe.confirmSetup({
       // `Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/account#payment-info`,
+        return_url: `${window.location.origin}/account/payment-info`,
       },
     });
 
-    if (error) {
+    if (stripeError) {
       // This point will only be reached if there is an immediate error when
       // confirming the payment. Show error to your customer (for example, payment
       // details incomplete)
-      setErrorMessage(error.message);
+      setError(stripeError);
     } else {
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
-      setErrorMessage(null);
+      setError(null);
     }
   };
 
@@ -50,9 +50,9 @@ function SetupForm({ errorMessage, setErrorMessage }) {
       >
         Submit
       </button>
-      {false && errorMessage && (
+      {false && error && (
         <span className="inline-flex mt-3 items-center rounded-md bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800">
-          {errorMessage}
+          {error.message}
         </span>
       )}
     </form>

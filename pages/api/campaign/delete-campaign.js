@@ -6,10 +6,18 @@ export default async function handler(req, res) {
   const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res.status(401).send('Unauthorized');
+    return res
+      .status(200)
+      .json({ status: { type: 'failed', title: "You're not signed in" } });
   }
   if (!req.body.campaignId) {
-    return res.status(400).send("requires a 'campaignId' form field");
+    return res.status(200).json({
+      status: {
+        type: 'failed',
+        title: 'Unable to delete campaign',
+        mesage: 'No campaign was specified',
+      },
+    });
   }
   const { campaignId } = req.body;
 
@@ -41,10 +49,15 @@ export default async function handler(req, res) {
       .eq('id', campaignId);
     console.log('delete campaign result', deleteCampaignResult);
 
-    res.status(200).json({ status: 'succeeded' });
+    res.status(200).json({
+      status: { type: 'succeeded', title: 'Successfully deleted campaign' },
+    });
   } else {
-    return res
-      .status(401)
-      .send("Unauthorized: campaign doesn't exist or isn't your campaign");
+    return res.status(200).json({
+      status: {
+        type: 'failed',
+        title: "Campaign isn't yours or doesn't exit",
+      },
+    });
   }
 }

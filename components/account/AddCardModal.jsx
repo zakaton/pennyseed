@@ -8,12 +8,12 @@ import getStripe from '../../utils/get-stripe';
 export default function AddCardModal({ open, setOpen }) {
   const [stripePromise] = useState(() => getStripe());
   const [isAddingCard, setIsAddingCard] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   useEffect(() => {
-    if (errorMessage) {
+    if (error) {
       setIsAddingCard(false);
     }
-  }, [errorMessage]);
+  }, [error]);
 
   const [clientSecret, setClientSecret] = useState(null);
   const createSetupIntent = async () => {
@@ -104,8 +104,8 @@ export default function AddCardModal({ open, setOpen }) {
                   <div className="py-2 pt-3">
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                       <ElementsForm
-                        errorMessage={errorMessage}
-                        setErrorMessage={setErrorMessage}
+                        error={error}
+                        setError={setError}
                       />
                     </Elements>
                   </div>

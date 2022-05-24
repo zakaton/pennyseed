@@ -7,8 +7,8 @@ export const fetchPaymentMethods = async (options = {}) => {
   const response = await fetch(
     `/api/account/get-payment-methods?${new URLSearchParams(options)}`
   );
-  const { paymentMethods } = await response.json();
-  return paymentMethods;
+  const { paymentMethods, status } = await response.json();
+  return { paymentMethods, status };
 };
 
 export const fetchPaymentMethod = async (paymentMethodId) => {
@@ -18,6 +18,6 @@ export const fetchPaymentMethod = async (paymentMethodId) => {
       paymentMethodId,
     })}`
   );
-  const { paymentMethod } = await response.json();
-  return paymentMethod;
+  const { paymentMethod, status } = await response.json();
+  return { paymentMethod, status };
 };

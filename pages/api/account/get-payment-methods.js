@@ -11,7 +11,9 @@ export default async function handler(req, res) {
   const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res.status(401).send('Unauthorized');
+    return res
+      .status(200)
+      .json({ status: { type: 'failed', title: 'You are not signed in' } });
   }
 
   const { endingBefore, startingAfter } = req.query;
@@ -30,6 +32,7 @@ export default async function handler(req, res) {
     ...options,
   });
   res.status(200).json({
+    status: { type: 'succeeded' },
     paymentMethods: paymentMethods.data.map((paymentMethod) =>
       stripPaymentMethod(paymentMethod)
     ),

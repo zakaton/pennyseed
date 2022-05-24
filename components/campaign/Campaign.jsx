@@ -12,13 +12,11 @@ import {
 } from '../../utils/campaign-utils';
 import { useUser } from '../../context/user-context';
 import DeleteCampaignModal from './DeleteCampaignModal';
-import DeleteCampaignStatusNotification from './DeleteCampaignStatusNotification';
+import Notification from '../Notification';
 
 import PledgeModal from './PledgeModal';
-import PledgeStatusNotification from './PledgeStatusNotification';
 
 import RemovePledgeModal from './RemovePledgeModal';
-import RemovePledgeStatusNotification from './RemovePledgeStatusNotification';
 
 import QRCodeModal from './QRCodeModal';
 
@@ -318,17 +316,17 @@ export default function Campaign({ campaignId, setCampaignReason }) {
   }, [campaign]);
 
   const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
-  const [deleteCampaignStatusString, setDeleteCampaignStatusString] =
+  const [deleteCampaignStatus, setDeleteCampaignStatus] =
     useState('succeeded');
   const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
     useState(false);
 
   const [showPledgeModal, setShowPledgeModal] = useState(false);
-  const [pledgeStatusString, setPledgeStatusString] = useState('succeeded');
+  const [pledgeStatus, setPledgeStatus] = useState('succeeded');
   const [showPledgeNotification, setShowPledgeNotification] = useState(false);
 
   const [showRemovePledgeModal, setShowRemovePledgeModal] = useState(false);
-  const [removePledgeStatusString, setRemovePledgeStatusString] =
+  const [removePledgeStatus, setRemovePledgeStatus] =
     useState('succeeded');
   const [showRemovePledgeNotification, setShowRemovePledgeNotification] =
     useState(false);
@@ -352,41 +350,41 @@ export default function Campaign({ campaignId, setCampaignReason }) {
         open={showDeleteCampaignModal}
         setOpen={setShowDeleteCampaignModal}
         selectedCampaign={selectedCampaign}
-        setDeleteCampaignStatusString={setDeleteCampaignStatusString}
+        setDeleteCampaignStatus={setDeleteCampaignStatus}
         setShowDeleteCampaignNotification={setShowDeleteCampaignNotification}
       />
-      <DeleteCampaignStatusNotification
+      <Notification
         open={showDeleteCampaignNotification}
         setOpen={setShowDeleteCampaignNotification}
-        statusString={deleteCampaignStatusString}
+        status={deleteCampaignStatus}
       />
 
       <PledgeModal
         open={showPledgeModal}
         setOpen={setShowPledgeModal}
         selectedCampaign={selectedCampaign}
-        setPledgeStatusString={setPledgeStatusString}
+        setPledgeStatus={setPledgeStatus}
         setShowPledgeNotification={setShowPledgeNotification}
         pledge={pledge}
         setPledge={setPledge}
       />
-      <PledgeStatusNotification
+      <Notification
         open={showPledgeNotification}
         setOpen={setShowPledgeNotification}
-        statusString={pledgeStatusString}
+        status={pledgeStatus}
       />
 
       <RemovePledgeModal
         open={showRemovePledgeModal}
         setOpen={setShowRemovePledgeModal}
         selectedCampaign={selectedCampaign}
-        setRemovePledgeStatusString={setRemovePledgeStatusString}
+        setRemovePledgeStatus={setRemovePledgeStatus}
         setShowRemovePledgeNotification={setShowRemovePledgeNotification}
       />
-      <RemovePledgeStatusNotification
+      <Notification
         open={showRemovePledgeNotification}
         setOpen={setShowRemovePledgeNotification}
-        statusString={removePledgeStatusString}
+        status={removePledgeStatus}
       />
 
       <QRCodeModal

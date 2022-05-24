@@ -8,12 +8,17 @@ export default async function handler(req, res) {
   const supabase = getSupabaseService(req);
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res.status(401).send('Unauthorized');
+    return res
+      .status(200)
+      .json({ status: { type: 'failed', title: 'You are not signed in' } });
   }
 
   const profile = await getUserProfile(user, supabase);
   const setupIntent = await stripe.setupIntents.create({
     customer: profile.stripe_customer,
   });
-  res.status(200).json({ client_secret: setupIntent.client_secret });
+  res.status(200).json({
+    status: { type: 'succeeded' },
+    client_secret: setupIntent.client_secret,
+  });
 }

@@ -13,7 +13,12 @@ export default async function handler(req, res) {
   const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res.status(401).send('Unauthorized');
+    return res.status(200).json({
+      status: {
+        type: 'failed',
+        title: 'You must be signed in to create a campaign',
+      },
+    });
   }
 
   const profile = await getUserProfile(user, supabase);
@@ -57,8 +62,11 @@ export default async function handler(req, res) {
 
     if (errorMessage) {
       return res.status(200).json({
-        error: errorMessage,
-        status: 'failed',
+        status: {
+          type: 'failed',
+          title: 'Failed to create campaign',
+          message: errorMessage,
+        },
       });
     }
 
@@ -84,10 +92,11 @@ export default async function handler(req, res) {
 
       res.status(200).json({
         campaignId: campaign.id,
+        status: { type: 'succeeded' },
       });
     } else {
       res.status(200).json({
-        error,
+        status: { type: 'failed', title: error },
       });
     }
   }

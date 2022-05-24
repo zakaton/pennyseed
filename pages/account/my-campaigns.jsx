@@ -6,7 +6,7 @@ import DeleteCampaignModal from '../../components/campaign/DeleteCampaignModal';
 import { supabase } from '../../utils/supabase';
 import { useUser } from '../../context/user-context';
 import { formatDollars } from '../../utils/campaign-utils';
-import DeleteCampaignStatusNotification from '../../components/campaign/DeleteCampaignStatusNotification';
+import Notification from '../../components/Notification';
 import CampaignFilters from '../../components/campaign/CampaignFilters';
 import Pagination from '../../components/Pagination';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
@@ -192,7 +192,7 @@ export default function MyCampaigns() {
 
   const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const [deleteCampaignStatusString, setDeleteCampaignStatusString] =
+  const [deleteCampaignStatus, setDeleteCampaignStatus] =
     useState('succeeded');
   const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
     useState(false);
@@ -259,13 +259,13 @@ export default function MyCampaigns() {
         open={showDeleteCampaignModal}
         setOpen={setShowDeleteCampaignModal}
         selectedCampaign={selectedCampaign}
-        setDeleteCampaignStatusString={setDeleteCampaignStatusString}
+        setDeleteCampaignStatus={setDeleteCampaignStatus}
         setShowDeleteCampaignNotification={setShowDeleteCampaignNotification}
       />
-      <DeleteCampaignStatusNotification
+      <Notification
         open={showDeleteCampaignNotification}
         setOpen={setShowDeleteCampaignNotification}
-        statusString={deleteCampaignStatusString}
+        status={deleteCampaignStatus}
       />
       <div className="bg-white px-4 pt-6 sm:px-6 sm:pt-6">
         <div className="flex items-center pb-4">

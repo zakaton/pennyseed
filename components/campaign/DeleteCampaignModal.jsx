@@ -7,7 +7,7 @@ export default function DeleteCampaignModal({
   open,
   setOpen,
   selectedCampaign,
-  setDeleteCampaignStatusString,
+  setDeleteCampaignStatus,
   setShowDeleteCampaignNotification,
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -108,7 +108,7 @@ export default function DeleteCampaignModal({
                         setIsDeleting(false);
                         setDidDelete(true);
                         const { status } = await response.json();
-                        setDeleteCampaignStatusString(status);
+                        setDeleteCampaignStatus(status);
                         setShowDeleteCampaignNotification(true);
                         setOpen(false);
                       }}

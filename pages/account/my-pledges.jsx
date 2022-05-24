@@ -6,7 +6,7 @@ import RemovePledgeModal from '../../components/campaign/RemovePledgeModal';
 import { supabase } from '../../utils/supabase';
 import { useUser } from '../../context/user-context';
 import { formatDollars } from '../../utils/campaign-utils';
-import RemovePledgeStatusNotification from '../../components/campaign/RemovePledgeStatusNotification';
+import Notification from '../../components/Notification';
 import CampaignFilters from '../../components/campaign/CampaignFilters';
 import Pagination from '../../components/Pagination';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
@@ -201,7 +201,7 @@ export default function MyPledges() {
 
   const [showRemovePledgeModal, setShowRemovePledgeModal] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState(null);
-  const [removePledgeStatusString, setRemovePledgeStatusString] =
+  const [removePledgeStatus, setRemovePledgeStatus] =
     useState('succeeded');
   const [showRemovePledgeNotification, setShowRemovePledgeNotification] =
     useState(false);
@@ -321,13 +321,13 @@ export default function MyPledges() {
         open={showRemovePledgeModal}
         setOpen={setShowRemovePledgeModal}
         selectedCampaign={selectedPledge?.campaign}
-        setRemovePledgeStatusString={setRemovePledgeStatusString}
+        setRemovePledgeStatus={setRemovePledgeStatus}
         setShowRemovePledgeNotification={setShowRemovePledgeNotification}
       />
-      <RemovePledgeStatusNotification
+      <Notification
         open={showRemovePledgeNotification}
         setOpen={setShowRemovePledgeNotification}
-        statusString={removePledgeStatusString}
+        status={removePledgeStatus}
       />
       <div className="bg-white px-4 pt-6 sm:px-6 sm:pt-6">
         <div className="flex items-center pb-4">
@@ -464,7 +464,7 @@ export default function MyPledges() {
                     ) : (
                       <>
                         You need to{' '}
-                        <MyLink href="/account#payment-info">
+                        <MyLink href="/account/payment-info">
                           <button
                             type="button"
                             className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

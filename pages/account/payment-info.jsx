@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useUser } from '../../context/user-context';
 import AddCardModal from '../../components/account/AddCardModal';
 import RemoveCardModal from '../../components/account/RemoveCardModal';
-import AddCardStatusNotification from '../../components/account/AddCardStatusNotification';
-import RemoveCardStatusNotification from '../../components/account/RemoveCardStatusNotification';
+import Notification from '../../components/Notification';
+import AddCardNotification from '../../components/account/AddCardNotification';
 import {
   numberOfPaymentMethodsPerPage,
   maxNumberOfPaymentMethods,
@@ -54,8 +54,7 @@ export default function PaymentInfo() {
     }
   }, [showAddCardModal, showRemoveCardModal]);
 
-  const [removeCardStatusString, setRemoveCardStatusString] =
-    useState('succeeded');
+  const [removeCardStatus, setRemoveCardStatus] = useState();
 
   const [pageIndex, setPageIndex] = useState(0);
   const showPreviousPaymentMethods = async () => {
@@ -173,14 +172,13 @@ export default function PaymentInfo() {
       </div>
     );
   }
-
   return (
     <>
       <Head>
         <title>Payment Info - Pennyseed</title>
       </Head>
       <AddCardModal open={showAddCardModal} setOpen={setShowAddCardModal} />
-      <AddCardStatusNotification
+      <AddCardNotification
         open={showAddCardNotification}
         setOpen={setShowAddCardNotification}
       />
@@ -189,12 +187,12 @@ export default function PaymentInfo() {
         setOpen={setShowRemoveCardModal}
         selectedPaymentMethod={selectedPaymentMethod}
         setShowRemoveCardNotification={setShowRemoveCardNotification}
-        setRemoveCardStatusString={setRemoveCardStatusString}
+        setRemoveCardStatus={setRemoveCardStatus}
       />
-      <RemoveCardStatusNotification
+      <Notification
         open={showRemoveCardNotification}
         setOpen={setShowRemoveCardNotification}
-        statusString={removeCardStatusString}
+        status={removeCardStatus}
       />
       <div className="bg-white px-4 pb-1 pt-6 sm:px-6 sm:pt-6">
         <div className="sm:flex sm:items-center">

@@ -28,13 +28,13 @@ const warnings = {
         </button>
       </MyLink>{' '}
       before you can create campaigns. Go to the{' '}
-      <MyLink href="/account#">
+      <MyLink href="/account">
         <button type="button" className="font-medium underline">
           General tab
         </button>
       </MyLink>{' '}
       on the{' '}
-      <MyLink href="/account#">
+      <MyLink href="/account">
         <button type="button" className="font-medium underline">
           Account page
         </button>
