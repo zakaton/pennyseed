@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 import MyLink from '../../components/MyLink';
 import DeleteCampaignModal from '../../components/campaign/DeleteCampaignModal';
 import { supabase } from '../../utils/supabase';
@@ -10,6 +11,66 @@ import Pagination from '../../components/Pagination';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
 
 const numberOfCampaignsPerPage = 4;
+
+const filterTypes = [
+  {
+    name: 'Approved',
+    query: 'approved',
+    column: 'approved',
+    radios: [
+      { value: true, label: 'approved', defaultChecked: false },
+      { value: false, label: 'not approved', defaultChecked: false },
+      { value: null, label: 'either', defaultChecked: true },
+    ],
+  },
+  {
+    name: 'Active',
+    query: 'active',
+    column: 'processed',
+    radios: [
+      { value: false, label: 'active', defaultChecked: false },
+      { value: true, label: 'ended', defaultChecked: false },
+      { value: null, label: 'either', defaultChecked: true },
+    ],
+  },
+  {
+    name: 'Successful',
+    query: 'successful',
+    column: 'successful',
+    radios: [
+      { value: true, label: 'successful', defaultChecked: false },
+      { value: false, label: 'failed', defaultChecked: false },
+      { value: null, label: 'either', defaultChecked: true },
+    ],
+  },
+];
+
+const sortOptions = [
+  {
+    label: 'Date Created',
+    query: 'date-pledged',
+    value: ['created_at', { ascending: false }],
+    current: false,
+  },
+  {
+    label: 'Ending Soonest',
+    query: 'ending-soonest',
+    value: ['deadline', { ascending: true }],
+    current: false,
+  },
+  {
+    label: 'Funding Goal',
+    query: 'funding-goal',
+    value: ['funding_goal', { ascending: false }],
+    current: false,
+  },
+  {
+    label: 'Number of Pledgers',
+    query: 'number-of-pledgers',
+    value: ['number_of_pledgers', { ascending: false }],
+    current: false,
+  },
+];
 
 export default function MyCampaigns() {
   const { isLoading, user } = useUser();
@@ -159,6 +220,9 @@ export default function MyCampaigns() {
 
   return (
     <>
+      <Head>
+        <title>My Campaigns - Pennyseed</title>
+      </Head>
       <DeleteCampaignModal
         open={showDeleteCampaignModal}
         setOpen={setShowDeleteCampaignModal}
@@ -198,6 +262,8 @@ export default function MyCampaigns() {
           setFilters={setCampaignFilters}
           order={campaignOrder}
           setOrder={setCampaignOrder}
+          filterTypes={filterTypes}
+          sortOptions={sortOptions}
         />
 
         {campaigns?.length > 0 &&

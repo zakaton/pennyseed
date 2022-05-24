@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 import MyLink from '../../components/MyLink';
 import RemovePledgeModal from '../../components/campaign/RemovePledgeModal';
 import { supabase } from '../../utils/supabase';
@@ -10,6 +11,69 @@ import Pagination from '../../components/Pagination';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
 
 const numberOfPledgesPerPage = 4;
+
+const filterTypes = [
+  {
+    name: 'Campaign Approved',
+    column: 'campaign.approved',
+    query: 'approved',
+    radios: [
+      { value: true, label: 'approved', defaultChecked: false },
+      { value: false, label: 'not approved', defaultChecked: false },
+      { value: null, label: 'either', defaultChecked: true },
+    ],
+  },
+  {
+    name: 'Campaign Active',
+    column: 'campaign.processed',
+    query: 'active',
+    radios: [
+      { value: false, label: 'active', defaultChecked: false },
+      { value: true, label: 'ended', defaultChecked: false },
+      { value: null, label: 'either', defaultChecked: true },
+    ],
+  },
+  {
+    name: 'Successful',
+    column: 'campaign.successful',
+    query: 'successful',
+    radios: [
+      { value: true, label: 'successful', defaultChecked: false },
+      { value: false, label: 'failed', defaultChecked: false },
+      { value: null, label: 'either', defaultChecked: true },
+    ],
+  },
+];
+
+const sortOptions = [
+  {
+    label: 'Date Pledged',
+    query: 'date-pledged',
+    value: ['created_at', { ascending: false }],
+    current: true,
+  },
+  {
+    label: 'Ending Soonest',
+    query: 'ending-soonest',
+    value: ['deadline', { ascending: true, foreignTable: 'campaign' }],
+    current: false,
+  },
+  {
+    label: 'Funding Goal',
+    query: 'funding-goal',
+    value: ['funding_goal', { ascending: false, foreignTable: 'campaign' }],
+    current: false,
+  },
+  {
+    label: 'Number of Pledgers',
+    query: 'number-of-pledgers',
+    value: [
+      'number_of_pledgers',
+      { ascending: false, foreignTable: 'campaign' },
+    ],
+    current: false,
+  },
+];
 
 export default function MyPledges() {
   const { isLoading, user } = useUser();
@@ -163,6 +227,9 @@ export default function MyPledges() {
 
   return (
     <>
+      <Head>
+        <title>My Pledges - Pennyseed</title>
+      </Head>
       <RemovePledgeModal
         open={showRemovePledgeModal}
         setOpen={setShowRemovePledgeModal}
@@ -192,6 +259,8 @@ export default function MyPledges() {
           setFilters={setPledgeFilters}
           order={pledgeOrder}
           setOrder={setPledgeOrder}
+          filterTypes={filterTypes}
+          sortOptions={sortOptions}
         />
 
         {pledges?.length > 0 &&

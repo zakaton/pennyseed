@@ -3,66 +3,6 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, AdjustmentsIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
 
-const filterTypes = [
-  {
-    name: 'Approved',
-    query: 'approved',
-    column: 'approved',
-    radios: [
-      { value: true, label: 'approved', defaultChecked: false },
-      { value: false, label: 'not approved', defaultChecked: false },
-      { value: null, label: 'either', defaultChecked: true },
-    ],
-  },
-  {
-    name: 'Active',
-    query: 'active',
-    column: 'processed',
-    radios: [
-      { value: false, label: 'active', defaultChecked: false },
-      { value: true, label: 'ended', defaultChecked: false },
-      { value: null, label: 'either', defaultChecked: true },
-    ],
-  },
-  {
-    name: 'Successful',
-    query: 'successful',
-    column: 'successful',
-    radios: [
-      { value: true, label: 'successful', defaultChecked: false },
-      { value: false, label: 'failed', defaultChecked: false },
-      { value: null, label: 'either', defaultChecked: true },
-    ],
-  },
-];
-
-const sortOptions = [
-  {
-    label: 'Date Created',
-    query: 'date-pledged',
-    value: ['created_at', { ascending: false }],
-    current: false,
-  },
-  {
-    label: 'Ending Soonest',
-    query: 'ending-soonest',
-    value: ['deadline', { ascending: true }],
-    current: false,
-  },
-  {
-    label: 'Funding Goal',
-    query: 'funding-goal',
-    value: ['funding_goal', { ascending: false }],
-    current: false,
-  },
-  {
-    label: 'Number of Pledgers',
-    query: 'number-of-pledgers',
-    value: ['number_of_pledgers', { ascending: false }],
-    current: false,
-  },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -72,7 +12,11 @@ export default function CampaignFilters({
   setFilters,
   order,
   setOrder,
+  sortOptions,
+  filterTypes,
 }) {
+  const router = useRouter();
+
   const [numberOfActiveFilters, setNumberOfActiveFilters] = useState(0);
   useEffect(() => {
     setNumberOfActiveFilters(Object.keys(filters).length);
@@ -80,7 +24,6 @@ export default function CampaignFilters({
 
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
 
-  const router = useRouter();
   const checkQuery = () => {
     const { 'sort-by': sortBy } = router.query;
 
@@ -238,7 +181,7 @@ export default function CampaignFilters({
           <div className="mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8">
             <Menu as="div" className="relative inline-block">
               <div className="flex">
-                <Menu.Button className="inline-flex group justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                   Sort
                   <ChevronDownIcon
                     className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"

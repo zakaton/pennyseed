@@ -5,69 +5,6 @@ import { useRouter } from 'next/router';
 import PaymentMethodsSelect from '../account/PaymentMethodsSelect';
 import { useUser } from '../../context/user-context';
 
-const filterTypes = [
-  {
-    name: 'Campaign Approved',
-    column: 'campaign.approved',
-    query: 'approved',
-    radios: [
-      { value: true, label: 'approved', defaultChecked: false },
-      { value: false, label: 'not approved', defaultChecked: false },
-      { value: null, label: 'either', defaultChecked: true },
-    ],
-  },
-  {
-    name: 'Campaign Active',
-    column: 'campaign.processed',
-    query: 'active',
-    radios: [
-      { value: false, label: 'active', defaultChecked: false },
-      { value: true, label: 'ended', defaultChecked: false },
-      { value: null, label: 'either', defaultChecked: true },
-    ],
-  },
-  {
-    name: 'Successful',
-    column: 'campaign.successful',
-    query: 'successful',
-    radios: [
-      { value: true, label: 'successful', defaultChecked: false },
-      { value: false, label: 'failed', defaultChecked: false },
-      { value: null, label: 'either', defaultChecked: true },
-    ],
-  },
-];
-
-const sortOptions = [
-  {
-    label: 'Date Pledged',
-    query: 'date-pledged',
-    value: ['created_at', { ascending: false }],
-    current: true,
-  },
-  {
-    label: 'Ending Soonest',
-    query: 'ending-soonest',
-    value: ['deadline', { ascending: true, foreignTable: 'campaign' }],
-    current: false,
-  },
-  {
-    label: 'Funding Goal',
-    query: 'funding-goal',
-    value: ['funding_goal', { ascending: false, foreignTable: 'campaign' }],
-    current: false,
-  },
-  {
-    label: 'Number of Pledgers',
-    query: 'number-of-pledgers',
-    value: [
-      'number_of_pledgers',
-      { ascending: false, foreignTable: 'campaign' },
-    ],
-    current: false,
-  },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -77,17 +14,10 @@ export default function PledgeFilters({
   setFilters,
   order,
   setOrder,
+  sortOptions,
+  filterTypes,
 }) {
-  const router = useRouter();
   const { paymentMethodsObject, getPaymentMethod } = useUser();
-
-  const [numberOfActiveFilters, setNumberOfActiveFilters] = useState(0);
-  useEffect(() => {
-    setNumberOfActiveFilters(Object.keys(filters).length);
-  }, [filters]);
-
-  const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
-
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   useEffect(() => {
     const newFilters = { ...filters };
@@ -98,8 +28,17 @@ export default function PledgeFilters({
     }
     setFilters(newFilters);
   }, [selectedPaymentMethod]);
-
   const [paymentMethodIdQuery, setPaymentMethodIdQuery] = useState(null);
+
+  const router = useRouter();
+  
+  const [numberOfActiveFilters, setNumberOfActiveFilters] = useState(0);
+  useEffect(() => {
+    setNumberOfActiveFilters(Object.keys(filters).length);
+  }, [filters]);
+
+  const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
+
   const checkQuery = () => {
     const { 'payment-method': paymentMethodId, 'sort-by': sortBy } =
       router.query;
@@ -298,7 +237,7 @@ export default function PledgeFilters({
           <div className="mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8">
             <Menu as="div" className="relative inline-block">
               <div className="flex">
-                <Menu.Button className="inline-flex group justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                   Sort
                   <ChevronDownIcon
                     className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"

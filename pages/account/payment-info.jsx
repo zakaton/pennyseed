@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useUser } from '../../context/user-context';
 import AddCardModal from '../../components/account/AddCardModal';
@@ -175,6 +176,9 @@ export default function PaymentInfo() {
 
   return (
     <>
+      <Head>
+        <title>Payment Info - Pennyseed</title>
+      </Head>
       <AddCardModal open={showAddCardModal} setOpen={setShowAddCardModal} />
       <AddCardStatusNotification
         open={showAddCardNotification}
