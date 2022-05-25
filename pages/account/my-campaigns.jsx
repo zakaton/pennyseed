@@ -165,6 +165,7 @@ export default function MyCampaigns() {
           if (campaigns.length < numberOfCampaignsPerPage) {
             setCampaigns(campaigns.concat(insertedCampaign));
           }
+          getNumberOfCampaigns();
         })
         .on('UPDATE', (payload) => {
           console.log('updated campaign', payload);
@@ -181,6 +182,7 @@ export default function MyCampaigns() {
           setCampaigns(
             campaigns.filter((campaign) => campaign?.id !== deletedCampaign.id)
           );
+          getNumberOfCampaigns();
         })
         .subscribe();
       return () => {

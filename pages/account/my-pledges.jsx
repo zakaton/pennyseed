@@ -176,6 +176,7 @@ export default function MyPledges() {
           if (pledges.length < numberOfPledgesPerPage) {
             getPledges(true);
           }
+          getNumberOfPledges();
         })
         .on('UPDATE', (payload) => {
           console.log('updated pledge', payload);
@@ -190,6 +191,7 @@ export default function MyPledges() {
           setPledges(
             pledges.filter((pledge) => pledge?.id !== deletedPledge.id)
           );
+          getNumberOfPledges();
         })
         .subscribe();
       return () => {

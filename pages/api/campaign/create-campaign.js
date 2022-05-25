@@ -7,6 +7,7 @@ import {
   maximumCampaignDollars,
   maximumCampaignReasonLength,
   minimumCampaignDollars,
+  getLatestDeadline,
 } from '../../../utils/campaign-utils';
 
 export default async function handler(req, res) {
@@ -54,8 +55,10 @@ export default async function handler(req, res) {
       minimumNumberOfPledgers > maximumPossibleNumberOfPledgers
     ) {
       errorMessage = `minimum number of pledgers must be between ${minimumPossibleNumberOfPledgers} and ${maximumPossibleNumberOfPledgers}`;
-    } else if (deadline.getTime() < Date.now()) {
+    } else if (deadline.getTime() <= Date.now()) {
       errorMessage = 'deadline must be a future date';
+    } else if (deadline.getTime() >= getLatestDeadline().getTime()) {
+      errorMessage = 'deadline must be within a year';
     } else if (!agreeToTermsOfUse) {
       errorMessage = 'user must agree to the terms of use';
     }
@@ -70,19 +73,20 @@ export default async function handler(req, res) {
       });
     }
 
-    const { data: campaigns, error } = await supabase.from('campaign').insert([
-      {
-        created_by: user.id,
-        reason,
-        funding_goal: fundingGoal,
-        minimum_number_of_pledgers: minimumNumberOfPledgers,
-        deadline,
-      },
-    ]);
+    const { data: campaigns, error: insertCampaignError } = await supabase
+      .from('campaign')
+      .insert([
+        {
+          created_by: user.id,
+          reason,
+          funding_goal: fundingGoal,
+          minimum_number_of_pledgers: minimumNumberOfPledgers,
+          deadline,
+        },
+      ]);
 
-    const campaign = campaigns[0];
-
-    if (!error) {
+    if (!insertCampaignError) {
+      const campaign = campaigns[0];
       await supabase
         .from('profile')
         .update({
@@ -96,7 +100,7 @@ export default async function handler(req, res) {
       });
     } else {
       res.status(200).json({
-        status: { type: 'failed', title: error },
+        status: { type: 'failed', title: 'Unable to create campaign' },
       });
     }
   }

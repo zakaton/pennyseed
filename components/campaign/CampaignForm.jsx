@@ -16,6 +16,7 @@ import {
   formatDateForInput,
   defaultLocale,
   defaultMinutesAway,
+  getLatestDeadline,
 } from '../../utils/campaign-utils';
 
 import { useUser } from '../../context/user-context';
@@ -56,12 +57,10 @@ export default function CampaignForm({
     useState(defaultFundingGoal);
 
   useEffect(() => {
-    const currentDate = new Date();
     const defaultFutureDate = new Date();
+    console.log(defaultFutureDate);
     defaultFutureDate.setMinutes(
-      currentDate.getMinutes() -
-        currentDate.getTimezoneOffset() +
-        defaultMinutesAway
+      defaultFutureDate.getMinutes() + defaultMinutesAway
     );
     setDeadline(defaultFutureDate);
   }, []);
@@ -339,30 +338,33 @@ export default function CampaignForm({
                     const newDeadline = new Date(e.target.value);
                     e.target.value = formatDateForInput(newDeadline);
                     const hasDeadlinePassed =
-                      newDeadline.getTime() < Date.now();
-                    e.target.setCustomValidity(
-                      hasDeadlinePassed ? 'deadline must be a future date' : ''
-                    );
-                    if (!hasDeadlinePassed) {
+                      newDeadline.getTime() <= Date.now();
+                    const isDeadlineTooLate =
+                      newDeadline.getTime() >= getLatestDeadline().getTime();
+
+                    let customValidity = '';
+                    if (hasDeadlinePassed) {
+                      customValidity = 'deadline must be a future date';
+                    } else if (isDeadlineTooLate) {
+                      customValidity = 'deadline must be within a year';
+                    }
+                    e.target.setCustomValidity(customValidity || '');
+
+                    if (!hasDeadlinePassed && !isDeadlineTooLate) {
                       setDeadline(newDeadline);
                     }
                   }}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                  must be a future date
+                  must be a future date within a year
                 </p>
                 <input
                   required
                   readOnly
                   name="deadline"
                   id="deadline"
-                  value={
-                    deadline
-                      ? deadline.getTime() +
-                        deadline.getTimezoneOffset() * 60 * 1000
-                      : ''
-                  }
+                  value={deadline ? deadline.getTime() : ''}
                   className="hidden"
                 />
               </div>

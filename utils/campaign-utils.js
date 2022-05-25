@@ -43,9 +43,16 @@ export function formatDollars(dollars, useDecimals = true) {
 }
 
 export const defaultMinutesAway = 30;
-
+export function getLatestDeadline() {
+  const latestDeadline = new Date();
+  latestDeadline.setFullYear(latestDeadline.getFullYear() + 1);
+  return latestDeadline;
+}
 export function formatDateForInput(date) {
-  return date.toISOString().slice(0, 16);
+  const datePlusTimezone = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60 * 1000
+  );
+  return datePlusTimezone.toISOString().slice(0, 16);
 }
 
 export function getPennyseedFee(dollars) {
