@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
   console.log(getNumberOfCampaignsError, numberOfCampaignsToProcess);
 
-  res.status(200).send({
+  res.status(200).json({
     hello: 'world',
   });
 }
