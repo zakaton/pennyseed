@@ -1,11 +1,6 @@
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import {
-  BellIcon,
-  MenuIcon,
-  XIcon,
-  UserCircleIcon,
-} from '@heroicons/react/outline';
+import { MenuIcon, XIcon, UserCircleIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
 
 import { useUser } from '../context/user-context';
@@ -82,42 +77,6 @@ export default function Header() {
                 {!isLoading &&
                   (user ? (
                     <>
-                      {/* Notifications Dropdown */}
-                      <Menu hidden as="div" className="relative z-20 ml-3">
-                        <div>
-                          <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
-                            <span className="sr-only">View notifications</span>
-                            <span className="absolute top-0 right-0 block h-3.5 w-3.5 rounded-full bg-red-400 ring-2 ring-white" />
-                            <BellIcon className="h-9 w-9" aria-hidden="true" />
-                          </Menu.Button>
-                        </div>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-200"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <MyLink
-                                  href="/account/notifications"
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
-                                  Set Notifications
-                                </MyLink>
-                              )}
-                            </Menu.Item>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative z-20 ml-3">
                         <div>

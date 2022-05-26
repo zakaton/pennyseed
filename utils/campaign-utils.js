@@ -42,7 +42,6 @@ export function formatDollars(dollars, useDecimals = true) {
   });
 }
 
-export const defaultMinutesAway = 30;
 export function getLatestDeadline() {
   const latestDeadline = new Date();
   latestDeadline.setFullYear(latestDeadline.getFullYear() + 1);

@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   const deletePledgesResult = await supabase
     .from('pledge')
     .delete()
-    .eq('pledger', user.id);
+    .eq('profile', user.id);
   console.log('delete pledges result', deletePledgesResult);
 
   // delete stripe customer/account

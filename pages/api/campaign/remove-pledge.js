@@ -46,7 +46,7 @@ export default async function handler(req, res) {
   const { data: existingPledge } = await supabase
     .from('pledge')
     .select('*')
-    .eq('pledger', user.id)
+    .eq('profile', user.id)
     .match({ campaign: campaignId })
     .maybeSingle();
 
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
   const deletePledgeResult = await supabase
     .from('pledge')
     .delete()
-    .match({ campaign: campaignId, pledger: user.id });
+    .match({ campaign: campaignId, profile: user.id });
   console.log('delete pledge result', deletePledgeResult);
 
   await updateCampaignNumberOfPledgers(campaignId, supabase);

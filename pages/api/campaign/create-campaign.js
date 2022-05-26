@@ -35,6 +35,7 @@ export default async function handler(req, res) {
     fundingGoal = Math.round(Number(fundingGoal));
     minimumNumberOfPledgers = Math.round(Number(minimumNumberOfPledgers));
     deadline = new Date(Number(deadline));
+    deadline.setMinutes(0, 0, 0);
     agreeToTermsOfUse = Boolean(agreeToTermsOfUse);
 
     const minimumPossibleNumberOfPledgers =

@@ -15,7 +15,6 @@ import {
   formatDollars,
   formatDateForInput,
   defaultLocale,
-  defaultMinutesAway,
   getLatestDeadline,
 } from '../../utils/campaign-utils';
 
@@ -58,10 +57,7 @@ export default function CampaignForm({
 
   useEffect(() => {
     const defaultFutureDate = new Date();
-    console.log(defaultFutureDate);
-    defaultFutureDate.setMinutes(
-      defaultFutureDate.getMinutes() + defaultMinutesAway
-    );
+    defaultFutureDate.setHours(defaultFutureDate.getHours() + 1, 0, 0, 0);
     setDeadline(defaultFutureDate);
   }, []);
 
@@ -106,7 +102,7 @@ export default function CampaignForm({
   const [stripeFee, setStripeFee] = useState(0);
   useEffect(() => {
     if (isCampaignSuccessful) {
-      setStripeFee(getStripeFee(pledgeDollarsPlusFees - pennyseedFee));
+      setStripeFee(getStripeFee(pledgeDollarsPlusFees));
     }
   }, [isCampaignSuccessful, pledgeDollarsPlusFees, pennyseedFee]);
 
@@ -253,9 +249,10 @@ export default function CampaignForm({
             id="createCampaignForm"
             onSubmit={async (e) => {
               e.preventDefault();
-              const isValid = e.target.reportValidity();
+              const form = e.target;
+
+              const isValid = form.reportValidity();
               if (isValid) {
-                const form = e.target;
                 const formData = new FormData(form);
                 const data = new URLSearchParams();
                 formData.forEach((value, key) => {
@@ -266,11 +263,12 @@ export default function CampaignForm({
                   method: form.method,
                   body: data,
                 });
-                const { campaignId, error } = await response.json();
-                if (!error) {
+
+                const { campaignId, status } = await response.json();
+                if (status.type === 'succeeded') {
                   router.push(`/campaign/${campaignId}`);
                 } else {
-                  console.log(error);
+                  console.error(status);
                 }
               }
             }}
@@ -333,31 +331,35 @@ export default function CampaignForm({
                   type="datetime-local"
                   name="deadline-local"
                   id="deadline-local"
+                  step={3600}
                   value={deadline ? formatDateForInput(deadline) : ''}
                   onInput={(e) => {
                     const newDeadline = new Date(e.target.value);
-                    e.target.value = formatDateForInput(newDeadline);
+                    newDeadline.setMinutes(0, 0, 0);
                     const hasDeadlinePassed =
                       newDeadline.getTime() <= Date.now();
                     const isDeadlineTooLate =
                       newDeadline.getTime() >= getLatestDeadline().getTime();
 
-                    let customValidity = '';
-                    if (hasDeadlinePassed) {
-                      customValidity = 'deadline must be a future date';
-                    } else if (isDeadlineTooLate) {
-                      customValidity = 'deadline must be within a year';
+                    if (hasDeadlinePassed || isDeadlineTooLate) {
+                      const customValidity = hasDeadlinePassed
+                        ? 'deadline has already passed'
+                        : 'deadline must be within a year';
+                      e.target.setCustomValidity(customValidity);
+                      e.target.reportValidity();
+                    } else {
+                      e.target.setCustomValidity('');
                     }
-                    e.target.setCustomValidity(customValidity || '');
 
                     if (!hasDeadlinePassed && !isDeadlineTooLate) {
+                      e.target.value = formatDateForInput(newDeadline);
                       setDeadline(newDeadline);
                     }
                   }}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
-                  must be a future date within a year
+                  must be a future date on the hour
                 </p>
                 <input
                   required
@@ -486,7 +488,10 @@ export default function CampaignForm({
                         <span className="sr-only">
                           By creating a campaign I agree{' '}
                         </span>{' '}
-                        to the <MyLink href="/terms">terms of use</MyLink>
+                        to the{' '}
+                        <MyLink href="/terms" target="_blank">
+                          terms of use
+                        </MyLink>
                       </span>
                     </div>
                   </div>
@@ -500,6 +505,26 @@ export default function CampaignForm({
         <div className="mt-1 flex items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right text-xs sm:px-6 sm:text-sm">
           <button
             type="submit"
+            onClick={(e) => {
+              const { form } = e.target;
+              const hasDeadlinePassed = deadline.getTime() <= Date.now();
+              const isDeadlineTooLate =
+                deadline.getTime() >= getLatestDeadline().getTime();
+              console.log(hasDeadlinePassed, isDeadlineTooLate);
+              const datetimeLocalInput = form.querySelector(
+                "input[name='deadline-local']"
+              );
+              if (hasDeadlinePassed || isDeadlineTooLate) {
+                const customValidity = hasDeadlinePassed
+                  ? 'deadline has already passed'
+                  : 'deadline must be within a year';
+                datetimeLocalInput.setCustomValidity(customValidity);
+                datetimeLocalInput.reportValidity();
+                e.preventDefault();
+              } else {
+                datetimeLocalInput.setCustomValidity('');
+              }
+            }}
             form="createCampaignForm"
             className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
           >

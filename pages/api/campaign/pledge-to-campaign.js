@@ -65,7 +65,7 @@ export default async function handler(req, res) {
   const { data: existingPledge } = await supabase
     .from('pledge')
     .select('*')
-    .eq('pledger', profile.id)
+    .eq('profile', profile.id)
     .match({ campaign: campaignId })
     .maybeSingle();
 
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     .from('pledge')
     .insert([
       {
-        pledger: profile.id,
+        profile: profile.id,
         payment_method: paymentMethodId,
         campaign: campaignId,
       },

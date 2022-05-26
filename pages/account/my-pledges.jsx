@@ -98,7 +98,7 @@ export default function MyPledges() {
     const { error, count: numberOfPledges } = await supabase
       .from('pledge')
       .select('*, campaign!inner(*)', { count: 'exact', head: true })
-      .eq('pledger', user.id)
+      .eq('profile', user.id)
       .match(filters);
     console.log('number of pledges', numberOfPledges);
     if (error) {
@@ -128,7 +128,7 @@ export default function MyPledges() {
       const { error, data: pledges } = await supabase
         .from('pledge')
         .select('*, campaign!inner(*)')
-        .eq('pledger', user.id)
+        .eq('profile', user.id)
         .match(filters)
         .order(...order)
         .limit(numberOfPledgesPerPage)

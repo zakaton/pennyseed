@@ -105,7 +105,7 @@ export default function SignIn() {
                   className="ml-2 block text-sm text-gray-900"
                 >
                   By signing in I agree to the{' '}
-                  <MyLink href="/terms" className="font-medium">
+                  <MyLink href="/terms" target="_blank" className="font-medium">
                     terms of use
                   </MyLink>
                   .
@@ -128,7 +128,10 @@ export default function SignIn() {
               <div className="flex items-center justify-center pt-3">
                 <span className="text-center text-sm text-gray-500">
                   By signing in you agree to the{' '}
-                  <MyLink href="/terms">terms of use</MyLink>.
+                  <MyLink href="/terms" target="_blank">
+                    terms of use
+                  </MyLink>
+                  .
                 </span>
               </div>
             </div>

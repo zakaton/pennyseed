@@ -90,7 +90,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     const { data: pledge } = await supabase
       .from('pledge')
       .select('*')
-      .match({ pledger: user.id, campaign: campaignId })
+      .match({ profile: user.id, campaign: campaignId })
       .maybeSingle();
     console.log('setting pledge', pledge);
     setPledge(pledge);
