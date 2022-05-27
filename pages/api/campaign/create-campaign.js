@@ -9,6 +9,7 @@ import {
   minimumCampaignDollars,
   getLatestDeadline,
 } from '../../../utils/campaign-utils';
+import { emailAdmin } from '../../../utils/send-email';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService();
@@ -94,6 +95,20 @@ export default async function handler(req, res) {
           active_campaign: campaign.id,
         })
         .eq('id', user.id);
+
+      try {
+        await emailAdmin({
+          subject: 'Campaign Created',
+          text: `A new Campaign ${campaign.id} has been created`,
+          html: `<h1>New Campaign!</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">new campaign</a> has been created</p>`,
+        });
+      } catch (error) {
+        console.error(error);
+
+        if (error.response) {
+          console.error(error.response.body);
+        }
+      }
 
       res.status(200).json({
         campaignId: campaign.id,

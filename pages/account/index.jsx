@@ -34,12 +34,16 @@ export default function AccountGeneral() {
                   {user.email}
                 </dd>
               </div>
-              <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-                <dt className="text-sm font-medium text-gray-500">Is admin?</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                  {user.is_admin ? 'yes' : 'no'}
-                </dd>
-              </div>
+              {user.is_admin && (
+                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Is admin?
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                    {user.is_admin ? 'yes' : 'no'}
+                  </dd>
+                </div>
+              )}
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
                 <dt className="text-sm font-medium text-gray-500">
                   Can create campaigns?
