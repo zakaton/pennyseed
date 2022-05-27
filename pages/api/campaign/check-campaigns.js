@@ -7,7 +7,6 @@ import {
   getPledgeDollarsPlusFees,
   getStripeFee,
 } from '../../../utils/campaign-utils';
-import { emailAdmin } from '../../../utils/send-email';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = getSupabaseService();
@@ -170,20 +169,6 @@ export default async function handler(req, res) {
       from += paginationSize, to += paginationSize
     ) {
       processCampaigns(from, to, currentDate);
-    }
-  }
-
-  try {
-    await emailAdmin({
-      subject: 'Check Campaigns',
-      text: `check campaigns`,
-      html: `<h1>Check Campaigns</h1> <p>we checked campaigns</p>`,
-    });
-  } catch (error) {
-    console.error(error);
-
-    if (error.response) {
-      console.error(error.response.body);
     }
   }
 
