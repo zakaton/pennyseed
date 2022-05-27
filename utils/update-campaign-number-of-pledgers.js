@@ -13,12 +13,13 @@ export default async function updateCampaignNumberOfPledgers(
     getNumberOfPledgersError
   );
 
+  // don't update if campaign already ended so we can know how much pledgers were charged
   const updateCampaignResult = await supabase
     .from('campaign')
     .update({
       number_of_pledgers: numberOfPledgers,
     })
-    .match({ id: campaignId });
+    .match({ id: campaignId, processed: false });
 
   console.log('update campaign result', updateCampaignResult);
 }

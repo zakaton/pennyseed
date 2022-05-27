@@ -165,13 +165,13 @@ export function UserContextProvider(props) {
       const { paymentMethod, status } = await fetchPaymentMethod(
         paymentMethodId
       );
-      if (status.type === 'succeded') {
+      if (status.type === 'succeeded') {
         const addedPaymentMethod = { [paymentMethodId]: paymentMethod };
         // eslint-disable-next-line no-shadow
-        setPaymentMethodsObject((paymentMethodsObject) => ({
+        setPaymentMethodsObject({
           ...paymentMethodsObject,
           ...addedPaymentMethod,
-        }));
+        });
       }
     }
   };

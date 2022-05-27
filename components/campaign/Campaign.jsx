@@ -254,7 +254,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
   const [currentPledgeDollarsPlusFees, setCurrentPledgeDollarsPlusFees] =
     useState(0);
   useEffect(() => {
-    if (campaign && isCampaignSuccessful) {
+    if (campaign && (campaign.succeeded || isCampaignSuccessful)) {
       setCurrentPledgeDollarsPlusFees(
         getPledgeDollarsPlusFees(
           campaign.funding_goal,
@@ -266,7 +266,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
 
   const [currentPledgeDollars, setCurrentPledgeDollars] = useState(0);
   useEffect(() => {
-    if (campaign && isCampaignSuccessful) {
+    if (campaign && (campaign.succeeded || isCampaignSuccessful)) {
       setCurrentPledgeDollars(
         getPledgeDollars(campaign.funding_goal, campaign.number_of_pledgers)
       );
@@ -407,7 +407,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                     <span className="mt-2 block text-center text-2xl font-bold leading-8 tracking-tight text-gray-900 sm:text-3xl">
                       I am raising{' '}
                       <span>{formatDollars(campaign.funding_goal, false)}</span>{' '}
-                      for <span>{campaign.reason}</span>
+                      for <span>{campaign.reason}</span>.
                     </span>
                   </h1>
                 </div>
@@ -460,12 +460,12 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                         <span
                           className={classNames(
                             'font-medium',
-                            isCampaignSuccessful
+                            campaign.succeeded
                               ? 'text-green-500'
                               : 'text-red-500'
                           )}
                         >
-                          {isCampaignSuccessful ? 'succeeded' : 'failed'}
+                          {campaign.succeeded ? 'succeeded' : 'failed'}
                         </span>{' '}
                         with{' '}
                         <span className="font-bold">
@@ -473,7 +473,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                           {campaign.minimum_number_of_pledgers.toLocaleString()}
                         </span>{' '}
                         pledgers, and{' '}
-                        {isCampaignSuccessful ? (
+                        {campaign.succeeded ? (
                           <>
                             each pledger paid{' '}
                             <span className="font-bold text-green-500">
@@ -584,6 +584,26 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                         {createdDate && createdDate.toLocaleString()}
                       </span>
                     </p>
+                    {campaign.processed ? (
+                      !campaign.approved && (
+                        <p className="italic">
+                          This campaign was not approved.
+                        </p>
+                      )
+                    ) : (
+                      <p className="italic">
+                        This campaign has {campaign.approved && 'been '}
+                        <span className="font-bold">
+                          {campaign.approved
+                            ? 'approved'
+                            : 'not been approved yet'}
+                        </span>
+                        {!campaign.approved && (
+                          <>, but you can still pledge in the meantime</>
+                        )}
+                        .
+                      </p>
+                    )}
 
                     {pledge && paymentMethod && (
                       <p className="italic">

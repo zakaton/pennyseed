@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../utils/supabase';
-// import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 

@@ -337,6 +337,16 @@ export default function MyCampaigns() {
                     {campaign.approved ? 'yes' : 'no'}
                   </dd>
                 </div>
+                {campaign.processed && (
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Succeeded
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {campaign.succeeded ? 'yes' : 'no'}
+                    </dd>
+                  </div>
+                )}
                 <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">
                     Deadline
