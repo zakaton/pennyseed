@@ -310,13 +310,13 @@ async function processCampaignsEndingIn24Hours({
   supabase,
   from,
   to,
-  hourBeforeCurrentDate,
+  hourAfterCurrentDate,
 }) {
   const { data: campaignsEndingIn24HoursToProcess, error } = await supabase
     .from('campaign')
     .select('*, created_by(*)')
     .match({ processed: false })
-    .lte('deadline', hourBeforeCurrentDate.toISOString())
+    .lte('deadline', hourAfterCurrentDate.toISOString())
     .range(from, to);
 
   console.log(
@@ -376,8 +376,9 @@ export default async function handler(req, res) {
     await Promise.all(processCampaignsPromises);
   }
 
-  const hourBeforeCurrentDate = new Date(currentDate);
-  hourBeforeCurrentDate.setHours(hourBeforeCurrentDate.getHours() - 1);
+  const hourAfterCurrentDate = new Date(currentDate);
+  hourAfterCurrentDate.setHours(hourAfterCurrentDate.getHours() + 1);
+
   const {
     error: getNumberOfCampaignsEndingIn24HoursError,
     count: numberOfCampaignsEndingIn24HoursToProcess,
@@ -385,7 +386,7 @@ export default async function handler(req, res) {
     .from('campaign')
     .select('*', { count: 'exact' })
     .match({ processed: false })
-    .lte('deadline', hourBeforeCurrentDate.toISOString());
+    .lte('deadline', hourAfterCurrentDate.toISOString());
 
   console.log(
     'getNumberOfCampaignsEndingIn24HoursError',
@@ -407,7 +408,7 @@ export default async function handler(req, res) {
           supabase,
           from,
           to,
-          hourBeforeCurrentDate,
+          hourAfterCurrentDate,
         });
       processCampaignsEndingIn24HoursPromises.push(
         processCampaignsEndingIn24HoursPromise

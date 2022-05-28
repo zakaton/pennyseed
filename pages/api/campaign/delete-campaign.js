@@ -43,7 +43,11 @@ async function processCampaignEmails(supabase, campaign) {
   } = await supabase
     .from('pledge')
     .select('*', { count: 'exact' })
-    .match({ campaign: campaign.id });
+    .match({
+      campaign: campaign.id,
+    })
+    .contains('notifications', ['email_campaign_deleted']);
+
   console.log('getNumberOfPledgesToEmailError', getNumberOfPledgesToEmailError);
   console.log('numberOfPledgesToEmail', numberOfPledgesToEmail);
 
