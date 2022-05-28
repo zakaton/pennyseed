@@ -7,30 +7,30 @@ import {
 } from '../../../utils/supabase';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
 
-async function emailPledgers(supabase, campaign, from, to) {
+async function emailPledgers({ supabase, campaign, from, to }) {
   const { data: pledgesToEmail, error } = await supabase
     .from('pledge')
-    .select('*, profile(*)')
+    .select('*, profile!inner(*)')
     .match({ campaign: campaign.id })
-    .contains('notifications', ['email_campaign_end_soon'])
+    .contains('profile.notifications', ['email_campaign_deleted'])
     .range(from, to);
 
   console.log('pledgesToEmail', pledgesToEmail);
 
   if (!error) {
     return sendEmail(
-      pledgesToEmail.map((pledge) => ({
+      ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
-        subject: `A Campaign you pledged to is ending soon`,
-        text: 'A Campaign you pledged to is ending soon',
-        html: `<h1>A Campaign you pledged is ending soon</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> you pledged to is ending soon</p>`,
+        subject: `A Campaign you pledged to has been deleted`,
+        text: 'A Campaign you pledged to has been deleted',
+        html: `<h1>A Campaign you pledged has been deleted</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> you pledged to has been deleted</p>`,
       }))
     );
   }
   console.error('error fetching pledges', error);
 }
 
-async function processCampaignEmails(supabase, campaign) {
+async function processCampaignEmails({ supabase, campaign }) {
   await emailAdmin({
     subject: 'Campaign Deleted',
     text: `Campaign ${campaign.id} was deleted`,
@@ -42,11 +42,11 @@ async function processCampaignEmails(supabase, campaign) {
     count: numberOfPledgesToEmail,
   } = await supabase
     .from('pledge')
-    .select('*', { count: 'exact' })
+    .select('*, profile!inner(*)', { count: 'exact' })
     .match({
       campaign: campaign.id,
     })
-    .contains('notifications', ['email_campaign_deleted']);
+    .contains('profile.notifications', ['email_campaign_deleted']);
 
   console.log('getNumberOfPledgesToEmailError', getNumberOfPledgesToEmailError);
   console.log('numberOfPledgesToEmail', numberOfPledgesToEmail);
@@ -58,7 +58,12 @@ async function processCampaignEmails(supabase, campaign) {
       from < numberOfPledgesToEmail;
       from += paginationSize, to += paginationSize
     ) {
-      const emailPledgersPromise = emailPledgers(supabase, campaign, from, to);
+      const emailPledgersPromise = emailPledgers({
+        supabase,
+        campaign,
+        from,
+        to,
+      });
       emailPledgersPromises.push(emailPledgersPromise);
     }
   }
@@ -101,7 +106,9 @@ export default async function handler(req, res) {
         .eq('id', user.id);
     }
 
-    await processCampaignEmails(supabase, campaign);
+    if (!campaign.processed) {
+      await processCampaignEmails({ supabase, campaign });
+    }
 
     const deletePledgesResult = await supabase
       .from('pledge')

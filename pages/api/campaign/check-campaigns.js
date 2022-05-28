@@ -91,16 +91,16 @@ async function chargePledges({
 async function emailPledgers({ supabase, from, to, campaign, successful }) {
   const { data: pledgesToEmail, error } = await supabase
     .from('pledge')
-    .select('*, profile(*)')
+    .select('*, profile!inner(*)')
     .match({ campaign: campaign.id })
-    .contains('notifications', ['email_campaign_end'])
+    .contains('profile.notifications', ['email_campaign_end'])
     .range(from, to);
 
   console.log('pledgesToEmail', pledgesToEmail);
 
   if (!error) {
     await sendEmail(
-      pledgesToEmail.map((pledge) => ({
+      ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
         subject: `A Campaign you pledged to ${
           successful ? 'Succeeded' : 'Failed'
@@ -196,6 +196,15 @@ async function processCampaign({ supabase, stripe, campaign }) {
     await Promise.all(emailPledgersPromises);
   }
 
+  if (campaign.created_by.active_campaign === campaign.id) {
+    const upateProfileResult = await supabase
+      .from('profile')
+      .update({
+        active_campaign: null,
+      })
+      .eq('id', campaign.created_by.id);
+    console.log('update profile result', upateProfileResult);
+  }
   const { error: updateCampaignError } = await supabase
     .from('campaign')
     .update({
@@ -244,16 +253,16 @@ async function processCampaigns({ supabase, stripe, from, to, currentDate }) {
 async function processPledgesEndingIn24Hours({ supabase, from, to, campaign }) {
   const { data: pledgesToEmail, error } = await supabase
     .from('pledge')
-    .select('*, profile(*)')
+    .select('*, profile!inner(*)')
     .match({ campaign: campaign.id })
-    .contains('notifications', ['email_campaign_end_soon'])
+    .contains('profile.notifications', ['email_campaign_end_soon'])
     .range(from, to);
 
   console.log('pledgesToEmail', pledgesToEmail);
 
   if (!error) {
     await sendEmail(
-      pledgesToEmail.map((pledge) => ({
+      ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
         subject: `A Campaign you pledged to is ending soon`,
         text: 'A Campaign you pledged to is ending soon',
@@ -310,12 +319,14 @@ async function processCampaignsEndingIn24Hours({
   supabase,
   from,
   to,
+  hourBeforeDayAfterCurrentDate,
   dayAfterCurrentDate,
 }) {
   const { data: campaignsEndingIn24HoursToProcess, error } = await supabase
     .from('campaign')
     .select('*, created_by(*)')
     .match({ processed: false })
+    .gt('deadline', hourBeforeDayAfterCurrentDate.toISOString())
     .lte('deadline', dayAfterCurrentDate.toISOString())
     .range(from, to);
 
@@ -337,7 +348,7 @@ async function processCampaignsEndingIn24Hours({
 
 // eslint-disable-next-line consistent-return
 export default async function handler(req, res) {
-  if (!enforceApiRouteSecret(req, res)) {
+  if (false && !enforceApiRouteSecret(req, res)) {
     return;
   }
 
@@ -378,6 +389,10 @@ export default async function handler(req, res) {
 
   const dayAfterCurrentDate = new Date(currentDate);
   dayAfterCurrentDate.setHours(dayAfterCurrentDate.getHours() + 24);
+  const hourBeforeDayAfterCurrentDate = new Date(currentDate);
+  hourBeforeDayAfterCurrentDate.setHours(
+    hourBeforeDayAfterCurrentDate.getHours() - 1
+  );
 
   const {
     error: getNumberOfCampaignsEndingIn24HoursError,
@@ -386,6 +401,7 @@ export default async function handler(req, res) {
     .from('campaign')
     .select('*', { count: 'exact' })
     .match({ processed: false })
+    .gt('deadline', hourBeforeDayAfterCurrentDate.toISOString())
     .lte('deadline', dayAfterCurrentDate.toISOString());
 
   console.log(
@@ -408,7 +424,8 @@ export default async function handler(req, res) {
           supabase,
           from,
           to,
-          hourAfterCurrentDate,
+          hourBeforeDayAfterCurrentDate,
+          dayAfterCurrentDate,
         });
       processCampaignsEndingIn24HoursPromises.push(
         processCampaignsEndingIn24HoursPromise
