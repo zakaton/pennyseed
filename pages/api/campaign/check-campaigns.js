@@ -389,7 +389,7 @@ export default async function handler(req, res) {
 
   const dayAfterCurrentDate = new Date(currentDate);
   dayAfterCurrentDate.setHours(dayAfterCurrentDate.getHours() + 24);
-  const hourBeforeDayAfterCurrentDate = new Date(currentDate);
+  const hourBeforeDayAfterCurrentDate = new Date(dayAfterCurrentDate);
   hourBeforeDayAfterCurrentDate.setHours(
     hourBeforeDayAfterCurrentDate.getHours() - 1
   );
