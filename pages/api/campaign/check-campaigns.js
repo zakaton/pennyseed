@@ -338,7 +338,7 @@ async function processCampaignsEndingIn24Hours({
   if (!error) {
     const campaignsEndingIn24HoursToProcessPromises =
       campaignsEndingIn24HoursToProcess.map((campaign) =>
-        processCampaignEndingIn24Hours(supabase, campaign)
+        processCampaignEndingIn24Hours({ supabase, campaign })
       );
     await Promise.all(campaignsEndingIn24HoursToProcessPromises);
   } else {
