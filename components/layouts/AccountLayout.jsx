@@ -45,7 +45,9 @@ function classNames(...classes) {
 
 export default function AccountLayout({ children }) {
   const router = useRouter();
-  const { isLoading, user } = useUser();
+  const { isLoading, user, isAdmin } = useUser();
+
+  console.log('isAdmin', isAdmin);
 
   useEffect(() => {
     if (!isLoading && !user) {

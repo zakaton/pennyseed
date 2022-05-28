@@ -3,7 +3,7 @@ import mail from '@sendgrid/mail';
 mail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const adminEmail = 'contact@pennyseed.fund';
-const updatesEmail = 'updates@pennyseed.fund';
+const notificationsEmail = 'notifications@pennyseed.fund';
 
 export default async function sendEmail(...messages) {
   try {
@@ -11,7 +11,7 @@ export default async function sendEmail(...messages) {
       messages.map((message) => ({
         ...message,
         from: {
-          email: updatesEmail,
+          email: notificationsEmail,
           name: 'Pennyseed',
         },
         replyTo: adminEmail,

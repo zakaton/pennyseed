@@ -14,6 +14,7 @@ export function UserContextProvider(props) {
   const [user, setUser] = useState(supabase.auth.user());
   const [isLoading, setIsLoading] = useState(true);
   const [didDeleteAccount, setDidDeleteAccount] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const updateUserProfile = async () => {
     const user = supabase.auth.user();
@@ -104,6 +105,12 @@ export function UserContextProvider(props) {
         console.log('unsubscribing to user updates');
         supabase.removeSubscription(subscription);
       };
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      setIsAdmin(user.email?.endsWith('@ukaton.com'));
     }
   }, [user]);
 
@@ -227,6 +234,8 @@ export function UserContextProvider(props) {
     isGettingPaymentMethod,
     getPaymentMethod,
     getPaymentMethodStatus,
+
+    isAdmin,
   };
 
   return <UserContext.Provider value={value} {...props} />;

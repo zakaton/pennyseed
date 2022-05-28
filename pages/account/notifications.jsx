@@ -139,8 +139,8 @@ export default function Notifications() {
                       Campaign is Deleted
                     </label>
                     <p className="text-gray-500">
-                      Get notified when a campaign you&apos;ve pledged to is
-                      deleted.
+                      Get notified when an active campaign you&apos;ve pledged
+                      to is deleted.
                     </p>
                   </div>
                 </div>
