@@ -20,12 +20,12 @@ export default async function handler(req, res) {
   const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return sendError({ title: 'You are not signed in' });
+    return sendError({ message: 'You are not signed in' });
   }
 
   const profile = await getUserProfile(user, supabase);
   if (!profile) {
-    return sendError({ title: 'profile not found' });
+    return sendError({ message: 'profile not found' });
   }
 
   const notifications = notificationTypes.filter(

@@ -19,8 +19,12 @@ const capitalizeString = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
 export default function PaymentInfo() {
-  const { paymentMethods, numberOfPaymentMethods, getPaymentMethods } =
-    useUser();
+  const {
+    paymentMethods,
+    numberOfPaymentMethods,
+    getPaymentMethods,
+    getPaymentMethodsStatus,
+  } = useUser();
 
   useEffect(() => {
     if (!paymentMethods) {
@@ -167,7 +171,9 @@ export default function PaymentInfo() {
     paymentMethodsContent = (
       <div className="py-4 text-center sm:py-5">
         <div className="text-sm font-medium text-gray-500">
-          Loading payment info...
+          {getPaymentMethodsStatus?.type !== 'succeeded'
+            ? 'Failed to load Payment Methods'
+            : 'Loading payment info...'}
         </div>
       </div>
     );

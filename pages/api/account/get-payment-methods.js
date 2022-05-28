@@ -5,15 +5,22 @@ import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 import { numberOfPaymentMethodsPerPage } from '../../../utils/get-payment-methods';
 import stripPaymentMethod from '../../../utils/strip-payment-method';
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
 export default async function handler(req, res) {
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+  const sendError = (error) =>
+    res.status(200).json({
+      status: {
+        type: 'failed',
+        title: 'Failed to get Payment Methods',
+        ...error,
+      },
+    });
+
   const supabase = getSupabaseService();
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res
-      .status(200)
-      .json({ status: { type: 'failed', title: 'You are not signed in' } });
+    return sendError({ message: 'You are not signed in' });
   }
 
   const { endingBefore, startingAfter } = req.query;
@@ -32,7 +39,7 @@ export default async function handler(req, res) {
     ...options,
   });
   res.status(200).json({
-    status: { type: 'succeeded' },
+    status: { type: 'succeeded', title: 'Successfully got Payment Methods' },
     paymentMethods: paymentMethods.data.map((paymentMethod) =>
       stripPaymentMethod(paymentMethod)
     ),

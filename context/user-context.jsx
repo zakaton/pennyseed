@@ -123,6 +123,7 @@ export function UserContextProvider(props) {
   const [paymentMethodsObject, setPaymentMethodsObject] = useState({});
   const [isGettingPaymentMethods, setIsGettingPaymentMethods] = useState(false);
   const [numberOfPaymentMethods, setNumberOfPaymentMethods] = useState(null);
+  const [getPaymentMethodsStatus, setGetPaymentMethodsStatus] = useState();
   const getPaymentMethods = async (refresh, limit, getMore) => {
     if (!paymentMethods || refresh) {
       setIsGettingPaymentMethods(true);
@@ -131,6 +132,7 @@ export function UserContextProvider(props) {
       if (status.type === 'succeeded') {
         setPaymentMethods(newPaymentMethods);
       }
+      setGetPaymentMethodsStatus(status);
       setIsGettingPaymentMethods(false);
     } else if (getMore) {
       setIsGettingPaymentMethods(true);
@@ -142,6 +144,7 @@ export function UserContextProvider(props) {
       if (status.type === 'succeeded') {
         setPaymentMethods(paymentMethods.concat(newPaymentMethods));
       }
+      setGetPaymentMethodsStatus(status);
       setIsGettingPaymentMethods(false);
     }
   };
@@ -158,8 +161,10 @@ export function UserContextProvider(props) {
       getPaymentMethods(true);
     }
   }, [numberOfPaymentMethods]);
-
+  const [getPaymentMethodStatus, setGetPaymentMethodStatus] = useState();
+  const [isGettingPaymentMethod, setIsGettingPaymentMethod] = useState(false);
   const getPaymentMethod = async (paymentMethodId) => {
+    setIsGettingPaymentMethod(true);
     if (!paymentMethodsObject[paymentMethodId]) {
       const { paymentMethod, status } = await fetchPaymentMethod(
         paymentMethodId
@@ -172,7 +177,9 @@ export function UserContextProvider(props) {
           ...addedPaymentMethod,
         });
       }
+      setGetPaymentMethodStatus(status);
     }
+    setIsGettingPaymentMethod(false);
   };
 
   useEffect(() => {
@@ -213,10 +220,13 @@ export function UserContextProvider(props) {
     isGettingPaymentMethods,
     paymentMethods,
     getPaymentMethods,
+    getPaymentMethodsStatus,
     numberOfPaymentMethods,
 
     paymentMethodsObject,
+    isGettingPaymentMethod,
     getPaymentMethod,
+    getPaymentMethodStatus,
   };
 
   return <UserContext.Provider value={value} {...props} />;
