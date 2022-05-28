@@ -5,9 +5,7 @@ import { getSupabaseService } from '../../../../utils/supabase';
 import { maxNumberOfPaymentMethods } from '../../../../utils/get-payment-methods';
 import updateCampaignNumberOfPledgers from '../../../../utils/update-campaign-number-of-pledgers';
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_CUSTOMER_WEBHOOK_SECRET;
-const supabase = getSupabaseService();
 
 export const config = {
   api: {
@@ -16,6 +14,9 @@ export const config = {
 };
 
 export default async function handler(req, res) {
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+  const supabase = getSupabaseService();
+
   if (req.method === 'POST') {
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
@@ -62,9 +63,11 @@ export default async function handler(req, res) {
                   .eq('payment_method', payment_method.id);
               console.log('delete pledges result', deletePledgesError, pledges);
 
-              await pledges.forEach(async (pledge) => {
-                updateCampaignNumberOfPledgers(pledge.campaign, supabase);
-              });
+              const updateCampaignNumberOfPledgersPromises = pledges.map(
+                async (pledge) =>
+                  updateCampaignNumberOfPledgers(pledge.campaign, supabase)
+              );
+              await Promise.all(updateCampaignNumberOfPledgersPromises);
             }
           }
         }

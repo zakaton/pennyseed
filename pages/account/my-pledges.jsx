@@ -203,7 +203,7 @@ export default function MyPledges() {
 
   const [showRemovePledgeModal, setShowRemovePledgeModal] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState(null);
-  const [removePledgeStatus, setRemovePledgeStatus] = useState('succeeded');
+  const [removePledgeStatus, setRemovePledgeStatus] = useState();
   const [showRemovePledgeNotification, setShowRemovePledgeNotification] =
     useState(false);
 

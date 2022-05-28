@@ -1,19 +1,22 @@
 import Stripe from 'stripe';
 import enforceApiRouteSecret from '../../../utils/enforce-api-route-secret';
-import { getSupabaseService } from '../../../utils/supabase';
+import { getSupabaseService, paginationSize } from '../../../utils/supabase';
 import {
   getPennyseedFee,
   getPledgeDollars,
   getPledgeDollarsPlusFees,
   getStripeFee,
 } from '../../../utils/campaign-utils';
+import sendEmail, { emailAdmin } from '../../../utils/send-email';
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const supabase = getSupabaseService();
-const paginationSize = 1_000;
-
-async function processPledge(pledge, campaign, defaultPaymentIntentOptions) {
-  console.log('pledgeToProcess', pledge);
+async function chargePledge({
+  supabase,
+  stripe,
+  pledge,
+  campaign,
+  defaultPaymentIntentOptions,
+}) {
+  console.log('pledgeToCharge', pledge);
 
   if (!pledge.payment_intent && pledge.payment_method) {
     const paymentIntentOptions = {
@@ -53,64 +56,144 @@ async function processPledge(pledge, campaign, defaultPaymentIntentOptions) {
     }
   }
 }
-async function processPledges(from, to, campaign) {
-  const { data: pledgesToProcess, error } = await supabase
+async function chargePledges({
+  supabase,
+  stripe,
+  from,
+  to,
+  campaign,
+  defaultPaymentIntentOptions,
+}) {
+  const { data: pledgesToCharge, error } = await supabase
     .from('pledge')
     .select('*, profile(*)')
     .match({ campaign: campaign.id })
     .range(from, to);
 
-  console.log('pledgesToProcess', pledgesToProcess);
+  console.log('pledgesToCharge', pledgesToCharge);
 
   if (!error) {
-    const pledgeDollarsPlusFees = getPledgeDollarsPlusFees(
-      campaign.funding_goal,
-      campaign.number_of_pledgers
+    const chargePledgePromises = pledgesToCharge.map((pledge) =>
+      chargePledge({
+        supabase,
+        stripe,
+        pledge,
+        campaign,
+        defaultPaymentIntentOptions,
+      })
     );
-    const pledgeDollars = getPledgeDollars(
-      campaign.funding_goal,
-      campaign.number_of_pledgers
-    );
-    const pennyseedFee = getPennyseedFee(pledgeDollars);
-    const stripeFee = getStripeFee(pledgeDollarsPlusFees);
-    const defaultPaymentIntentOptions = {
-      amount: Math.round(pledgeDollarsPlusFees * 100),
-      application_fee_amount: Math.round((stripeFee + pennyseedFee) * 100),
-    };
-
-    pledgesToProcess.forEach((pledge) => {
-      processPledge(pledge, campaign, defaultPaymentIntentOptions);
-    });
+    await Promise.all(chargePledgePromises);
   } else {
     console.error('error fetching pledges', error);
   }
 }
 
-async function processCampaign(campaign) {
+async function emailPledgers({ supabase, from, to, campaign, successful }) {
+  const { data: pledgesToEmail, error } = await supabase
+    .from('pledge')
+    .select('*, profile(*)')
+    .match({ campaign: campaign.id })
+    .contains('notifications', ['email_campaign_end'])
+    .range(from, to);
+
+  console.log('pledgesToEmail', pledgesToEmail);
+
+  if (!error) {
+    await sendEmail(
+      pledgesToEmail.map((pledge) => ({
+        to: pledge.profile.email,
+        subject: `A Campaign you pledged to ${
+          successful ? 'Succeeded' : 'Failed'
+        }`,
+        text: 'A Campaign you pledged to is ending soon',
+        html: `<h1>A Campaign you pledged is ending soon</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> you pledged to is ending soon</p>`,
+      }))
+    );
+  } else {
+    console.error('error fetching pledges', error);
+  }
+}
+
+async function processCampaign({ supabase, stripe, campaign }) {
   console.log('campaignToProcess', campaign);
 
   const successful =
     campaign.approved &&
     campaign.number_of_pledgers >= campaign.minimum_number_of_pledgers;
   console.log('campaign succeeeded?', successful);
+
   if (successful) {
     const { error: getNumberOfPledgesError, count: numberOfPledgesToProcess } =
       await supabase
         .from('pledge')
         .select('*', { count: 'exact' })
         .match({ campaign: campaign.id });
-
     console.log('getNumberOfPledgesError', getNumberOfPledgesError);
     console.log('numberOfPledgesToProcess', numberOfPledgesToProcess);
+
     if (numberOfPledgesToProcess > 0) {
+      const pledgeDollarsPlusFees = getPledgeDollarsPlusFees(
+        campaign.funding_goal,
+        campaign.number_of_pledgers
+      );
+      const pledgeDollars = getPledgeDollars(
+        campaign.funding_goal,
+        campaign.number_of_pledgers
+      );
+      const pennyseedFee = getPennyseedFee(pledgeDollars);
+      const stripeFee = getStripeFee(pledgeDollarsPlusFees);
+      const defaultPaymentIntentOptions = {
+        amount: Math.round(pledgeDollarsPlusFees * 100),
+        application_fee_amount: Math.round((stripeFee + pennyseedFee) * 100),
+      };
+
+      const chargePledgesPromises = [];
       for (
         let from = 0, to = paginationSize - 1;
         from < numberOfPledgesToProcess;
         from += paginationSize, to += paginationSize
       ) {
-        processPledges(from, to, campaign);
+        const chargePledgesPromise = chargePledges({
+          supabase,
+          stripe,
+          from,
+          to,
+          campaign,
+          defaultPaymentIntentOptions,
+        });
+
+        chargePledgesPromises.push(chargePledgesPromise);
       }
+      await Promise.all(chargePledgesPromises);
     }
+  }
+
+  const {
+    error: getNumberOfPledgesToEmailError,
+    count: numberOfPledgesToEmail,
+  } = await supabase
+    .from('pledge')
+    .select('*', { count: 'exact' })
+    .match({ campaign: campaign.id });
+  console.log('getNumberOfPledgesToEmailError', getNumberOfPledgesToEmailError);
+  console.log('numberOfPledgesToEmail', numberOfPledgesToEmail);
+
+  if (numberOfPledgesToEmail > 0) {
+    const emailPledgersPromises = [];
+    for (
+      let from = 0, to = paginationSize - 1;
+      from < numberOfPledgesToEmail;
+      from += paginationSize, to += paginationSize
+    ) {
+      const emailPledgersPromise = emailPledgers({
+        supabase,
+        from,
+        to,
+        campaign,
+      });
+      emailPledgersPromises.push(emailPledgersPromise);
+    }
+    await Promise.all(emailPledgersPromises);
   }
 
   const { error: updateCampaignError } = await supabase
@@ -120,11 +203,25 @@ async function processCampaign(campaign) {
       successful,
     })
     .match({ id: campaign.id });
-  if (updateCampaignError) {
+  if (!updateCampaignError) {
+    await emailAdmin({
+      subject: 'Campaign Ended',
+      text: `Campaign ${campaign.id} has ended`,
+      html: `<h1>Campaign Ended</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> has ended</p>`,
+    });
+    if (campaign.created_by.notifications?.includes('email_campaign_end')) {
+      await sendEmail({
+        to: campaign.created_by.email,
+        subject: `Your Campaign ${successful ? 'Succeeded' : 'Failed'}`,
+        text: 'Your Campaign has Ended',
+        html: `<h1>Your Campaign Ended</h1> <p>Your <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> has ended</p>`,
+      });
+    }
+  } else {
     console.error('error updating campaign', updateCampaignError);
   }
 }
-async function processCampaigns(from, to, currentDate) {
+async function processCampaigns({ supabase, stripe, from, to, currentDate }) {
   const { data: campaignsToProcess, error } = await supabase
     .from('campaign')
     .select('*, created_by(*)')
@@ -135,9 +232,104 @@ async function processCampaigns(from, to, currentDate) {
   console.log('campaignsToProcess', campaignsToProcess);
 
   if (!error) {
-    campaignsToProcess.forEach((campaign) => {
-      processCampaign(campaign);
+    const processCampaignPromises = campaignsToProcess.map((campaign) =>
+      processCampaign(supabase, stripe, campaign)
+    );
+    await Promise.all(processCampaignPromises);
+  } else {
+    console.error('error fetching campaigns', error);
+  }
+}
+
+async function processPledgesEndingIn24Hours({ supabase, from, to, campaign }) {
+  const { data: pledgesToEmail, error } = await supabase
+    .from('pledge')
+    .select('*, profile(*)')
+    .match({ campaign: campaign.id })
+    .contains('notifications', ['email_campaign_end_soon'])
+    .range(from, to);
+
+  console.log('pledgesToEmail', pledgesToEmail);
+
+  if (!error) {
+    await sendEmail(
+      pledgesToEmail.map((pledge) => ({
+        to: pledge.profile.email,
+        subject: `A Campaign you pledged to is ending soon`,
+        text: 'A Campaign you pledged to is ending soon',
+        html: `<h1>A Campaign you pledged is ending soon</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> you pledged to is ending soon</p>`,
+      }))
+    );
+  } else {
+    console.error('error fetching pledges', error);
+  }
+}
+
+async function processCampaignEndingIn24Hours({ supabase, campaign }) {
+  console.log('campaignEndingIn24HoursToProcess', campaign);
+
+  const { error: getNumberOfPledgesError, count: numberOfPledgesToProcess } =
+    await supabase
+      .from('pledge')
+      .select('*', { count: 'exact' })
+      .match({ campaign: campaign.id });
+
+  console.log('getNumberOfPledgesError', getNumberOfPledgesError);
+  console.log('numberOfPledgesToProcess', numberOfPledgesToProcess);
+  if (numberOfPledgesToProcess > 0) {
+    const processPledgesEndingIn24HoursPromises = [];
+    for (
+      let from = 0, to = paginationSize - 1;
+      from < numberOfPledgesToProcess;
+      from += paginationSize, to += paginationSize
+    ) {
+      const processPledgesEndingIn24HoursPromise =
+        processPledgesEndingIn24Hours({ supabase, from, to, campaign });
+      processPledgesEndingIn24HoursPromises.push(
+        processPledgesEndingIn24HoursPromise
+      );
+    }
+    await Promise.all(processPledgesEndingIn24HoursPromises);
+  }
+
+  await emailAdmin({
+    subject: 'Campaign Ending in 24 Hours',
+    text: `Campaign ${campaign.id} will end in 24 hours`,
+    html: `<h1>Campaign Ending in 24 hours</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> will end in 24 hours</p>`,
+  });
+  if (campaign.created_by.notifications?.includes('email_campaign_end_soon')) {
+    await sendEmail({
+      to: campaign.created_by.email,
+      subject: `Your Campaign will end in 24 hours`,
+      text: 'Your Campaign will end in 24 hours',
+      html: `<h1>Your Campaign will end in 24 hours</h1> <p>Your <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> will end in 24 hours</p>`,
     });
+  }
+}
+async function processCampaignsEndingIn24Hours({
+  supabase,
+  from,
+  to,
+  hourBeforeCurrentDate,
+}) {
+  const { data: campaignsEndingIn24HoursToProcess, error } = await supabase
+    .from('campaign')
+    .select('*, created_by(*)')
+    .match({ processed: false })
+    .lte('deadline', hourBeforeCurrentDate.toISOString())
+    .range(from, to);
+
+  console.log(
+    'campaignsEndingIn24HoursToProcess',
+    campaignsEndingIn24HoursToProcess
+  );
+
+  if (!error) {
+    const campaignsEndingIn24HoursToProcessPromises =
+      campaignsEndingIn24HoursToProcess.map((campaign) =>
+        processCampaignEndingIn24Hours(supabase, campaign)
+      );
+    await Promise.all(campaignsEndingIn24HoursToProcessPromises);
   } else {
     console.error('error fetching campaigns', error);
   }
@@ -148,6 +340,9 @@ export default async function handler(req, res) {
   if (!enforceApiRouteSecret(req, res)) {
     return;
   }
+
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+  const supabase = getSupabaseService();
 
   const currentDate = new Date();
 
@@ -163,13 +358,62 @@ export default async function handler(req, res) {
   console.log('getNumberOfCampaignsError', getNumberOfCampaignsError);
   console.log('numberOfCampaignsToProcess', numberOfCampaignsToProcess);
   if (numberOfCampaignsToProcess > 0) {
+    const processCampaignsPromises = [];
     for (
       let from = 0, to = paginationSize - 1;
       from < numberOfCampaignsToProcess;
       from += paginationSize, to += paginationSize
     ) {
-      processCampaigns(from, to, currentDate);
+      const processCampaignsPromise = processCampaigns({
+        supabase,
+        stripe,
+        from,
+        to,
+        currentDate,
+      });
+      processCampaignsPromises.push(processCampaignsPromise);
     }
+    await Promise.all(processCampaignsPromises);
+  }
+
+  const hourBeforeCurrentDate = new Date(currentDate);
+  hourBeforeCurrentDate.setHours(hourBeforeCurrentDate.getHours() - 1);
+  const {
+    error: getNumberOfCampaignsEndingIn24HoursError,
+    count: numberOfCampaignsEndingIn24HoursToProcess,
+  } = await supabase
+    .from('campaign')
+    .select('*', { count: 'exact' })
+    .match({ processed: false })
+    .lte('deadline', hourBeforeCurrentDate.toISOString());
+
+  console.log(
+    'getNumberOfCampaignsEndingIn24HoursError',
+    getNumberOfCampaignsEndingIn24HoursError
+  );
+  console.log(
+    'numberOfCampaignsEndingIn24HoursToProcess',
+    numberOfCampaignsEndingIn24HoursToProcess
+  );
+  if (numberOfCampaignsEndingIn24HoursToProcess > 0) {
+    const processCampaignsEndingIn24HoursPromises = [];
+    for (
+      let from = 0, to = paginationSize - 1;
+      from < numberOfCampaignsEndingIn24HoursToProcess;
+      from += paginationSize, to += paginationSize
+    ) {
+      const processCampaignsEndingIn24HoursPromise =
+        processCampaignsEndingIn24Hours({
+          supabase,
+          from,
+          to,
+          hourBeforeCurrentDate,
+        });
+      processCampaignsEndingIn24HoursPromises.push(
+        processCampaignsEndingIn24HoursPromise
+      );
+    }
+    await Promise.all(processCampaignsEndingIn24HoursPromises);
   }
 
   res.status(200).send('checked campaigns');

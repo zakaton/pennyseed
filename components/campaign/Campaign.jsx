@@ -316,16 +316,16 @@ export default function Campaign({ campaignId, setCampaignReason }) {
   }, [campaign]);
 
   const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
-  const [deleteCampaignStatus, setDeleteCampaignStatus] = useState('succeeded');
+  const [deleteCampaignStatus, setDeleteCampaignStatus] = useState();
   const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
     useState(false);
 
   const [showPledgeModal, setShowPledgeModal] = useState(false);
-  const [pledgeStatus, setPledgeStatus] = useState('succeeded');
+  const [pledgeStatus, setPledgeStatus] = useState();
   const [showPledgeNotification, setShowPledgeNotification] = useState(false);
 
   const [showRemovePledgeModal, setShowRemovePledgeModal] = useState(false);
-  const [removePledgeStatus, setRemovePledgeStatus] = useState('succeeded');
+  const [removePledgeStatus, setRemovePledgeStatus] = useState();
   const [showRemovePledgeNotification, setShowRemovePledgeNotification] =
     useState(false);
 

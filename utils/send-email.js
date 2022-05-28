@@ -6,18 +6,26 @@ const adminEmail = 'contact@pennyseed.fund';
 const updatesEmail = 'updates@pennyseed.fund';
 
 export default async function sendEmail(...messages) {
-  return mail.send(
-    messages.map((message) => ({
-      ...message,
-      from: {
-        email: updatesEmail,
-        name: 'Pennyseed',
-      },
-      replyTo: adminEmail,
-    }))
-  );
+  try {
+    await mail.send(
+      messages.map((message) => ({
+        ...message,
+        from: {
+          email: updatesEmail,
+          name: 'Pennyseed',
+        },
+        replyTo: adminEmail,
+      }))
+    );
+  } catch (error) {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body);
+    }
+  }
 }
 
 export async function emailAdmin(message) {
-  return sendEmail({ ...message, to: adminEmail });
+  sendEmail({ ...message, to: adminEmail });
 }

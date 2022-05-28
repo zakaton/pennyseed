@@ -19,7 +19,6 @@ export function UserContextProvider(props) {
     const user = supabase.auth.user();
     if (user) {
       const profile = await getUserProfile(user);
-
       setUser({
         ...user,
         ...profile,

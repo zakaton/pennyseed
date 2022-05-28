@@ -194,7 +194,7 @@ export default function MyCampaigns() {
 
   const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const [deleteCampaignStatus, setDeleteCampaignStatus] = useState('succeeded');
+  const [deleteCampaignStatus, setDeleteCampaignStatus] = useState();
   const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
     useState(false);
 
