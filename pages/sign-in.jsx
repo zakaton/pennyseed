@@ -16,17 +16,12 @@ export default function SignIn() {
   const [redirectPathname, setRedirectPathname] = useState();
   useEffect(() => {
     if (router.query.redirect_pathname) {
-      console.log(
-        'router.query.redirect_pathname',
-        router.query.redirect_pathname
-      );
       setRedirectPathname(router.query.redirect_pathname);
     }
   }, []);
 
   useEffect(() => {
     if (!isLoading && user) {
-      console.log('redirecting to ', redirectPathname);
       router.replace(redirectPathname || '/');
     }
   }, [isLoading, user]);
@@ -36,12 +31,6 @@ export default function SignIn() {
       return;
     }
     setIsSubmitting(true);
-    console.log(
-      'redirect',
-      redirectPathname
-        ? `${window.location.origin}${redirectPathname}`
-        : `${window.location.origin}`
-    );
     // eslint-disable-next-line no-unused-vars
     const { error, data } = await supabase.auth.signIn(
       {
@@ -49,8 +38,8 @@ export default function SignIn() {
       },
       {
         redirectTo: redirectPathname
-          ? `${window.location.origin}${redirectPathname}`
-          : `${window.location.origin}`,
+          ? window.location.origin + redirectPathname
+          : window.location.origin,
       }
     );
     if (error) {
