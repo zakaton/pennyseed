@@ -13,9 +13,21 @@ export default function SignIn() {
   const router = useRouter();
   const { isLoading, user } = useUser();
 
+  const [redirectPathname, setRedirectPathname] = useState();
+  useEffect(() => {
+    if (router.query.redirect_pathname) {
+      console.log(
+        'router.query.redirect_pathname',
+        router.query.redirect_pathname
+      );
+      setRedirectPathname(router.query.redirect_pathname);
+    }
+  }, []);
+
   useEffect(() => {
     if (!isLoading && user) {
-      router.replace('/account');
+      console.log('redirecting to ', redirectPathname);
+      router.replace(redirectPathname || '/');
     }
   }, [isLoading, user]);
 
@@ -24,13 +36,21 @@ export default function SignIn() {
       return;
     }
     setIsSubmitting(true);
+    console.log(
+      'redirect',
+      redirectPathname
+        ? `${window.location.origin}${redirectPathname}`
+        : `${window.location.origin}`
+    );
     // eslint-disable-next-line no-unused-vars
     const { error, data } = await supabase.auth.signIn(
       {
         email,
       },
       {
-        redirectTo: `${window.location.origin}`,
+        redirectTo: redirectPathname
+          ? `${window.location.origin}${redirectPathname}`
+          : `${window.location.origin}`,
       }
     );
     if (error) {

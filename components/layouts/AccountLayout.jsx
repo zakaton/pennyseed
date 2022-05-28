@@ -49,7 +49,16 @@ export default function AccountLayout({ children }) {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.replace('/sign-in');
+      router.replace(
+        {
+          pathname: '/sign-in',
+          query: { ...router.query, ...{ redirect_pathname: router.pathname } },
+        },
+        '/sign-in',
+        {
+          shallow: true,
+        }
+      );
     }
   }, [isLoading, user]);
 
