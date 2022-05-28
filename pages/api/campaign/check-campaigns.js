@@ -233,7 +233,7 @@ async function processCampaigns({ supabase, stripe, from, to, currentDate }) {
 
   if (!error) {
     const processCampaignPromises = campaignsToProcess.map((campaign) =>
-      processCampaign(supabase, stripe, campaign)
+      processCampaign({ supabase, stripe, campaign })
     );
     await Promise.all(processCampaignPromises);
   } else {
