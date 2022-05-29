@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-import { format } from 'prettier';
 import enforceApiRouteSecret from '../../../utils/enforce-api-route-secret';
 import { getSupabaseService, paginationSize } from '../../../utils/supabase';
 import {
