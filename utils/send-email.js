@@ -10,6 +10,11 @@ export default async function sendEmail(...messages) {
     await mail.send(
       messages.map((message) => ({
         ...message,
+        dynamicTemplateData: {
+          email: message.to,
+          ...message?.dynamicTemplateData,
+        },
+        templateId: process.env.SENDGRID_TEMPLATE_ID,
         from: {
           email: notificationsEmail,
           name: 'Pennyseed',
@@ -27,5 +32,8 @@ export default async function sendEmail(...messages) {
 }
 
 export async function emailAdmin(message) {
-  sendEmail({ ...message, to: adminEmail });
+  sendEmail({
+    ...message,
+    to: adminEmail,
+  });
 }

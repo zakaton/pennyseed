@@ -105,8 +105,12 @@ async function emailPledgers({ supabase, from, to, campaign, successful }) {
         subject: `A Campaign you pledged to ${
           successful ? 'Succeeded' : 'Failed'
         }`,
-        text: 'A Campaign you pledged to is ending soon',
-        html: `<h1>A Campaign you pledged is ending soon</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> you pledged to is ending soon</p>`,
+        dynamicTemplateData: {
+          heading: 'A Campaign you pledged to is ending soon',
+          body: 'A Campaign you pledged to is ending soon',
+          optional_link: 'Link to Campaign',
+          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+        },
       }))
     );
   } else {
@@ -215,15 +219,23 @@ async function processCampaign({ supabase, stripe, campaign }) {
   if (!updateCampaignError) {
     await emailAdmin({
       subject: 'Campaign Ended',
-      text: `Campaign ${campaign.id} has ended`,
-      html: `<h1>Campaign Ended</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> has ended</p>`,
+      dynamicTemplateData: {
+        heading: `Campaign ${campaign.id} has ended`,
+        body: `A Campaign has ended!`,
+        optional_link: 'Link to Campaign',
+        optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+      },
     });
     if (campaign.created_by.notifications?.includes('email_campaign_end')) {
       await sendEmail({
         to: campaign.created_by.email,
         subject: `Your Campaign ${successful ? 'Succeeded' : 'Failed'}`,
-        text: 'Your Campaign has Ended',
-        html: `<h1>Your Campaign Ended</h1> <p>Your <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> has ended</p>`,
+        dynamicTemplateData: {
+          heading: `Your Campaign!! ${successful ? 'Succeeded' : 'Failed'}`,
+          body: `Your Campaign! ${successful ? 'Succeeded' : 'Failed'}`,
+          optional_link: 'Link to Campaign',
+          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+        },
       });
     }
   } else {
@@ -265,8 +277,12 @@ async function processPledgesEndingIn24Hours({ supabase, from, to, campaign }) {
       ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
         subject: `A Campaign you pledged to is ending soon`,
-        text: 'A Campaign you pledged to is ending soon',
-        html: `<h1>A Campaign you pledged is ending soon</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> you pledged to is ending soon</p>`,
+        dynamicTemplateData: {
+          heading: 'A Campaign you pledged to is ending soon',
+          body: 'A Campaign you pledged to is ending soon',
+          optional_link: 'Link to Campaign',
+          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+        },
       }))
     );
   } else {
@@ -303,15 +319,23 @@ async function processCampaignEndingIn24Hours({ supabase, campaign }) {
 
   await emailAdmin({
     subject: 'Campaign Ending in 24 Hours',
-    text: `Campaign ${campaign.id} will end in 24 hours`,
-    html: `<h1>Campaign Ending in 24 hours</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> will end in 24 hours</p>`,
+    dynamicTemplateData: {
+      heading: `Campaign ${campaign.id} is ending in 24 hours`,
+      body: `A Campaign is ending in 24 hours!`,
+      optional_link: 'Link to Campaign',
+      optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+    },
   });
   if (campaign.created_by.notifications?.includes('email_campaign_end_soon')) {
     await sendEmail({
       to: campaign.created_by.email,
       subject: `Your Campaign will end in 24 hours`,
-      text: 'Your Campaign will end in 24 hours',
-      html: `<h1>Your Campaign will end in 24 hours</h1> <p>Your <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> will end in 24 hours</p>`,
+      dynamicTemplateData: {
+        heading: `Your Campaign will end in 24 hours`,
+        body: `Your Campaign will end in 24 hours`,
+        optional_link: 'Link to Campaign',
+        optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+      },
     });
   }
 }

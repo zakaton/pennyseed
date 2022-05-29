@@ -22,8 +22,12 @@ async function emailPledgers({ supabase, campaign, from, to }) {
       ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
         subject: `A Campaign you pledged to has been deleted`,
-        text: 'A Campaign you pledged to has been deleted',
-        html: `<h1>A Campaign you pledged has been deleted</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">campaign</a> you pledged to has been deleted</p>`,
+        dynamicTemplateData: {
+          heading: `A Campaign you pledged to has been deleted`,
+          body: 'A Campaign you pledged to has been deleted',
+          optional_link: 'Link to Campaign',
+          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+        },
       }))
     );
   }
@@ -33,8 +37,10 @@ async function emailPledgers({ supabase, campaign, from, to }) {
 async function processCampaignEmails({ supabase, campaign }) {
   await emailAdmin({
     subject: 'Campaign Deleted',
-    text: `Campaign ${campaign.id} was deleted`,
-    html: `<h1>Campaign Ended</h1> <p>A campaign was deleted</p>`,
+    dynamicTemplateData: {
+      heading: `Campaign ${campaign.id} was deleted`,
+      body: 'Campain was deleted',
+    },
   });
 
   const {

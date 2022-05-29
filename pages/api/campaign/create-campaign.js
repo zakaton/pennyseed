@@ -98,8 +98,12 @@ export default async function handler(req, res) {
 
       await emailAdmin({
         subject: 'Campaign Created',
-        text: `A new Campaign ${campaign.id} has been created`,
-        html: `<h1>New Campaign!</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${campaign.id}">new campaign</a> has been created</p>`,
+        dynamicTemplateData: {
+          heading: 'Campaign Created',
+          body: `A new Campaign ${campaign.id} has been created`,
+          optional_link: 'Link to Campaign',
+          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+        },
       });
 
       res.status(200).json({

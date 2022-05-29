@@ -23,8 +23,12 @@ async function emailPledgers({ supabase, from, to, user }) {
       ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
         subject: `A Campaign you pledged to was deleted`,
-        text: 'A Campaign you pledged to was deleted',
-        html: `<h1>A Campaign you pledged was deleted</h1> <p>A <a href="https://pennyseed.vercel.app/campaign/${pledge.campaign.id}">campaign</a> you pledged to was deleted</p>`,
+        dynamicTemplateData: {
+          heading: `A Campaign you pledged to was deleted`,
+          body: 'A Campaign you pledged to was deleted',
+          optional_link: 'Link to Campaign',
+          optional_link_url: `https://pennyseed.vercel.app/campaign/${pledge.campaign.id}`,
+        },
       }))
     );
   } else {
@@ -109,9 +113,11 @@ export default async function handler(req, res) {
   console.log('delete user result', deleteUserError);
 
   await emailAdmin({
-    subject: 'User Deleted',
-    text: `User ${user.id} was deleted`,
-    html: `<h1>User Deleted</h1> <p>A user was deleted</p>`,
+    subject: 'User Deleted!',
+    dynamicTemplateData: {
+      heading: 'User was Deleted!',
+      body: `A User deleted their account!`,
+    },
   });
 
   res.status(200).json({
