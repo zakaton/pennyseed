@@ -171,7 +171,7 @@ export default function PaymentInfo() {
     paymentMethodsContent = (
       <div className="py-4 text-center sm:py-5">
         <div className="text-sm font-medium text-gray-500">
-          {getPaymentMethodsStatus?.type !== 'succeeded'
+          {getPaymentMethodsStatus
             ? 'Failed to load Payment Methods'
             : 'Loading payment info...'}
         </div>
