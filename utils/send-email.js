@@ -12,6 +12,7 @@ export default async function sendEmail(...messages) {
         ...message,
         dynamicTemplateData: {
           email: message.to,
+          subject: message.subject,
           ...message?.dynamicTemplateData,
         },
         templateId: process.env.SENDGRID_TEMPLATE_ID,
