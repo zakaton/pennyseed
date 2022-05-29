@@ -6,6 +6,7 @@ import {
   paginationSize,
 } from '../../../utils/supabase';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
+import { formatDollars } from '../../../utils/campaign-utils';
 
 async function emailPledgers({ supabase, from, to, user }) {
   const { data: pledgesToEmail, error } = await supabase
@@ -25,9 +26,10 @@ async function emailPledgers({ supabase, from, to, user }) {
         subject: `A Campaign you pledged to was deleted`,
         dynamicTemplateData: {
           heading: `A Campaign you pledged to was deleted`,
-          body: 'A Campaign you pledged to was deleted',
-          optional_link: 'Link to Campaign',
-          optional_link_url: `https://pennyseed.vercel.app/campaign/${pledge.campaign.id}`,
+          body: `A campaign trying to raise ${formatDollars(
+            pledge.campaign.funding_goal,
+            false
+          )} for ${pledge.campaign.reason} was deleted.`,
         },
       }))
     );
@@ -113,10 +115,10 @@ export default async function handler(req, res) {
   console.log('delete user result', deleteUserError);
 
   await emailAdmin({
-    subject: 'User Deleted!',
+    subject: 'Deleted User',
     dynamicTemplateData: {
-      heading: 'User was Deleted!',
-      body: `A User deleted their account!`,
+      heading: `Goodbye ${user.email}!`,
+      body: `A user with email ${user.email} has deleted their account`,
     },
   });
 

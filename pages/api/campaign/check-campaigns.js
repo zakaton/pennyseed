@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { format } from 'prettier';
 import enforceApiRouteSecret from '../../../utils/enforce-api-route-secret';
 import { getSupabaseService, paginationSize } from '../../../utils/supabase';
 import {
@@ -6,6 +7,7 @@ import {
   getPledgeDollars,
   getPledgeDollarsPlusFees,
   getStripeFee,
+  formatDollars,
 } from '../../../utils/campaign-utils';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
 
@@ -102,12 +104,19 @@ async function emailPledgers({ supabase, from, to, campaign, successful }) {
     await sendEmail(
       ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
-        subject: `A Campaign you pledged to ${
+        subject: `A Campaign you Pledged to ${
           successful ? 'Succeeded' : 'Failed'
         }`,
         dynamicTemplateData: {
-          heading: 'A Campaign you pledged to is ending soon',
-          body: 'A Campaign you pledged to is ending soon',
+          heading: `A Campaign you pledged to has ${
+            successful ? 'succeeded' : 'failed'
+          }`,
+          body: `A campaign trying to raise ${formatDollars(
+            campaign.funding_goal,
+            false
+          )} for ${campaign.reason} has ${
+            successful ? 'succeeded' : 'failed'
+          }.`,
           optional_link: 'Link to Campaign',
           optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
         },
@@ -218,10 +227,13 @@ async function processCampaign({ supabase, stripe, campaign }) {
     .match({ id: campaign.id });
   if (!updateCampaignError) {
     await emailAdmin({
-      subject: 'Campaign Ended',
+      subject: `Campaign [${campaign.id}] has Ended`,
       dynamicTemplateData: {
-        heading: `Campaign ${campaign.id} has ended`,
-        body: `A Campaign has ended!`,
+        heading: `A Campaign has ${successful ? 'Succeeded' : 'Failed'}`,
+        body: `A campaign trying to raise ${formatDollars(
+          campaign.funding_goal,
+          false
+        )} for ${campaign.reason} has ${successful ? 'succeeded' : 'failed'}.`,
         optional_link: 'Link to Campaign',
         optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
       },
@@ -231,8 +243,10 @@ async function processCampaign({ supabase, stripe, campaign }) {
         to: campaign.created_by.email,
         subject: `Your Campaign ${successful ? 'Succeeded' : 'Failed'}`,
         dynamicTemplateData: {
-          heading: `Your Campaign!! ${successful ? 'Succeeded' : 'Failed'}`,
-          body: `Your Campaign! ${successful ? 'Succeeded' : 'Failed'}`,
+          heading: `Your campaign ${successful ? 'succeeded' : 'failed'}.`,
+          body: `Your campaign trying to raise ${formatDollars(
+            campaign.funding_goal
+          )} has ${successful ? 'succeeded' : 'failed'}`,
           optional_link: 'Link to Campaign',
           optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
         },
@@ -318,10 +332,13 @@ async function processCampaignEndingIn24Hours({ supabase, campaign }) {
   }
 
   await emailAdmin({
-    subject: 'Campaign Ending in 24 Hours',
+    subject: `Campaign is Ending in 24 Hours`,
     dynamicTemplateData: {
       heading: `Campaign ${campaign.id} is ending in 24 hours`,
-      body: `A Campaign is ending in 24 hours!`,
+      body: `A campaign trying to raise ${formatDollars(
+        campaign.funding_goal,
+        false
+      )} for ${campaign.reason} will end in 24 hours.`,
       optional_link: 'Link to Campaign',
       optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
     },
@@ -332,7 +349,9 @@ async function processCampaignEndingIn24Hours({ supabase, campaign }) {
       subject: `Your Campaign will end in 24 hours`,
       dynamicTemplateData: {
         heading: `Your Campaign will end in 24 hours`,
-        body: `Your Campaign will end in 24 hours`,
+        body: `Your campaign trying to raise ${formatDollars(
+          campaign.funding_goal
+        )} will end in 24 hours`,
         optional_link: 'Link to Campaign',
         optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
       },

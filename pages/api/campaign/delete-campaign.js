@@ -6,6 +6,7 @@ import {
   paginationSize,
 } from '../../../utils/supabase';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
+import { formatDollars } from '../../../utils/campaign-utils';
 
 async function emailPledgers({ supabase, campaign, from, to }) {
   const { data: pledgesToEmail, error } = await supabase
@@ -21,12 +22,13 @@ async function emailPledgers({ supabase, campaign, from, to }) {
     return sendEmail(
       ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
-        subject: `A Campaign you pledged to has been deleted`,
+        subject: `A Campaign you Pledged to has been Deleted`,
         dynamicTemplateData: {
-          heading: `A Campaign you pledged to has been deleted`,
-          body: 'A Campaign you pledged to has been deleted',
-          optional_link: 'Link to Campaign',
-          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+          heading: `A Campaign you Pledged to has been Deleted`,
+          body: `A campaign trying to raise ${formatDollars(
+            campaign.funding_goal,
+            false
+          )} for ${campaign.reason} has been deleted.`,
         },
       }))
     );
@@ -38,8 +40,11 @@ async function processCampaignEmails({ supabase, campaign }) {
   await emailAdmin({
     subject: 'Campaign Deleted',
     dynamicTemplateData: {
-      heading: `Campaign ${campaign.id} was deleted`,
-      body: 'Campain was deleted',
+      heading: `Campaign [${campaign.id}] was deleted`,
+      body: `A campaign trying to raise ${formatDollars(
+        campaign.funding_goal,
+        false
+      )} for ${campaign.reason} was deleted.`,
     },
   });
 

@@ -6,6 +6,22 @@ const adminEmail = 'contact@pennyseed.fund';
 const notificationsEmail = 'notifications@pennyseed.fund';
 
 export default async function sendEmail(...messages) {
+  console.log(
+    messages.map((message) => ({
+      ...message,
+      dynamicTemplateData: {
+        email: message.to,
+        subject: message.subject,
+        ...message?.dynamicTemplateData,
+      },
+      templateId: process.env.SENDGRID_TEMPLATE_ID,
+      from: {
+        email: notificationsEmail,
+        name: 'Pennyseed',
+      },
+      replyTo: adminEmail,
+    }))
+  );
   try {
     await mail.send(
       messages.map((message) => ({

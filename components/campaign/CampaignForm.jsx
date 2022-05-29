@@ -510,7 +510,6 @@ export default function CampaignForm({
               const hasDeadlinePassed = deadline.getTime() <= Date.now();
               const isDeadlineTooLate =
                 deadline.getTime() >= getLatestDeadline().getTime();
-              console.log(hasDeadlinePassed, isDeadlineTooLate);
               const datetimeLocalInput = form.querySelector(
                 "input[name='deadline-local']"
               );

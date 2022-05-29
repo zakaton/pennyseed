@@ -8,6 +8,7 @@ import {
   maximumCampaignReasonLength,
   minimumCampaignDollars,
   getLatestDeadline,
+  formatDollars,
 } from '../../../utils/campaign-utils';
 import { emailAdmin } from '../../../utils/send-email';
 
@@ -99,8 +100,13 @@ export default async function handler(req, res) {
       await emailAdmin({
         subject: 'Campaign Created',
         dynamicTemplateData: {
-          heading: 'Campaign Created',
-          body: `A new Campaign ${campaign.id} has been created`,
+          heading: `Campaign [${campaign.id}] was created`,
+          body: `A campaign trying to raise ${formatDollars(
+            campaign.funding_goal,
+            false
+          )} for ${campaign.reason} was created. It requires a minimum of ${
+            campaign.minimum_number_of_pledgers
+          } pledgers.`,
           optional_link: 'Link to Campaign',
           optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
         },
