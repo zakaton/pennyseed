@@ -232,138 +232,140 @@ export default function AllUsers() {
   };
 
   return (
-    <>
-      <Head>
-        <title>All Users - Pennyseed</title>
-      </Head>
-      <DeleteUserModal
-        open={showDeleteUserModal}
-        setOpen={setShowDeleteUserModal}
-        selectedUser={selectedUser}
-        setDeleteUserStatus={setDeleteUserStatus}
-        setShowDeleteUserNotification={setShowDeleteUserNotification}
-      />
-      <Notification
-        open={showDeleteUserNotification}
-        setOpen={setShowDeleteUserNotification}
-        status={deleteUserStatus}
-      />
-      <div className="bg-white px-4 pt-6 sm:px-6 sm:pt-6">
-        <div className="flex items-center pb-4">
-          <div className="sm:flex-auto">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              All Users
-            </h3>
-            <p className="mt-1 text-sm text-gray-500">View all users</p>
-          </div>
-        </div>
-
-        <UserFilters
-          filters={filters}
-          setFilters={setFilters}
-          order={order}
-          setOrder={setOrder}
-          filterTypes={filterTypes}
-          orderTypes={orderTypes}
-          clearFilters={clearFilters}
+    isAdmin && (
+      <>
+        <Head>
+          <title>All Users - Pennyseed</title>
+        </Head>
+        <DeleteUserModal
+          open={showDeleteUserModal}
+          setOpen={setShowDeleteUserModal}
+          selectedUser={selectedUser}
+          setDeleteUserStatus={setDeleteUserStatus}
+          setShowDeleteUserNotification={setShowDeleteUserNotification}
         />
-
-        {users?.length > 0 &&
-          // eslint-disable-next-line no-shadow
-          users.map((user) => (
-            <div
-              key={user.id}
-              className="border-t border-gray-200 px-4 py-5 sm:px-6"
-            >
-              <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">Email</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{user.email}</dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Date Joined
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {new Date(user.created_at).toLocaleString()}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Has Completed Onboarding?
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {user.has_completed_onboarding ? 'yes' : 'no'}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Can Create Campaigns?
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {user.can_create_campaigns ? 'yes' : 'no'}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <MyLink
-                    href={`/account/all-campaigns?created_by=${user.email}`}
-                    className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
-                  >
-                    Campaigns
-                  </MyLink>
-                </div>
-                <div className="sm:col-span-1">
-                  <button
-                    onClick={() => {
-                      setSelectedUser(user);
-                      setShowDeleteUserModal(true);
-                    }}
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  >
-                    Delete<span className="sr-only"> user</span>
-                  </button>
-                </div>
-              </dl>
-            </div>
-          ))}
-
-        {isGettingUsers && (
-          <div className="mt-5 border-t border-gray-200">
-            <div className="divide-y divide-gray-200">
-              <div className="py-4 text-center sm:py-5">
-                <div className="text-sm font-medium text-gray-500">
-                  Loading users...
-                </div>
-              </div>
+        <Notification
+          open={showDeleteUserNotification}
+          setOpen={setShowDeleteUserNotification}
+          status={deleteUserStatus}
+        />
+        <div className="bg-white px-4 pt-6 sm:px-6 sm:pt-6">
+          <div className="flex items-center pb-4">
+            <div className="sm:flex-auto">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                All Users
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">View all users</p>
             </div>
           </div>
-        )}
 
-        {users?.length === 0 && !isGettingUsers && (
-          <div className="mt-5 border-t border-gray-200">
-            <div className="divide-y divide-gray-200">
-              <div className="py-4 text-center sm:py-5">
-                <div className="text-sm font-medium text-gray-500">
-                  No users found.
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        {users && users.length > 0 && (
-          <Pagination
-            name="user"
-            numberOfResults={numberOfUsers}
-            numberOfResultsPerPage={numberOfUsersPerPage}
-            pageIndex={pageIndex}
-            setPageIndex={setPageIndex}
-            showPrevious={showPrevious}
-            showNext={showNext}
+          <UserFilters
+            filters={filters}
+            setFilters={setFilters}
+            order={order}
+            setOrder={setOrder}
+            filterTypes={filterTypes}
+            orderTypes={orderTypes}
+            clearFilters={clearFilters}
           />
-        )}
-      </div>
-    </>
+
+          {users?.length > 0 &&
+            // eslint-disable-next-line no-shadow
+            users.map((user) => (
+              <div
+                key={user.id}
+                className="border-t border-gray-200 px-4 py-5 sm:px-6"
+              >
+                <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">Email</dt>
+                    <dd className="mt-1 text-sm text-gray-900">{user.email}</dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Date Joined
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {new Date(user.created_at).toLocaleString()}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Has Completed Onboarding?
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {user.has_completed_onboarding ? 'yes' : 'no'}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Can Create Campaigns?
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {user.can_create_campaigns ? 'yes' : 'no'}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <MyLink
+                      href={`/account/all-campaigns?created_by=${user.email}`}
+                      className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                    >
+                      Campaigns
+                    </MyLink>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <button
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setShowDeleteUserModal(true);
+                      }}
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    >
+                      Delete<span className="sr-only"> user</span>
+                    </button>
+                  </div>
+                </dl>
+              </div>
+            ))}
+
+          {isGettingUsers && (
+            <div className="mt-5 border-t border-gray-200">
+              <div className="divide-y divide-gray-200">
+                <div className="py-4 text-center sm:py-5">
+                  <div className="text-sm font-medium text-gray-500">
+                    Loading users...
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {users?.length === 0 && !isGettingUsers && (
+            <div className="mt-5 border-t border-gray-200">
+              <div className="divide-y divide-gray-200">
+                <div className="py-4 text-center sm:py-5">
+                  <div className="text-sm font-medium text-gray-500">
+                    No users found.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {users && users.length > 0 && (
+            <Pagination
+              name="user"
+              numberOfResults={numberOfUsers}
+              numberOfResultsPerPage={numberOfUsersPerPage}
+              pageIndex={pageIndex}
+              setPageIndex={setPageIndex}
+              showPrevious={showPrevious}
+              showNext={showNext}
+            />
+          )}
+        </div>
+      </>
+    )
   );
 }
 

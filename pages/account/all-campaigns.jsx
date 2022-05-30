@@ -290,237 +290,241 @@ export default function AllCampaigns() {
   };
 
   return (
-    <>
-      <Head>
-        <title>All Campaigns - Pennyseed</title>
-      </Head>
-      <DeleteCampaignModal
-        open={showDeleteCampaignModal}
-        setOpen={setShowDeleteCampaignModal}
-        selectedCampaign={selectedCampaign}
-        setDeleteCampaignStatus={setDeleteCampaignStatus}
-        setShowDeleteCampaignNotification={setShowDeleteCampaignNotification}
-      />
-      <Notification
-        open={showDeleteCampaignNotification}
-        setOpen={setShowDeleteCampaignNotification}
-        status={deleteCampaignStatus}
-      />
-      <div className="bg-white px-4 pt-6 sm:px-6 sm:pt-6">
-        <div className="flex items-center pb-4">
-          <div className="sm:flex-auto">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              All Campaigns
-            </h3>
-            <p className="mt-1 text-sm text-gray-500">View all campaigns</p>
-          </div>
-          <div className="invisible mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <MyLink href="/create-campaign">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:w-auto"
-              >
-                Create Campaign
-              </button>
-            </MyLink>
-          </div>
-        </div>
-
-        <CampaignFilters
-          filters={filters}
-          setFilters={setFilters}
-          order={order}
-          setOrder={setOrder}
-          filterTypes={filterTypes}
-          orderTypes={orderTypes}
-          clearFilters={clearFilters}
-        >
-          <fieldset id="campaignerEmail">
-            <legend className="block font-medium">Created By</legend>
-            <div className="flex rounded-md py-3 shadow-sm">
-              <div className="relative flex flex-grow items-stretch focus-within:z-10">
-                <input
-                  type="email"
-                  defaultValue={createdByEmail}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      setCreatedByEmail(e.target.value);
-                    }
-                  }}
-                  className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
-                  placeholder="created_by@example.com"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  const input = e.target
-                    .closest('fieldset')
-                    .querySelector('input');
-                  setCreatedByEmail(input.value);
-                }}
-                className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
-              >
-                <SearchIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </button>
+    isAdmin && (
+      <>
+        <Head>
+          <title>All Campaigns - Pennyseed</title>
+        </Head>
+        <DeleteCampaignModal
+          open={showDeleteCampaignModal}
+          setOpen={setShowDeleteCampaignModal}
+          selectedCampaign={selectedCampaign}
+          setDeleteCampaignStatus={setDeleteCampaignStatus}
+          setShowDeleteCampaignNotification={setShowDeleteCampaignNotification}
+        />
+        <Notification
+          open={showDeleteCampaignNotification}
+          setOpen={setShowDeleteCampaignNotification}
+          status={deleteCampaignStatus}
+        />
+        <div className="bg-white px-4 pt-6 sm:px-6 sm:pt-6">
+          <div className="flex items-center pb-4">
+            <div className="sm:flex-auto">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                All Campaigns
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">View all campaigns</p>
             </div>
-          </fieldset>
-        </CampaignFilters>
+            <div className="invisible mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+              <MyLink href="/create-campaign">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:w-auto"
+                >
+                  Create Campaign
+                </button>
+              </MyLink>
+            </div>
+          </div>
 
-        {campaigns?.length > 0 &&
-          campaigns.map((campaign) => (
-            <div
-              key={campaign.id}
-              className="border-t border-gray-200 px-4 py-5 sm:px-6"
-            >
-              <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">Email</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {campaign.created_by.email}
-                  </dd>
+          <CampaignFilters
+            filters={filters}
+            setFilters={setFilters}
+            order={order}
+            setOrder={setOrder}
+            filterTypes={filterTypes}
+            orderTypes={orderTypes}
+            clearFilters={clearFilters}
+          >
+            <fieldset id="campaignerEmail">
+              <legend className="block font-medium">Created By</legend>
+              <div className="flex rounded-md py-3 shadow-sm">
+                <div className="relative flex flex-grow items-stretch focus-within:z-10">
+                  <input
+                    type="email"
+                    defaultValue={createdByEmail}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        setCreatedByEmail(e.target.value);
+                      }
+                    }}
+                    className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
+                    placeholder="created_by@example.com"
+                  />
                 </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">Reason</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {campaign.reason}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Date Created
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {new Date(campaign.created_at).toLocaleString()}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Funding Goal
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {formatDollars(campaign.funding_goal, false)}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Approved
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {campaign.approved ? 'yes' : 'no'}
-                  </dd>
-                </div>
-                {campaign.processed && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    const input = e.target
+                      .closest('fieldset')
+                      .querySelector('input');
+                    setCreatedByEmail(input.value);
+                  }}
+                  className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
+                >
+                  <SearchIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+            </fieldset>
+          </CampaignFilters>
+
+          {campaigns?.length > 0 &&
+            campaigns.map((campaign) => (
+              <div
+                key={campaign.id}
+                className="border-t border-gray-200 px-4 py-5 sm:px-6"
+              >
+                <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                   <div className="sm:col-span-1">
-                    <dt className="text-sm font-medium text-gray-500">
-                      Succeeded
-                    </dt>
+                    <dt className="text-sm font-medium text-gray-500">Email</dt>
                     <dd className="mt-1 text-sm text-gray-900">
-                      {campaign.succeeded ? 'yes' : 'no'}
+                      {campaign.created_by.email}
                     </dd>
                   </div>
-                )}
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Deadline
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {new Date(campaign.deadline).toLocaleString()}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Number of Pledgers
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {campaign.number_of_pledgers}/
-                    {campaign.minimum_number_of_pledgers}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1">
-                  <MyLink
-                    href={`/campaign/${campaign.id}`}
-                    className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
-                  >
-                    View<span className="sr-only"> campaign</span>
-                  </MyLink>
-                </div>
-                {!campaign.processed && (
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Reason
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {campaign.reason}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Date Created
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {new Date(campaign.created_at).toLocaleString()}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Funding Goal
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {formatDollars(campaign.funding_goal, false)}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Approved
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {campaign.approved ? 'yes' : 'no'}
+                    </dd>
+                  </div>
+                  {campaign.processed && (
+                    <div className="sm:col-span-1">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Succeeded
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900">
+                        {campaign.succeeded ? 'yes' : 'no'}
+                      </dd>
+                    </div>
+                  )}
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Deadline
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {new Date(campaign.deadline).toLocaleString()}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Number of Pledgers
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {campaign.number_of_pledgers}/
+                      {campaign.minimum_number_of_pledgers}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-1">
+                    <MyLink
+                      href={`/campaign/${campaign.id}`}
+                      className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                    >
+                      View<span className="sr-only"> campaign</span>
+                    </MyLink>
+                  </div>
+                  {!campaign.processed && (
+                    <div className="sm:col-span-1">
+                      <button
+                        onClick={async () => {
+                          const updateCampaignResult = await supabase
+                            .from('campaign')
+                            .update({ approved: !campaign.approved })
+                            .eq('id', campaign.id);
+                          console.log(
+                            'updateCampaignResult',
+                            updateCampaignResult
+                          );
+                        }}
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                      >
+                        {campaign.approved ? 'Deny' : 'Approve'}
+                        <span className="sr-only"> campaign</span>
+                      </button>
+                    </div>
+                  )}
                   <div className="sm:col-span-1">
                     <button
-                      onClick={async () => {
-                        const updateCampaignResult = await supabase
-                          .from('campaign')
-                          .update({ approved: !campaign.approved })
-                          .eq('id', campaign.id);
-                        console.log(
-                          'updateCampaignResult',
-                          updateCampaignResult
-                        );
+                      onClick={() => {
+                        setSelectedCampaign(campaign);
+                        setShowDeleteCampaignModal(true);
                       }}
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
-                      {campaign.approved ? 'Deny' : 'Approve'}
-                      <span className="sr-only"> campaign</span>
+                      Delete<span className="sr-only"> campaign</span>
                     </button>
                   </div>
-                )}
-                <div className="sm:col-span-1">
-                  <button
-                    onClick={() => {
-                      setSelectedCampaign(campaign);
-                      setShowDeleteCampaignModal(true);
-                    }}
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  >
-                    Delete<span className="sr-only"> campaign</span>
-                  </button>
-                </div>
-              </dl>
-            </div>
-          ))}
+                </dl>
+              </div>
+            ))}
 
-        {isGettingCampaigns && (
-          <div className="mt-5 border-t border-gray-200">
-            <div className="divide-y divide-gray-200">
-              <div className="py-4 text-center sm:py-5">
-                <div className="text-sm font-medium text-gray-500">
-                  Loading campaigns...
+          {isGettingCampaigns && (
+            <div className="mt-5 border-t border-gray-200">
+              <div className="divide-y divide-gray-200">
+                <div className="py-4 text-center sm:py-5">
+                  <div className="text-sm font-medium text-gray-500">
+                    Loading campaigns...
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {campaigns?.length === 0 && !isGettingCampaigns && (
-          <div className="mt-5 border-t border-gray-200">
-            <div className="divide-y divide-gray-200">
-              <div className="py-4 text-center sm:py-5">
-                <div className="text-sm font-medium text-gray-500">
-                  No campaigns found.
+          {campaigns?.length === 0 && !isGettingCampaigns && (
+            <div className="mt-5 border-t border-gray-200">
+              <div className="divide-y divide-gray-200">
+                <div className="py-4 text-center sm:py-5">
+                  <div className="text-sm font-medium text-gray-500">
+                    No campaigns found.
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-        {campaigns && campaigns.length > 0 && (
-          <Pagination
-            name="campaign"
-            numberOfResults={numberOfCampaigns}
-            numberOfResultsPerPage={numberOfCampaignsPerPage}
-            pageIndex={pageIndex}
-            setPageIndex={setPageIndex}
-            showPrevious={showPrevious}
-            showNext={showNext}
-          />
-        )}
-      </div>
-    </>
+          )}
+          {campaigns && campaigns.length > 0 && (
+            <Pagination
+              name="campaign"
+              numberOfResults={numberOfCampaigns}
+              numberOfResultsPerPage={numberOfCampaignsPerPage}
+              pageIndex={pageIndex}
+              setPageIndex={setPageIndex}
+              showPrevious={showPrevious}
+              showNext={showNext}
+            />
+          )}
+        </div>
+      </>
+    )
   );
 }
 
