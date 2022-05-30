@@ -34,17 +34,36 @@ async function chargePledge({
     };
 
     // https://stripe.com/docs/api/payment_intents/create
+    let paymentIntentError;
     const paymentIntent = await stripe.paymentIntents
       .create(paymentIntentOptions)
       .catch((error) => {
         console.error('error charging pledger', error);
+        paymentIntentError = error;
       });
     const { error: updatePledgeError } = await supabase
       .from('pledge')
       .update({
-        payment_intent: paymentIntent.id,
+        payment_intent: paymentIntent?.id,
+        error: paymentIntentError?.message || null,
       })
       .match({ id: pledge.id });
+    if (paymentIntentError) {
+      try {
+        const paymentMethod = await stripe.paymentMethods.detach(
+          pledge.payment_method
+        );
+        if (paymentMethod.customer !== null) {
+          console.error(
+            'unable to detach payment method',
+            pledge.payment_method
+          );
+        }
+        console.log('detached payment method', pledge.payment_method);
+      } catch (error) {
+        console.error('error trying to detach payment method', error);
+      }
+    }
     if (!updatePledgeError) {
       await supabase
         .from('profile')
@@ -134,6 +153,53 @@ async function processCampaign({ supabase, stripe, campaign }) {
     campaign.number_of_pledgers >= campaign.minimum_number_of_pledgers;
   console.log('campaign succeeeded?', successful);
 
+  if (campaign.created_by.active_campaign === campaign.id) {
+    const upateProfileResult = await supabase
+      .from('profile')
+      .update({
+        active_campaign: null,
+      })
+      .eq('id', campaign.created_by.id);
+    console.log('update profile result', upateProfileResult);
+  }
+  const { error: updateCampaignError } = await supabase
+    .from('campaign')
+    .update({
+      processed: true,
+      successful,
+    })
+    .match({ id: campaign.id });
+  if (!updateCampaignError) {
+    await emailAdmin({
+      subject: `Campaign [${campaign.id}] has Ended`,
+      dynamicTemplateData: {
+        heading: `A Campaign has ${successful ? 'Succeeded' : 'Failed'}`,
+        body: `A campaign trying to raise ${formatDollars(
+          campaign.funding_goal,
+          false
+        )} for ${campaign.reason} has ${successful ? 'succeeded' : 'failed'}.`,
+        optional_link: 'Go to Campaign',
+        optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
+      },
+    });
+    if (campaign.created_by.notifications?.includes('email_campaign_end')) {
+      await sendEmail({
+        to: campaign.created_by.email,
+        subject: `Your Campaign ${successful ? 'Succeeded' : 'Failed'}`,
+        dynamicTemplateData: {
+          heading: `Your campaign ${successful ? 'succeeded' : 'failed'}.`,
+          body: `Your campaign trying to raise ${formatDollars(
+            campaign.funding_goal
+          )} has ${successful ? 'succeeded' : 'failed'}`,
+          optional_link: 'Go to Campaign',
+          optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
+        },
+      });
+    }
+  } else {
+    console.error('error updating campaign', updateCampaignError);
+  }
+
   if (successful) {
     const { error: getNumberOfPledgesError, count: numberOfPledgesToProcess } =
       await supabase
@@ -206,53 +272,6 @@ async function processCampaign({ supabase, stripe, campaign }) {
       emailPledgersPromises.push(emailPledgersPromise);
     }
     await Promise.all(emailPledgersPromises);
-  }
-
-  if (campaign.created_by.active_campaign === campaign.id) {
-    const upateProfileResult = await supabase
-      .from('profile')
-      .update({
-        active_campaign: null,
-      })
-      .eq('id', campaign.created_by.id);
-    console.log('update profile result', upateProfileResult);
-  }
-  const { error: updateCampaignError } = await supabase
-    .from('campaign')
-    .update({
-      processed: true,
-      successful,
-    })
-    .match({ id: campaign.id });
-  if (!updateCampaignError) {
-    await emailAdmin({
-      subject: `Campaign [${campaign.id}] has Ended`,
-      dynamicTemplateData: {
-        heading: `A Campaign has ${successful ? 'Succeeded' : 'Failed'}`,
-        body: `A campaign trying to raise ${formatDollars(
-          campaign.funding_goal,
-          false
-        )} for ${campaign.reason} has ${successful ? 'succeeded' : 'failed'}.`,
-        optional_link: 'Go to Campaign',
-        optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
-      },
-    });
-    if (campaign.created_by.notifications?.includes('email_campaign_end')) {
-      await sendEmail({
-        to: campaign.created_by.email,
-        subject: `Your Campaign ${successful ? 'Succeeded' : 'Failed'}`,
-        dynamicTemplateData: {
-          heading: `Your campaign ${successful ? 'succeeded' : 'failed'}.`,
-          body: `Your campaign trying to raise ${formatDollars(
-            campaign.funding_goal
-          )} has ${successful ? 'succeeded' : 'failed'}`,
-          optional_link: 'Go to Campaign',
-          optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
-        },
-      });
-    }
-  } else {
-    console.error('error updating campaign', updateCampaignError);
   }
 }
 async function processCampaigns({ supabase, stripe, from, to, currentDate }) {

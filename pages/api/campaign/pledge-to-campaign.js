@@ -7,17 +7,6 @@ import { getMaximumPossibleNumberOfPledgers } from '../../../utils/campaign-util
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
-  const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req);
-  if (!user) {
-    return res.status(200).json({
-      status: {
-        type: 'failed',
-        title: 'You must be signed in to Pledge',
-      },
-    });
-  }
-
   const sendErrorMessage = (errorMessage) =>
     res.status(200).json({
       status: {
@@ -26,6 +15,12 @@ export default async function handler(req, res) {
         message: errorMessage,
       },
     });
+
+  const supabase = getSupabaseService();
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+  if (!user) {
+    return sendErrorMessage('You must be signed in to Pledge');
+  }
 
   const { campaignId, paymentMethodId } = req.body;
   if (!campaignId) {
