@@ -238,7 +238,7 @@ export default function MyPledges() {
     }
     setFilters(newFilters);
   }, [selectedPaymentMethod]);
-  
+
   const [paymentMethodIdQuery, setPaymentMethodIdQuery] = useState(null);
   const checkQuery = () => {
     const { 'payment-method': paymentMethodId } = router.query;

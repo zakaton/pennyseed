@@ -357,7 +357,7 @@ export default function AllCampaigns() {
                   const input = e.target
                     .closest('fieldset')
                     .querySelector('input');
-                  setCreatedBYEmail(input.value);
+                  setCreatedByEmail(input.value);
                 }}
                 className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
               >
