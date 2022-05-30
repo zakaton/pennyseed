@@ -16,11 +16,14 @@ const nextConfig = withPWA({
     locales: ['en'],
     defaultLocale: 'en',
   },
-  compiler: {
-    removeConsole: {
-      exclude: ['error'],
-    },
-  },
+  compiler:
+    process.env.NODE_ENV === 'production'
+      ? {
+          removeConsole: {
+            exclude: ['error'],
+          },
+        }
+      : {},
 });
 
 module.exports = nextConfig;

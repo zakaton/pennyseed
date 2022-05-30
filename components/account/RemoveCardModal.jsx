@@ -117,6 +117,7 @@ export default function RemoveCardModal({
                           body: data,
                         });
                         const { status } = await response.json();
+                        console.log('status', status);
                         setDidRemoveCard(true);
                         setRemoveCardStatus(status);
                         setShowRemoveCardNotification(true);
