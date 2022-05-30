@@ -16,6 +16,11 @@ const nextConfig = withPWA({
     locales: ['en'],
     defaultLocale: 'en',
   },
+  compiler: {
+    removeConsole: {
+      exclude: ['error'],
+    },
+  },
 });
 
 module.exports = nextConfig;
