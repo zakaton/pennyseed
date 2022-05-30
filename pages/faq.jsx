@@ -312,6 +312,33 @@ const faqs = [
     ),
   },
   {
+    question:
+      "What a campaign succeeds but one of the pledger's payment methods is expired (or otherwise invalid)?",
+    answer: () => (
+      <>
+        <p>
+          If a campaign succeeds at the time of charging pledgers one (or more)
+          of the pledger&apos;s payment methods are invalid (e.g. the card
+          expires between when the payment method was added and the campaign
+          ends), we will still charge the other pledgers.
+        </p>
+        <p>
+          As a result, it is possible that the campaigner may receive less than
+          they asked for (minus the number of failed payments multiplied by the
+          pledge amount). For instance, if you try to raise $1,000 and 1,000
+          pledge, then each will pay $1 after fees, but if 1 pledger&apos;s
+          payment method fails, then the campaigner will receive $999.
+        </p>
+        <p>
+          It&apos;s unfortunate, but cancelling the entire campaign instead and
+          trying it again doesn&apos;t seem fair. The pledgers will still pay
+          the same amount (specifically the maximum pledge amount) they agreed
+          to when they pledged.
+        </p>
+      </>
+    ),
+  },
+  {
     question: 'What incentives do people get for pledging?',
     answer: () => (
       <>
