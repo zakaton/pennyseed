@@ -116,8 +116,8 @@ async function emailPledgers({ supabase, from, to, campaign, successful }) {
           )} for ${campaign.reason} has ${
             successful ? 'succeeded' : 'failed'
           }.`,
-          optional_link: 'Link to Campaign',
-          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+          optional_link: 'Go to Campaign',
+          optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
         },
       }))
     );
@@ -233,8 +233,8 @@ async function processCampaign({ supabase, stripe, campaign }) {
           campaign.funding_goal,
           false
         )} for ${campaign.reason} has ${successful ? 'succeeded' : 'failed'}.`,
-        optional_link: 'Link to Campaign',
-        optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+        optional_link: 'Go to Campaign',
+        optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
       },
     });
     if (campaign.created_by.notifications?.includes('email_campaign_end')) {
@@ -246,8 +246,8 @@ async function processCampaign({ supabase, stripe, campaign }) {
           body: `Your campaign trying to raise ${formatDollars(
             campaign.funding_goal
           )} has ${successful ? 'succeeded' : 'failed'}`,
-          optional_link: 'Link to Campaign',
-          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+          optional_link: 'Go to Campaign',
+          optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
         },
       });
     }
@@ -293,8 +293,8 @@ async function processPledgesEndingIn24Hours({ supabase, from, to, campaign }) {
         dynamicTemplateData: {
           heading: 'A Campaign you pledged to is ending soon',
           body: 'A Campaign you pledged to is ending soon',
-          optional_link: 'Link to Campaign',
-          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+          optional_link: 'Go to Campaign',
+          optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
         },
       }))
     );
@@ -338,8 +338,8 @@ async function processCampaignEndingIn24Hours({ supabase, campaign }) {
         campaign.funding_goal,
         false
       )} for ${campaign.reason} will end in 24 hours.`,
-      optional_link: 'Link to Campaign',
-      optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+      optional_link: 'Go to Campaign',
+      optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
     },
   });
   if (campaign.created_by.notifications?.includes('email_campaign_end_soon')) {
@@ -351,8 +351,8 @@ async function processCampaignEndingIn24Hours({ supabase, campaign }) {
         body: `Your campaign trying to raise ${formatDollars(
           campaign.funding_goal
         )} will end in 24 hours`,
-        optional_link: 'Link to Campaign',
-        optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+        optional_link: 'Go to Campaign',
+        optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
       },
     });
   }

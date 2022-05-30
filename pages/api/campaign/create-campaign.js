@@ -107,8 +107,8 @@ export default async function handler(req, res) {
           )} for ${campaign.reason} was created. It requires a minimum of ${
             campaign.minimum_number_of_pledgers
           } pledgers.`,
-          optional_link: 'Link to Campaign',
-          optional_link_url: `https://pennyseed.vercel.app/campaign/${campaign.id}`,
+          optional_link: 'Go to Campaign',
+          optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
         },
       });
 
