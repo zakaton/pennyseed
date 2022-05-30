@@ -8,6 +8,7 @@ import UserFilters from '../../components/account/UserFilters';
 import Pagination from '../../components/Pagination';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
 import DeleteUserModal from '../../components/account/DeleteUserModal.js';
+import MyLink from '../../components/MyLink';
 
 const numberOfUsersPerPage = 4;
 
@@ -300,6 +301,14 @@ export default function AllUsers() {
                 <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">Email</dt>
                   <dd className="mt-1 text-sm text-gray-900">{user.email}</dd>
+                </div>
+                <div className="sm:col-span-1">
+                  <MyLink
+                    href={`/account/all-campaigns?created_by=${user.email}`}
+                    className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    Campaigns
+                  </MyLink>
                 </div>
                 <div className="sm:col-span-1">
                   <button
