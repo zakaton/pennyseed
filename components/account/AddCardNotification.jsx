@@ -6,7 +6,7 @@ import Notification from '../Notification';
 const addCardNotificationStatuses = {
   succeeded: {
     type: 'succeeded',
-    title: 'Successfully added card',
+    title: 'Successfully added Card',
   },
   processing: {
     type: 'warning',
