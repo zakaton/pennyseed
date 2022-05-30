@@ -56,15 +56,19 @@ export default async function handler(req, res) {
               .eq('stripe_customer', profile.stripe_customer);
 
             if (event.type === 'payment_method.detached') {
-              const { data: pledges, error: deletePledgesError } =
+              const { data: deletedPledges, error: deletePledgesError } =
                 await supabase
                   .from('pledge')
                   .delete()
                   .eq('payment_method', payment_method.id);
-              console.log('delete pledges result', deletePledgesError, pledges);
+              console.log(
+                'delete pledges result',
+                deletePledgesError,
+                deletedPledges
+              );
 
-              const updateCampaignNumberOfPledgersPromises = pledges.map(
-                async (pledge) =>
+              const updateCampaignNumberOfPledgersPromises = deletedPledges.map(
+                (pledge) =>
                   updateCampaignNumberOfPledgers(pledge.campaign, supabase)
               );
               await Promise.all(updateCampaignNumberOfPledgersPromises);
