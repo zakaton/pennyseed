@@ -14,32 +14,22 @@ const numberOfUsersPerPage = 4;
 
 const filterTypes = [
   {
-    name: 'Approved',
-    query: 'approved',
-    column: 'approved',
+    name: 'Has Completed Onboarding?',
+    query: 'has-completed-onboarding',
+    column: 'has_completed_onboarding',
     radios: [
-      { value: true, label: 'approved', defaultChecked: false },
-      { value: false, label: 'not approved', defaultChecked: false },
+      { value: true, label: 'yes', defaultChecked: false },
+      { value: false, label: 'no', defaultChecked: false },
       { value: null, label: 'either', defaultChecked: true },
     ],
   },
   {
-    name: 'Active',
-    query: 'active',
-    column: 'processed',
+    name: 'Can Create Campaigns?',
+    query: 'can-create-campaigns',
+    column: 'can_create_campaigns',
     radios: [
-      { value: false, label: 'active', defaultChecked: false },
-      { value: true, label: 'ended', defaultChecked: false },
-      { value: null, label: 'either', defaultChecked: true },
-    ],
-  },
-  {
-    name: 'Successful',
-    query: 'successful',
-    column: 'successful',
-    radios: [
-      { value: true, label: 'successful', defaultChecked: false },
-      { value: false, label: 'failed', defaultChecked: false },
+      { value: true, label: 'yes', defaultChecked: false },
+      { value: false, label: 'no', defaultChecked: false },
       { value: null, label: 'either', defaultChecked: true },
     ],
   },
@@ -47,27 +37,15 @@ const filterTypes = [
 
 const orderTypes = [
   {
-    label: 'Date Created',
-    query: 'date-pledged',
+    label: 'Date Joined',
+    query: 'date-joined',
     value: ['created_at', { ascending: false }],
     current: false,
   },
   {
-    label: 'Ending Soonest',
-    query: 'ending-soonest',
-    value: ['deadline', { ascending: true }],
-    current: false,
-  },
-  {
-    label: 'Funding Goal',
-    query: 'funding-goal',
-    value: ['funding_goal', { ascending: false }],
-    current: false,
-  },
-  {
-    label: 'Number of Pledgers',
-    query: 'number-of-pledgers',
-    value: ['number_of_pledgers', { ascending: false }],
+    label: 'Email',
+    query: 'email',
+    value: ['email', { ascending: true }],
     current: false,
   },
 ];
@@ -301,6 +279,30 @@ export default function AllUsers() {
                 <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">Email</dt>
                   <dd className="mt-1 text-sm text-gray-900">{user.email}</dd>
+                </div>
+                <div className="sm:col-span-1">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Date Joined
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    {new Date(user.created_at).toLocaleString()}
+                  </dd>
+                </div>
+                <div className="sm:col-span-1">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Has Completed Onboarding?
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    {user.has_completed_onboarding ? 'yes' : 'no'}
+                  </dd>
+                </div>
+                <div className="sm:col-span-1">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Can Create Campaigns?
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    {user.can_create_campaigns ? 'yes' : 'no'}
+                  </dd>
                 </div>
                 <div className="sm:col-span-1">
                   <MyLink
