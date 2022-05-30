@@ -108,7 +108,7 @@ async function chargePledges({
   }
 }
 
-async function emailPledgers({ supabase, from, to, campaign, successful }) {
+async function emailPledgers({ supabase, from, to, campaign, succeeded }) {
   const { data: pledgesToEmail, error } = await supabase
     .from('pledge')
     .select('*, profile!inner(*)')
@@ -123,18 +123,16 @@ async function emailPledgers({ supabase, from, to, campaign, successful }) {
       ...pledgesToEmail.map((pledge) => ({
         to: pledge.profile.email,
         subject: `A Campaign you Pledged to ${
-          successful ? 'Succeeded' : 'Failed'
+          succeeded ? 'Succeeded' : 'Failed'
         }`,
         dynamicTemplateData: {
           heading: `A Campaign you pledged to has ${
-            successful ? 'succeeded' : 'failed'
+            succeeded ? 'succeeded' : 'failed'
           }`,
           body: `A campaign trying to raise ${formatDollars(
             campaign.funding_goal,
             false
-          )} for ${campaign.reason} has ${
-            successful ? 'succeeded' : 'failed'
-          }.`,
+          )} for ${campaign.reason} has ${succeeded ? 'succeeded' : 'failed'}.`,
           optional_link: 'Go to Campaign',
           optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
         },
@@ -148,10 +146,10 @@ async function emailPledgers({ supabase, from, to, campaign, successful }) {
 async function processCampaign({ supabase, stripe, campaign }) {
   console.log('campaignToProcess', campaign);
 
-  const successful =
+  const succeeded =
     campaign.approved &&
     campaign.number_of_pledgers >= campaign.minimum_number_of_pledgers;
-  console.log('campaign succeeeded?', successful);
+  console.log('campaign succeeeded?', succeeded);
 
   if (campaign.created_by.active_campaign === campaign.id) {
     const upateProfileResult = await supabase
@@ -166,18 +164,18 @@ async function processCampaign({ supabase, stripe, campaign }) {
     .from('campaign')
     .update({
       processed: true,
-      successful,
+      succeeded,
     })
     .match({ id: campaign.id });
   if (!updateCampaignError) {
     await emailAdmin({
       subject: `Campaign [${campaign.id}] has Ended`,
       dynamicTemplateData: {
-        heading: `A Campaign has ${successful ? 'Succeeded' : 'Failed'}`,
+        heading: `A Campaign has ${succeeded ? 'Succeeded' : 'Failed'}`,
         body: `A campaign trying to raise ${formatDollars(
           campaign.funding_goal,
           false
-        )} for ${campaign.reason} has ${successful ? 'succeeded' : 'failed'}.`,
+        )} for ${campaign.reason} has ${succeeded ? 'succeeded' : 'failed'}.`,
         optional_link: 'Go to Campaign',
         optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
       },
@@ -185,12 +183,12 @@ async function processCampaign({ supabase, stripe, campaign }) {
     if (campaign.created_by.notifications?.includes('email_campaign_end')) {
       await sendEmail({
         to: campaign.created_by.email,
-        subject: `Your Campaign ${successful ? 'Succeeded' : 'Failed'}`,
+        subject: `Your Campaign ${succeeded ? 'Succeeded' : 'Failed'}`,
         dynamicTemplateData: {
-          heading: `Your campaign ${successful ? 'succeeded' : 'failed'}.`,
+          heading: `Your campaign ${succeeded ? 'succeeded' : 'failed'}.`,
           body: `Your campaign trying to raise ${formatDollars(
             campaign.funding_goal
-          )} has ${successful ? 'succeeded' : 'failed'}`,
+          )} has ${succeeded ? 'succeeded' : 'failed'}`,
           optional_link: 'Go to Campaign',
           optional_link_url: `${process.env.NEXT_PUBLIC_URL}/campaign/${campaign.id}`,
         },
@@ -200,7 +198,7 @@ async function processCampaign({ supabase, stripe, campaign }) {
     console.error('error updating campaign', updateCampaignError);
   }
 
-  if (successful) {
+  if (succeeded) {
     const { error: getNumberOfPledgesError, count: numberOfPledgesToProcess } =
       await supabase
         .from('pledge')

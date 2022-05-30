@@ -37,8 +37,8 @@ const filterTypes = [
   },
   {
     name: 'Successful',
-    column: 'campaign.successful',
-    query: 'successful',
+    column: 'campaign.succeeded',
+    query: 'succeeded',
     radios: [
       { value: true, label: 'successful', defaultChecked: false },
       { value: false, label: 'failed', defaultChecked: false },
