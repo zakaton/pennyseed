@@ -82,7 +82,7 @@ export default function AllCampaigns() {
   useEffect(() => {
     if (!isAdmin) {
       console.log('redirect to /account');
-      router.replace('/account', undefined, {
+      router.replace('/account/my-campaigns', undefined, {
         shallow: true,
       });
     }
