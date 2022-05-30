@@ -48,6 +48,8 @@ export default async function handler(req, res) {
       .status(200)
       .json({ status: { type: 'failed', title: 'you are not signed in' } });
   }
+
+  // FILL - can choose to get userId from query and delete that user instead
   console.log('user to delete', user);
 
   // email pledgers about deleted campaigns

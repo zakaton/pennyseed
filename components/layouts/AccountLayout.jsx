@@ -7,6 +7,8 @@ import {
   UserCircleIcon,
   HandIcon,
   PencilAltIcon,
+  UserGroupIcon,
+  DocumentDuplicateIcon,
 } from '@heroicons/react/outline';
 import MyLink from '../MyLink';
 import { useUser } from '../../context/user-context';
@@ -18,9 +20,21 @@ const navigation = [
     icon: UserCircleIcon,
   },
   {
+    name: 'All Users',
+    href: '/account/all-users',
+    icon: UserGroupIcon,
+    isAdmin: true,
+  },
+  {
     name: 'My Campaigns',
     href: '/account/my-campaigns',
     icon: PencilAltIcon,
+  },
+  {
+    name: 'All Campaigns',
+    href: '/account/all-campaigns',
+    icon: DocumentDuplicateIcon,
+    isAdmin: true,
   },
   {
     name: 'My Pledges',
@@ -46,8 +60,6 @@ function classNames(...classes) {
 export default function AccountLayout({ children }) {
   const router = useRouter();
   const { isLoading, user, isAdmin } = useUser();
-
-  console.log('isAdmin', isAdmin);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -77,28 +89,30 @@ export default function AccountLayout({ children }) {
               {navigation.map((item) => {
                 const current = router.route === item.href;
                 return (
-                  <MyLink
-                    key={item.href}
-                    href={item.href}
-                    className={classNames(
-                      current
-                        ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
-                        : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                      'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
-                    )}
-                    {...(current ? { 'aria-current': 'page' } : {})}
-                  >
-                    <item.icon
+                  (!item.isAdmin || isAdmin) && (
+                    <MyLink
+                      key={item.href}
+                      href={item.href}
                       className={classNames(
                         current
-                          ? 'text-yellow-500 group-hover:text-yellow-500'
-                          : 'text-gray-400 group-hover:text-gray-500',
-                        '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
+                          ? 'bg-gray-50 text-yellow-700 hover:bg-white hover:text-yellow-700'
+                          : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                        'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
                       )}
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">{item.name}</span>
-                  </MyLink>
+                      {...(current ? { 'aria-current': 'page' } : {})}
+                    >
+                      <item.icon
+                        className={classNames(
+                          current
+                            ? 'text-yellow-500 group-hover:text-yellow-500'
+                            : 'text-gray-400 group-hover:text-gray-500',
+                          '-ml-1 mr-3 h-6 w-6 flex-shrink-0'
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">{item.name}</span>
+                    </MyLink>
+                  )
                 );
               })}
             </nav>

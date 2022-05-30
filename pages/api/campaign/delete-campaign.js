@@ -103,10 +103,13 @@ export default async function handler(req, res) {
   const { data: campaign } = await supabase
     .from('campaign')
     .select('*, created_by(*)')
-    .match({ id: campaignId, created_by: user.id })
+    .match({ id: campaignId })
     .single();
 
-  if (campaign) {
+  if (
+    campaign &&
+    (campaign.created_by === user.id || user.email?.endsWith('@ukaton.com'))
+  ) {
     const profile = await getUserProfile(user, supabase);
     if (profile.active_campaign === campaignId) {
       await supabase

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { SearchIcon } from '@heroicons/react/outline';
 import MyLink from '../../components/MyLink';
 import DeleteCampaignModal from '../../components/campaign/DeleteCampaignModal';
 import { supabase } from '../../utils/supabase';
@@ -73,9 +74,18 @@ const orderTypes = [
   },
 ];
 
-export default function MyCampaigns() {
+export default function AllCampaigns() {
   const router = useRouter();
-  const { isLoading, user } = useUser();
+  const { isLoading, user, isAdmin } = useUser();
+
+  useEffect(() => {
+    if (!isAdmin) {
+      console.log('WRONG!');
+      router.replace('/account', undefined, {
+        shallow: true,
+      });
+    }
+  }, []);
 
   const [isGettingCampaigns, setIsGettingCampaigns] = useState(true);
   const [campaigns, setCampaigns] = useState(null);
@@ -92,8 +102,7 @@ export default function MyCampaigns() {
     // eslint-disable-next-line no-shadow
     const { count: numberOfCampaigns } = await supabase
       .from('campaign')
-      .select('*', { count: 'exact', head: true })
-      .eq('created_by', user.id)
+      .select('*, created_by!inner(email)', { count: 'exact', head: true })
       .match(filters);
     setPageIndex(0);
     setNumberOfCampaigns(numberOfCampaigns);
@@ -118,7 +127,7 @@ export default function MyCampaigns() {
       // eslint-disable-next-line no-shadow
       const { data: campaigns } = await supabase
         .from('campaign')
-        .select('*')
+        .select('*, created_by!inner(email)')
         .eq('created_by', user.id)
         .match(filters)
         .order(...order)
@@ -158,23 +167,15 @@ export default function MyCampaigns() {
     if (campaigns) {
       console.log('subscribing to campaigns updates');
       const subscription = supabase
-        .from(`campaign:created_by=eq.${user.id}`)
+        .from(`campaign`)
         .on('INSERT', (payload) => {
           console.log('new campaign', payload);
-          const insertedCampaign = payload.new;
-          if (campaigns.length < numberOfCampaignsPerPage) {
-            setCampaigns(campaigns.concat(insertedCampaign));
-          }
+          getCampaigns(true);
           getNumberOfCampaigns();
         })
         .on('UPDATE', (payload) => {
           console.log('updated campaign', payload);
-          const updatedCampaign = payload.new;
-          setCampaigns(
-            campaigns.map((campaign) =>
-              campaign.id === updatedCampaign.id ? updatedCampaign : campaign
-            )
-          );
+          getCampaigns(true);
         })
         .on('DELETE', (payload) => {
           console.log('deleted campaigns', payload);
@@ -218,6 +219,29 @@ export default function MyCampaigns() {
     }
   };
 
+  const [email, setEmail] = useState('');
+  useEffect(() => {
+    const newFilters = { ...filters };
+    if (!email) {
+      delete newFilters['created_by.email'];
+    } else {
+      newFilters['created_by.email'] = email;
+    }
+    setFilters(newFilters);
+  }, [email]);
+
+  const checkQuery = () => {
+    // eslint-disable-next-line no-shadow
+    const { email } = router.query;
+    console.log('email', email);
+    if (email) {
+      setEmail(email);
+    }
+  };
+  useEffect(() => {
+    checkQuery();
+  }, []);
+
   useEffect(() => {
     const query = {};
     filterTypes.forEach((filterType) => {
@@ -231,6 +255,12 @@ export default function MyCampaigns() {
       }
     });
 
+    if (email) {
+      query.email = email;
+    } else {
+      delete router.query.email;
+    }
+
     const sortOption = orderTypes.find(
       // eslint-disable-next-line no-shadow
       (sortOption) => sortOption.value === order
@@ -239,22 +269,23 @@ export default function MyCampaigns() {
       query['sort-by'] = sortOption.query;
     }
 
-    console.log(query);
+    console.log('final query', query);
     router.replace({ query: { ...router.query, ...query } }, undefined, {
       shallow: true,
     });
-  }, [filters, order]);
+  }, [filters, order, email]);
 
   const clearFilters = () => {
     if (Object.keys(filters).length > 0) {
       setFilters({});
+      setEmail('');
     }
   };
 
   return (
     <>
       <Head>
-        <title>My Campaigns - Pennyseed</title>
+        <title>All Campaigns - Pennyseed</title>
       </Head>
       <DeleteCampaignModal
         open={showDeleteCampaignModal}
@@ -272,11 +303,9 @@ export default function MyCampaigns() {
         <div className="flex items-center pb-4">
           <div className="sm:flex-auto">
             <h3 className="text-lg font-medium leading-6 text-gray-900">
-              My Campaigns
+              All Campaigns
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              View all the campaigns you&apos;ve created
-            </p>
+            <p className="mt-1 text-sm text-gray-500">View all campaigns</p>
           </div>
           <div className="invisible mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <MyLink href="/create-campaign">
@@ -298,7 +327,41 @@ export default function MyCampaigns() {
           filterTypes={filterTypes}
           orderTypes={orderTypes}
           clearFilters={clearFilters}
-        />
+        >
+          <fieldset id="email">
+            <legend className="block font-medium">User Email</legend>
+            <div className="flex rounded-md py-3 shadow-sm">
+              <div className="relative flex flex-grow items-stretch focus-within:z-10">
+                <input
+                  type="email"
+                  defaultValue={email}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setEmail(e.target.value);
+                    }
+                  }}
+                  className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  const input = e.target
+                    .closest('fieldset')
+                    .querySelector('input');
+                  setEmail(input.value);
+                }}
+                className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
+              >
+                <SearchIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+          </fieldset>
+        </CampaignFilters>
 
         {campaigns?.length > 0 &&
           campaigns.map((campaign) => (
@@ -307,6 +370,12 @@ export default function MyCampaigns() {
               className="border-t border-gray-200 px-4 py-5 sm:px-6"
             >
               <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <div className="sm:col-span-1">
+                  <dt className="text-sm font-medium text-gray-500">Email</dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    {campaign.created_by.email}
+                  </dd>
+                </div>
                 <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">Reason</dt>
                   <dd className="mt-1 text-sm text-gray-900">
@@ -372,6 +441,27 @@ export default function MyCampaigns() {
                     View<span className="sr-only"> campaign</span>
                   </MyLink>
                 </div>
+                {!campaign.processed && (
+                  <div className="sm:col-span-1">
+                    <button
+                      onClick={async () => {
+                        const updateCampaignResult = await supabase
+                          .from('campaign')
+                          .update({ approved: !campaign.approved })
+                          .eq('id', campaign.id);
+                        console.log(
+                          'updateCampaignResult',
+                          updateCampaignResult
+                        );
+                      }}
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                    >
+                      {campaign.approved ? 'Deny' : 'Approve'}
+                      <span className="sr-only"> campaign</span>
+                    </button>
+                  </div>
+                )}
                 <div className="sm:col-span-1">
                   <button
                     onClick={() => {
@@ -389,7 +479,7 @@ export default function MyCampaigns() {
           ))}
 
         {isGettingCampaigns && (
-          <div className="border-t border-gray-200 pt-5">
+          <div className="mt-5 border-t border-gray-200">
             <div className="divide-y divide-gray-200">
               <div className="py-4 text-center sm:py-5">
                 <div className="text-sm font-medium text-gray-500">
@@ -400,47 +490,12 @@ export default function MyCampaigns() {
           </div>
         )}
 
-        {!isGettingCampaigns && campaigns?.length === 0 && (
-          <div className="border-t border-gray-200">
+        {campaigns?.length === 0 && !isGettingCampaigns && (
+          <div className="mt-5 border-t border-gray-200">
             <div className="divide-y divide-gray-200">
               <div className="py-4 text-center sm:py-5">
                 <div className="text-sm font-medium text-gray-500">
-                  {user.can_create_campaigns ? (
-                    <>
-                      No campaigns found.{' '}
-                      {Object.keys(filters).length === 0 &&
-                        !isGettingCampaigns && (
-                          <>
-                            <MyLink href="/create-campaign">
-                              <button
-                                type="button"
-                                className="inline-flex items-center rounded-md border border-transparent bg-yellow-100 px-2 py-1 text-sm font-medium leading-4 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-                              >
-                                Create a Campaign
-                              </button>
-                            </MyLink>{' '}
-                            to get started.
-                          </>
-                        )}
-                    </>
-                  ) : (
-                    <>
-                      You need to{' '}
-                      <MyLink
-                        href="/api/account/stripe-onboarding"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <button
-                          type="button"
-                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                          set up your Stripe Account
-                        </button>
-                      </MyLink>{' '}
-                      before you can create a campaign.
-                    </>
-                  )}
+                  No campaigns found.
                 </div>
               </div>
             </div>
@@ -462,4 +517,4 @@ export default function MyCampaigns() {
   );
 }
 
-MyCampaigns.getLayout = getAccountLayout;
+AllCampaigns.getLayout = getAccountLayout;

@@ -30,7 +30,7 @@ const capitalizeString = (string) =>
 export default function Campaign({ campaignId, setCampaignReason }) {
   const [isGettingCampaign, setIsGettingCampaign] = useState(true);
   const [campaign, setCampaign] = useState(null);
-  const { user, paymentMethodsObject, getPaymentMethod } = useUser();
+  const { user, isAdmin, paymentMethodsObject, getPaymentMethod } = useUser();
 
   const [isMyCampaign, setIsMyCampaign] = useState(null);
   useEffect(() => {
@@ -676,7 +676,22 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                   Pledge
                 </button>
               ))}
-            {isMyCampaign && (
+            {isAdmin && !campaign.processed && (
+              <button
+                type="button"
+                onClick={async () => {
+                  const updateCampaignResult = await supabase
+                    .from('campaign')
+                    .update({ approved: !campaign.approved })
+                    .eq('id', campaign.id);
+                  console.log('updateCampaignResult', updateCampaignResult);
+                }}
+                className="inline-flex justify-center rounded-md border border-transparent bg-yellow-600 py-2 px-4 font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              >
+                {campaign.approved ? 'Deny' : 'Approve'}
+              </button>
+            )}
+            {(isMyCampaign || isAdmin) && (
               <button
                 type="button"
                 onClick={() => setShowDeleteCampaignModal(true)}

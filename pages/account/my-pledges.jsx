@@ -238,8 +238,8 @@ export default function MyPledges() {
     }
     setFilters(newFilters);
   }, [selectedPaymentMethod]);
+  
   const [paymentMethodIdQuery, setPaymentMethodIdQuery] = useState(null);
-
   const checkQuery = () => {
     const { 'payment-method': paymentMethodId } = router.query;
     console.log('paymentMethodId', paymentMethodId);
@@ -353,7 +353,7 @@ export default function MyPledges() {
         >
           <fieldset id="paymentMethodId">
             <legend className="block font-medium">Payment Method</legend>
-            <div className="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
+            <div className="space-y-6 pt-3 sm:space-y-4">
               <PaymentMethodsSelect
                 selectedPaymentMethod={selectedPaymentMethod}
                 setSelectedPaymentMethod={setSelectedPaymentMethod}
