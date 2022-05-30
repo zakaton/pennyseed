@@ -90,7 +90,7 @@ export default function DeleteUserModal({
                   {selectedUser && (
                     <form
                       method="POST"
-                      action="/api/account/delete-user"
+                      action="/api/account/delete-account"
                       className="py-2 sm:py-0"
                       onSubmit={async (e) => {
                         e.preventDefault();

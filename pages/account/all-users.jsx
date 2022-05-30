@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import MyLink from '../../components/MyLink';
 import { supabase } from '../../utils/supabase';
 import { useUser } from '../../context/user-context';
 import Notification from '../../components/Notification';
 import UserFilters from '../../components/account/UserFilters';
 import Pagination from '../../components/Pagination';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
-import DeleteUserModal from '../../components/account/DeleteAccountModal';
+import DeleteUserModal from '../../components/account/DeleteUserModal.js';
 
 const numberOfUsersPerPage = 4;
 
@@ -78,7 +77,7 @@ export default function AllUsers() {
 
   useEffect(() => {
     if (!isAdmin) {
-      console.log('WRONG!');
+      console.log('redirect to /account');
       router.replace('/account', undefined, {
         shallow: true,
       });
@@ -188,18 +187,24 @@ export default function AllUsers() {
     }
   }, [users]);
 
-  const [showDeleteCampaignModal, setShowDeleteCampaignModal] = useState(false);
-  const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const [deleteCampaignStatus, setDeleteCampaignStatus] = useState();
-  const [showDeleteCampaignNotification, setShowDeleteCampaignNotification] =
+  const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [deleteUserStatus, setDeleteUserStatus] = useState();
+  const [showDeleteUserNotification, setShowDeleteUserNotification] =
     useState(false);
 
   const removeNotifications = () => {
-    setShowDeleteCampaignNotification(false);
+    setShowDeleteUserNotification(false);
   };
   useEffect(() => {
     removeNotifications();
   }, []);
+
+  useEffect(() => {
+    if (showDeleteUserModal) {
+      removeNotifications();
+    }
+  }, [showDeleteUserModal]);
 
   const showPrevious = async () => {
     console.log('showPrevious');
@@ -253,16 +258,16 @@ export default function AllUsers() {
         <title>All Users - Pennyseed</title>
       </Head>
       <DeleteUserModal
-        open={showDeleteCampaignModal}
-        setOpen={setShowDeleteCampaignModal}
-        selectedCampaign={selectedCampaign}
-        setDeleteCampaignStatus={setDeleteCampaignStatus}
-        setShowDeleteCampaignNotification={setShowDeleteCampaignNotification}
+        open={showDeleteUserModal}
+        setOpen={setShowDeleteUserModal}
+        selectedUser={selectedUser}
+        setDeleteUserStatus={setDeleteUserStatus}
+        setShowDeleteUserNotification={setShowDeleteUserNotification}
       />
       <Notification
-        open={showDeleteCampaignNotification}
-        setOpen={setShowDeleteCampaignNotification}
-        status={deleteCampaignStatus}
+        open={showDeleteUserNotification}
+        setOpen={setShowDeleteUserNotification}
+        status={deleteUserStatus}
       />
       <div className="bg-white px-4 pt-6 sm:px-6 sm:pt-6">
         <div className="flex items-center pb-4">
@@ -271,16 +276,6 @@ export default function AllUsers() {
               All Users
             </h3>
             <p className="mt-1 text-sm text-gray-500">View all users</p>
-          </div>
-          <div className="invisible mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <MyLink href="/create-campaign">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:w-auto"
-              >
-                Create Campaign
-              </button>
-            </MyLink>
           </div>
         </div>
 
@@ -295,6 +290,7 @@ export default function AllUsers() {
         />
 
         {users?.length > 0 &&
+          // eslint-disable-next-line no-shadow
           users.map((user) => (
             <div
               key={user.id}
@@ -304,6 +300,18 @@ export default function AllUsers() {
                 <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">Email</dt>
                   <dd className="mt-1 text-sm text-gray-900">{user.email}</dd>
+                </div>
+                <div className="sm:col-span-1">
+                  <button
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setShowDeleteUserModal(true);
+                    }}
+                    type="button"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-1.5 px-2.5 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  >
+                    Delete<span className="sr-only"> user</span>
+                  </button>
                 </div>
               </dl>
             </div>
@@ -334,7 +342,7 @@ export default function AllUsers() {
         )}
         {users && users.length > 0 && (
           <Pagination
-            name="campaign"
+            name="user"
             numberOfResults={numberOfUsers}
             numberOfResultsPerPage={numberOfUsersPerPage}
             pageIndex={pageIndex}

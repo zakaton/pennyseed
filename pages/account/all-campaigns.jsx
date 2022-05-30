@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -80,7 +81,7 @@ export default function AllCampaigns() {
 
   useEffect(() => {
     if (!isAdmin) {
-      console.log('WRONG!');
+      console.log('redirect to /account');
       router.replace('/account', undefined, {
         shallow: true,
       });
@@ -206,6 +207,12 @@ export default function AllCampaigns() {
     removeNotifications();
   }, []);
 
+  useEffect(() => {
+    if (showDeleteCampaignModal) {
+      removeNotifications();
+    }
+  }, [showDeleteCampaignModal]);
+
   const showPrevious = async () => {
     console.log('showPrevious');
     if (pageIndex > 0) {
@@ -219,23 +226,23 @@ export default function AllCampaigns() {
     }
   };
 
-  const [email, setEmail] = useState('');
+  const [createdByEmail, setCreatedByEmail] = useState('');
   useEffect(() => {
     const newFilters = { ...filters };
-    if (!email) {
+    if (!createdByEmail) {
       delete newFilters['created_by.email'];
     } else {
-      newFilters['created_by.email'] = email;
+      newFilters['created_by.email'] = createdByEmail;
     }
     setFilters(newFilters);
-  }, [email]);
+  }, [createdByEmail]);
 
   const checkQuery = () => {
     // eslint-disable-next-line no-shadow
-    const { email } = router.query;
-    console.log('email', email);
-    if (email) {
-      setEmail(email);
+    const { created_by } = router.query;
+    console.log('created_by', created_by);
+    if (created_by) {
+      setCreatedByEmail(created_by);
     }
   };
   useEffect(() => {
@@ -255,10 +262,10 @@ export default function AllCampaigns() {
       }
     });
 
-    if (email) {
-      query.email = email;
+    if (createdByEmail) {
+      query.created_by = createdByEmail;
     } else {
-      delete router.query.email;
+      delete router.query.created_by;
     }
 
     const sortOption = orderTypes.find(
@@ -273,12 +280,12 @@ export default function AllCampaigns() {
     router.replace({ query: { ...router.query, ...query } }, undefined, {
       shallow: true,
     });
-  }, [filters, order, email]);
+  }, [filters, order, createdByEmail]);
 
   const clearFilters = () => {
     if (Object.keys(filters).length > 0) {
       setFilters({});
-      setEmail('');
+      setCreatedByEmail('');
     }
   };
 
@@ -328,20 +335,20 @@ export default function AllCampaigns() {
           orderTypes={orderTypes}
           clearFilters={clearFilters}
         >
-          <fieldset id="email">
-            <legend className="block font-medium">User Email</legend>
+          <fieldset id="campaignerEmail">
+            <legend className="block font-medium">Created By</legend>
             <div className="flex rounded-md py-3 shadow-sm">
               <div className="relative flex flex-grow items-stretch focus-within:z-10">
                 <input
                   type="email"
-                  defaultValue={email}
+                  defaultValue={createdByEmail}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      setEmail(e.target.value);
+                      setCreatedByEmail(e.target.value);
                     }
                   }}
                   className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
-                  placeholder="you@example.com"
+                  placeholder="created_by@example.com"
                 />
               </div>
               <button
@@ -350,7 +357,7 @@ export default function AllCampaigns() {
                   const input = e.target
                     .closest('fieldset')
                     .querySelector('input');
-                  setEmail(input.value);
+                  setCreatedBYEmail(input.value);
                 }}
                 className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
               >

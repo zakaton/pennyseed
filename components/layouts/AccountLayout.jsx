@@ -26,15 +26,15 @@ const navigation = [
     isAdmin: true,
   },
   {
-    name: 'My Campaigns',
-    href: '/account/my-campaigns',
-    icon: PencilAltIcon,
-  },
-  {
     name: 'All Campaigns',
     href: '/account/all-campaigns',
     icon: DocumentDuplicateIcon,
     isAdmin: true,
+  },
+  {
+    name: 'My Campaigns',
+    href: '/account/my-campaigns',
+    icon: PencilAltIcon,
   },
   {
     name: 'My Pledges',

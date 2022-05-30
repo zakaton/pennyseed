@@ -42,15 +42,47 @@ export default async function handler(req, res) {
   const supabase = getSupabaseService();
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
+  const sendError = (error) =>
+    res.status(200).json({
+      status: {
+        type: 'failed',
+        title: 'Failed to delete User',
+        ...error,
+      },
+    });
+
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
-    return res
-      .status(200)
-      .json({ status: { type: 'failed', title: 'you are not signed in' } });
+    return sendError({ message: 'you are not signed in' });
   }
 
-  // FILL - can choose to get userId from query and delete that user instead
-  console.log('user to delete', user);
+  let userToDelete;
+  if (req.method === 'POST') {
+    if (user.email?.endsWith('@ukaton.com')) {
+      const { userId } = req.body;
+      if (userId) {
+        const { data: foundUser, error } = await supabase
+          .from('profile')
+          .select('*')
+          .eq('id', userId)
+          .maybeSingle();
+
+        if (error) {
+          console.error(error);
+          return sendError({ message: 'unable to find user' });
+        }
+        if (foundUser) {
+          userToDelete = foundUser;
+        }
+      } else {
+        return sendError({ message: 'userId no defined' });
+      }
+    } else {
+      return sendError({ message: 'you are not authorized to delete users' });
+    }
+  } else {
+    userToDelete = user;
+  }
 
   // email pledgers about deleted campaigns
   const {
@@ -59,7 +91,7 @@ export default async function handler(req, res) {
   } = await supabase
     .from('pledge')
     .select('*, profile!inner(*), campaign!inner(*)', { count: 'exact' })
-    .eq('campaign.created_by', user.id)
+    .eq('campaign.created_by', userToDelete.id)
     .eq('campaign.processed', false)
     .eq('profile.notifications', ['email_campaign_deleted']);
 
@@ -77,7 +109,7 @@ export default async function handler(req, res) {
           supabase,
           from,
           to,
-          user,
+          userToDelete,
         });
         emailPledgersPromises.push(emailPledgersPromise);
       }
@@ -89,18 +121,18 @@ export default async function handler(req, res) {
   const deleteCampaignsResult = await supabase
     .from('campaign')
     .delete()
-    .eq('created_by', user.id);
+    .eq('created_by', userToDelete.id);
   console.log('delete campaigns result', deleteCampaignsResult);
 
   // delete pledges
   const deletePledgesResult = await supabase
     .from('pledge')
     .delete()
-    .eq('profile', user.id);
+    .eq('profile', userToDelete.id);
   console.log('delete pledges result', deletePledgesResult);
 
   // delete stripe customer/account
-  const profile = await getUserProfile(user, supabase);
+  const profile = await getUserProfile(userToDelete, supabase);
   await stripe.customers.del(profile.stripe_customer);
   await stripe.accounts.del(profile.stripe_account);
 
@@ -108,19 +140,19 @@ export default async function handler(req, res) {
   const deleteProfileResult = await supabase
     .from('profile')
     .delete()
-    .eq('id', user.id);
+    .eq('id', userToDelete.id);
   console.log('delete profile result', deleteProfileResult);
 
   const { error: deleteUserError } = await supabase.auth.api.deleteUser(
-    user.id
+    userToDelete.id
   );
   console.log('delete user result', deleteUserError);
 
   await emailAdmin({
     subject: 'Deleted User',
     dynamicTemplateData: {
-      heading: `Goodbye ${user.email}!`,
-      body: `A user with email ${user.email} has deleted their account`,
+      heading: `Goodbye ${userToDelete.email}!`,
+      body: `A user with email ${userToDelete.email} has deleted their account.`,
     },
   });
 
