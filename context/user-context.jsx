@@ -49,7 +49,7 @@ export function UserContextProvider(props) {
 
     window.s = supabase;
     console.log(session);
-    // FIX THIS ISSUE!
+    // FIX - sometimes the session doesn't refresh
     // supabase.auth.refreshSession();
 
     updateUserProfile();
