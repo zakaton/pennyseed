@@ -6,7 +6,6 @@ import { numberOfPaymentMethodsPerPage } from '../../../utils/get-payment-method
 import stripPaymentMethod from '../../../utils/strip-payment-method';
 
 export default async function handler(req, res) {
-  console.log('cookies', req.cookies);
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
   const sendError = (error) =>
