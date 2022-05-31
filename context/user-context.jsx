@@ -32,10 +32,10 @@ export function UserContextProvider(props) {
 
   const setAuthCookie = async (event, session) => {
     if (session) {
-      console.log('setting auth cookie', event, session);
       await fetch('/api/account/set-auth-cookie', {
         method: 'POST',
         body: JSON.stringify({ event, session }),
+        credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -53,7 +53,6 @@ export function UserContextProvider(props) {
     // supabase.auth.refreshSession();
 
     updateUserProfile();
-    setAuthCookie(session);
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
