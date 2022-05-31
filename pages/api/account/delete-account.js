@@ -51,7 +51,7 @@ export default async function handler(req, res) {
       },
     });
 
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const { user } = await supabase.auth.api.getUserByCookie(req, res);
   if (!user) {
     return sendError({ message: 'you are not signed in' });
   }

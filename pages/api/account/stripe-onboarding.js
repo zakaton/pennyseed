@@ -7,7 +7,7 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService(req);
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const { user } = await supabase.auth.api.getUserByCookie(req, res);
   if (!user) {
     return res.redirect('/account');
   }

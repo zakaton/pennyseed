@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     });
 
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const { user } = await supabase.auth.api.getUserByCookie(req, res);
   if (!user) {
     return sendErrorMessage('You must be signed in to Pledge');
   }

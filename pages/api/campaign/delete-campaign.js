@@ -83,7 +83,7 @@ async function processCampaignEmails({ supabase, campaign }) {
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const { user } = await supabase.auth.api.getUserByCookie(req, res);
   if (!user) {
     return res
       .status(200)
