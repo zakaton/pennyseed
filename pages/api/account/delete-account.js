@@ -4,6 +4,7 @@ import {
   getSupabaseService,
   getUserProfile,
   paginationSize,
+  isUserAdmin,
 } from '../../../utils/supabase';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
 import { formatDollars } from '../../../utils/campaign-utils';
@@ -58,7 +59,7 @@ export default async function handler(req, res) {
 
   let userToDelete;
   if (req.method === 'POST') {
-    if (user.email?.endsWith('@ukaton.com')) {
+    if (isUserAdmin(user)) {
       const { userId } = req.body;
       if (userId) {
         const { data: foundUser, error } = await supabase

@@ -8,6 +8,8 @@ export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+export const isUserAdmin = (user) => user.email?.endsWith('@ukaton.com');
+
 export const getSupabaseService = (req) => {
   const supabaseService = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,

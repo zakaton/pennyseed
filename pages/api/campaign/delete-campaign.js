@@ -4,6 +4,7 @@ import {
   getSupabaseService,
   getUserProfile,
   paginationSize,
+  isUserAdmin,
 } from '../../../utils/supabase';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
 import { formatDollars } from '../../../utils/campaign-utils';
@@ -106,10 +107,7 @@ export default async function handler(req, res) {
     .match({ id: campaignId })
     .single();
 
-  if (
-    campaign &&
-    (campaign.created_by === user.id || user.email?.endsWith('@ukaton.com'))
-  ) {
+  if (campaign && (campaign.created_by === user.id || isUserAdmin(user))) {
     const profile = await getUserProfile(user, supabase);
     if (profile.active_campaign === campaignId) {
       await supabase
