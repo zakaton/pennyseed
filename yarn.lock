@@ -1166,13 +1166,6 @@
   dependencies:
     cross-fetch "^3.0.6"
 
-"@supabase/gotrue-js@^1.22.16":
-  version "1.22.16"
-  resolved "https://registry.yarnpkg.com/@supabase/gotrue-js/-/gotrue-js-1.22.16.tgz#78cc3b656b96f14374e35493031a36d89a1d5a29"
-  integrity sha512-t/tR87anihvyc9ePk53NF2CG8yzTDiWOt0ReZpr7sRKV91sHNLbghVMsMDwPONWnVQ9V2/qfKutuAvPGTB/Dew==
-  dependencies:
-    cross-fetch "^3.0.6"
-
 "@supabase/postgrest-js@^0.37.2":
   version "0.37.2"
   resolved "https://registry.yarnpkg.com/@supabase/postgrest-js/-/postgrest-js-0.37.2.tgz#4243587eea5ad9507371fcdc4b3ec096d652ad03"
