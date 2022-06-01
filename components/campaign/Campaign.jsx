@@ -605,7 +605,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                       </p>
                     )}
 
-                    {pledge && paymentMethod && (
+                    {pledge && paymentMethod && campaign.succeeded && (
                       <p className="italic">
                         You pledged to this campaign using your{' '}
                         <span className="font-bold">
