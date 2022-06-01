@@ -60,7 +60,7 @@ export default async function handler(req, res) {
         }
         break;
       default:
-        console.log(`Unhandled event type ${event.type}`);
+        console.log(`Unhandled Event type ${event.type}`);
     }
 
     res.json({ received: true });
