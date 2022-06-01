@@ -4,9 +4,8 @@ import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
 import { getMaximumPossibleNumberOfPledgers } from '../../../utils/campaign-utils';
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
 export default async function handler(req, res) {
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
   const sendErrorMessage = (errorMessage) =>
     res.status(200).json({
       status: {

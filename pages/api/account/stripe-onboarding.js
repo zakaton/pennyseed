@@ -3,9 +3,8 @@ import Stripe from 'stripe';
 import absoluteUrl from 'next-absolute-url';
 import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
 export default async function handler(req, res) {
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
   const supabase = getSupabaseService(req);
   const { user } = await supabase.auth.api.getUserByCookie(req, res);
   if (!user) {
