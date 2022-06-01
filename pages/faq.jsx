@@ -58,9 +58,8 @@ const faqs = [
         <p>
           Yes. We thought about allowing people to pledge without an account by
           just putting in their card information, but what if they changed their
-          mind before the deadline? By having pledgers creating an account they
-          can choose to cancel their pledges at any time before the deadline
-          comes.
+          mind before the deadline? By having pledgers create an account they
+          can choose to cancel their pledges at any time before the deadline.
         </p>
         <p>
           If you want, you could create an account, pledge to a campaign, and
