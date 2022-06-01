@@ -3,9 +3,7 @@ import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../../utils/supabase';
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_ACCOUNT_WEBHOOK_SECRET;
-const supabase = getSupabaseService();
 
 export const config = {
   api: {
@@ -14,6 +12,9 @@ export const config = {
 };
 
 export default async function handler(req, res) {
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+  const supabase = getSupabaseService();
+
   if (req.method === 'POST') {
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
