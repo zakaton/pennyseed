@@ -3,10 +3,10 @@ import enforceApiRouteSecret from '../../../utils/enforce-api-route-secret';
 import { getSupabaseService } from '../../../utils/supabase';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const supabase = getSupabaseService();
 
 // eslint-disable-next-line consistent-return
 export default async function handler(req, res) {
+  const supabase = getSupabaseService();
   console.log('received request', req.query);
   if (!enforceApiRouteSecret(req, res)) {
     return;
