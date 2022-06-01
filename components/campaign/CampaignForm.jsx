@@ -159,7 +159,7 @@ export default function CampaignForm({
           <p className="mb-3 text-sm italic text-gray-500">
             {canCreateCampaign
               ? 'Fill all the required fields and click "Create Campaign" below. You cannot edit your campaign after it\'s created.'
-              : 'See how much your pledgers would pay for a given funding goal'}
+              : 'See how much your pledgers would pay for a given funding goal.'}
           </p>
           <p className="mt-1 mb-3 text-sm text-gray-500">
             I am raising{' '}
