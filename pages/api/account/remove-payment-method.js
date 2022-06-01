@@ -2,9 +2,8 @@
 import Stripe from 'stripe';
 import { getSupabaseService } from '../../../utils/supabase';
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
 export default async function handler(req, res) {
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
   const sendError = (error = {}) =>
     res.status(200).json({
       status: {
