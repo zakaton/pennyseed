@@ -435,9 +435,7 @@ export default function CampaignForm({
                   htmlFor="current-number-of-pledgers"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {isExample
-                    ? 'Final Number of Pledgers'
-                    : 'Hypothetical Final Number of Pledgers'}
+                  Hypothetical Final Number of Pledgers
                 </label>
                 <input
                   type="number"
