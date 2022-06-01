@@ -605,6 +605,19 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                       </p>
                     )}
 
+                    {user &&
+                      !isMyCampaign &&
+                      !isGettingPledge &&
+                      !campaign.processed &&
+                      campaign.number_of_pledgers <
+                        maximumPossibleNumberOfPledgers &&
+                      !pledge && (
+                        <p className='italic'>
+                          Make sure you received this campaign link from a
+                          trusted source before pledging.
+                        </p>
+                      )}
+
                     {pledge && paymentMethod && campaign.succeeded && (
                       <p className="italic">
                         You pledged to this campaign using your{' '}
