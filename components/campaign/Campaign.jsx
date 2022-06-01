@@ -612,7 +612,7 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                       campaign.number_of_pledgers <
                         maximumPossibleNumberOfPledgers &&
                       !pledge && (
-                        <p className='italic'>
+                        <p className="italic">
                           Make sure you received this campaign link from a
                           trusted source before pledging.
                         </p>
