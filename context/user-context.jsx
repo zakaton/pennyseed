@@ -52,6 +52,8 @@ export function UserContextProvider(props) {
     // FIX - sometimes the session doesn't refresh
     // supabase.auth.refreshSession();
 
+    setAuthCookie('SIGNED_IN', session);
+
     updateUserProfile();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
