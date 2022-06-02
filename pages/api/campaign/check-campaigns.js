@@ -202,7 +202,7 @@ async function processCampaign({ supabase, stripe, campaign }) {
     const { error: getNumberOfPledgesError, count: numberOfPledgesToProcess } =
       await supabase
         .from('pledge')
-        .select('*', { count: 'exact' })
+        .select('*', { count: 'exact', head: true })
         .match({ campaign: campaign.id });
     console.log('getNumberOfPledgesError', getNumberOfPledgesError);
     console.log('numberOfPledgesToProcess', numberOfPledgesToProcess);
@@ -248,9 +248,10 @@ async function processCampaign({ supabase, stripe, campaign }) {
     error: getNumberOfPledgesToEmailError,
     count: numberOfPledgesToEmail,
   } = await supabase
-    .from('pledge')
-    .select('*', { count: 'exact' })
-    .match({ campaign: campaign.id });
+    .from('pledge, profile!inner(*)')
+    .select('*', { count: 'exact', head: true })
+    .match({ campaign: campaign.id })
+    .contains('profile.notifications', ['email_campaign_ended']);
   console.log('getNumberOfPledgesToEmailError', getNumberOfPledgesToEmailError);
   console.log('numberOfPledgesToEmail', numberOfPledgesToEmail);
 
@@ -326,7 +327,7 @@ async function processCampaignEndingIn24Hours({ supabase, campaign }) {
   const { error: getNumberOfPledgesError, count: numberOfPledgesToProcess } =
     await supabase
       .from('pledge')
-      .select('*', { count: 'exact' })
+      .select('*', { count: 'exact', head: true })
       .match({ campaign: campaign.id });
 
   console.log('getNumberOfPledgesError', getNumberOfPledgesError);
@@ -421,7 +422,7 @@ export default async function handler(req, res) {
     count: numberOfCampaignsToProcess,
   } = await supabase
     .from('campaign')
-    .select('*', { count: 'exact' })
+    .select('*', { count: 'exact', head: true })
     .match({ processed: false })
     .lte('deadline', currentDate.toISOString());
 
@@ -458,7 +459,7 @@ export default async function handler(req, res) {
     count: numberOfCampaignsEndingIn24HoursToProcess,
   } = await supabase
     .from('campaign')
-    .select('*', { count: 'exact' })
+    .select('*', { count: 'exact', head: true })
     .match({ processed: false })
     .gt('deadline', hourBeforeDayAfterCurrentDate.toISOString())
     .lte('deadline', dayAfterCurrentDate.toISOString());

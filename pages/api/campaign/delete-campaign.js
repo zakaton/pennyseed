@@ -55,7 +55,7 @@ async function processCampaignEmails({ supabase, campaign }) {
     count: numberOfPledgesToEmail,
   } = await supabase
     .from('pledge')
-    .select('*, profile!inner(*)', { count: 'exact' })
+    .select('*, profile!inner(*)', { count: 'exact', head: true })
     .match({
       campaign: campaign.id,
     })

@@ -13,10 +13,10 @@ import { formatDollars } from '../../../utils/campaign-utils';
 async function emailPledgers({ supabase, from, to, user }) {
   const { data: pledgesToEmail, error } = await supabase
     .from('pledge')
-    .select('*, profile!inner(*), campaign!inner(*)', { count: 'exact' })
+    .select('*, profile!inner(*), campaign!inner(*)')
     .eq('campaign.created_by', user.id)
     .eq('campaign.processed', false)
-    .eq('profile.notifications', ['email_campaign_deleted'])
+    .contains('profile.notifications', ['email_campaign_deleted'])
     .range(from, to);
 
   console.log('pledgesToEmail', pledgesToEmail);
@@ -92,10 +92,13 @@ export default async function handler(req, res) {
     error: getNumberOfPledgesToEmailError,
   } = await supabase
     .from('pledge')
-    .select('*, profile!inner(*), campaign!inner(*)', { count: 'exact' })
+    .select('*, profile!inner(*), campaign!inner(*)', {
+      count: 'exact',
+      head: true,
+    })
     .eq('campaign.created_by', userToDelete.id)
     .eq('campaign.processed', false)
-    .eq('profile.notifications', ['email_campaign_deleted']);
+    .contains('profile.notifications', ['email_campaign_deleted']);
 
   console.log('numberOfPledgesToEmail', numberOfPledgesToEmail);
   console.log('getNumberOfPledgesToEmailError', getNumberOfPledgesToEmailError);
