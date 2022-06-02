@@ -607,8 +607,8 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                         This campaign has {campaign.approved && 'been '}
                         <span className="font-bold">
                           {campaign.approved
-                            ? 'approved'
-                            : 'not been approved yet'}
+                            ? 'approved by Pennyseed'
+                            : 'not been approved by Pennyseed yet'}
                         </span>
                         {!campaign.approved && (
                           <>, but you can still pledge in the meantime</>
