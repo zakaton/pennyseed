@@ -10,11 +10,11 @@ import {
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
 import { formatDollars } from '../../../utils/campaign-utils';
 
-async function emailPledgers({ supabase, from, to, user }) {
+async function emailPledgers({ supabase, from, to, userToDelete }) {
   const { data: pledgesToEmail, error } = await supabase
     .from('pledge')
     .select('*, profile!inner(*), campaign!inner(*)')
-    .eq('campaign.created_by', user.id)
+    .eq('campaign.created_by', userToDelete.id)
     .eq('campaign.processed', false)
     .contains('profile.notifications', ['email_campaign_deleted'])
     .range(from, to);

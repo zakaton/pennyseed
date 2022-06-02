@@ -267,6 +267,7 @@ async function processCampaign({ supabase, stripe, campaign }) {
         from,
         to,
         campaign,
+        succeeded,
       });
       emailPledgersPromises.push(emailPledgersPromise);
     }
