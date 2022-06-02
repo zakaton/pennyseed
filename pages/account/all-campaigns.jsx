@@ -129,7 +129,6 @@ export default function AllCampaigns() {
       const { data: campaigns } = await supabase
         .from('campaign')
         .select('*, created_by!inner(email)')
-        .eq('created_by', user.id)
         .match(filters)
         .order(...order)
         .limit(numberOfCampaignsPerPage)
