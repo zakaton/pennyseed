@@ -86,6 +86,11 @@ export default async function handler(req, res) {
     userToDelete = user;
   }
 
+  console.log('userToDelete', userToDelete);
+  if (!userToDelete) {
+    return sendError({ message: 'no user found' });
+  }
+
   // email pledgers about deleted campaigns
   const {
     count: numberOfPledgesToEmail,
@@ -155,8 +160,6 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('error deleting stripe account', error);
   }
-
-  console.log('userToDelete', userToDelete);
 
   // delete profile
   const deleteProfileResult = await supabase
