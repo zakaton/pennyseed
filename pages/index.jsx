@@ -23,7 +23,7 @@ export default function Home() {
     setIsSSR(true);
   }, []);
 
-  const aspectRatio = isMobile ? 'aspect-[1]' : 'aspect-[15/9]';
+  const aspectRatio = isMobile ? 'aspect-[1]' : 'aspect-[14/9]';
 
   return (
     <>
