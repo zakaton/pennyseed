@@ -248,10 +248,10 @@ async function processCampaign({ supabase, stripe, campaign }) {
     error: getNumberOfPledgesToEmailError,
     count: numberOfPledgesToEmail,
   } = await supabase
-    .from('pledge, profile!inner(*)')
-    .select('*', { count: 'exact', head: true })
+    .from('pledge')
+    .select('*, profile!inner(*)', { count: 'exact', head: true })
     .match({ campaign: campaign.id })
-    .contains('profile.notifications', ['email_campaign_ended']);
+    .contains('profile.notifications', ['email_campaign_end']);
   console.log('getNumberOfPledgesToEmailError', getNumberOfPledgesToEmailError);
   console.log('numberOfPledgesToEmail', numberOfPledgesToEmail);
 
@@ -409,7 +409,7 @@ async function processCampaignsEndingIn24Hours({
 
 // eslint-disable-next-line consistent-return
 export default async function handler(req, res) {
-  if (false && !enforceApiRouteSecret(req, res)) {
+  if (!enforceApiRouteSecret(req, res)) {
     return;
   }
 
