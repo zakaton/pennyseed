@@ -145,7 +145,7 @@ export function UserContextProvider(props) {
   };
 
   const deleteAccount = async () => {
-    await fetch('/api/account/delete-account');
+    await fetchWithAccessToken('/api/account/delete-account');
     signOut();
     setDidDeleteAccount(true);
   };
