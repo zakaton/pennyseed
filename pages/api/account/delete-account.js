@@ -119,6 +119,13 @@ export default async function handler(req, res) {
     }
   }
 
+  await supabase
+    .from('profile')
+    .update({
+      active_campaign: null,
+    })
+    .eq('id', userToDelete.id);
+
   // delete campaigns
   const deleteCampaignsResult = await supabase
     .from('campaign')
@@ -135,8 +142,18 @@ export default async function handler(req, res) {
 
   // delete stripe customer/account
   const profile = await getUserProfile(userToDelete, supabase);
-  await stripe.customers.del(profile.stripe_customer);
-  await stripe.accounts.del(profile.stripe_account);
+  try {
+    await stripe.customers.del(profile.stripe_customer);
+  } catch (error) {
+    console.error('error deleting stripe customer', error);
+  }
+  try {
+    await stripe.accounts.del(profile.stripe_account);
+  } catch (error) {
+    console.error('error deleting stripe account', error);
+  }
+
+  console.log('userToDelete', userToDelete);
 
   // delete profile
   const deleteProfileResult = await supabase
