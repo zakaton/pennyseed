@@ -23,8 +23,6 @@ export default function Home() {
     setIsSSR(true);
   }, []);
 
-  const aspectRatio = isMobile ? 'aspect-[1]' : 'aspect-[14/9]';
-
   return (
     <>
       <Head>
@@ -94,7 +92,10 @@ export default function Home() {
             </p>
             <YouTube
               className="mx-auto"
-              iframeClassName={classNames(aspectRatio, 'mx-auto w-full')}
+              iframeClassName={classNames(
+                isMobile ? 'aspect-square' : 'aspect-video',
+                'mx-auto w-full'
+              )}
               title="Creating a Campaign"
               videoId={isMobile ? 'ryElmlpMzJU' : 'Fod9zHVh20U'}
               opts={YouTubePlayerOptions}
@@ -107,7 +108,10 @@ export default function Home() {
             </p>
             <YouTube
               className="mx-auto"
-              iframeClassName={classNames(aspectRatio, 'mx-auto w-full')}
+              iframeClassName={classNames(
+                isMobile ? 'aspect-square' : 'aspect-video',
+                'mx-auto w-full'
+              )}
               title="Pledging to a Campaign"
               videoId={isMobile ? 'XOHp_syTNZg' : 'mf9FjI6iHOI'}
               opts={YouTubePlayerOptions}
