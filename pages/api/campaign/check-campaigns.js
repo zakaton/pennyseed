@@ -429,6 +429,7 @@ export default async function handler(req, res) {
 
   console.log('getNumberOfCampaignsError', getNumberOfCampaignsError);
   console.log('numberOfCampaignsToProcess', numberOfCampaignsToProcess);
+
   if (numberOfCampaignsToProcess > 0) {
     const processCampaignsPromises = [];
     for (
