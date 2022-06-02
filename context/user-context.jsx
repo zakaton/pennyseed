@@ -1,6 +1,10 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import { useRouter } from 'next/router';
-import { supabase, getUserProfile } from '../utils/supabase';
+import {
+  supabase,
+  getUserProfile,
+  supabaseAuthHeader,
+} from '../utils/supabase';
 import {
   fetchPaymentMethods,
   fetchPaymentMethod,
@@ -15,6 +19,19 @@ export function UserContextProvider(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [didDeleteAccount, setDidDeleteAccount] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [baseFetchHeaders, setBaseFetchHeaders] = useState({});
+
+  useEffect(() => {
+    if (session?.access_token) {
+      setBaseFetchHeaders({ [supabaseAuthHeader]: session.access_token });
+    }
+  }, [session]);
+
+  const fetchWithAccessToken = (url, options) =>
+    fetch(url, {
+      ...(options || {}),
+      headers: { ...(options?.headers || {}), ...baseFetchHeaders },
+    });
 
   const updateUserProfile = async () => {
     const user = supabase.auth.user();
@@ -49,9 +66,6 @@ export function UserContextProvider(props) {
     setSession(session);
 
     window.s = supabase;
-    console.log(session);
-    // FIX - sometimes the session doesn't refresh
-    // supabase.auth.refreshSession();
 
     updateUserProfile();
 
@@ -135,7 +149,7 @@ export function UserContextProvider(props) {
     if (!paymentMethods || refresh) {
       setIsGettingPaymentMethods(true);
       const { paymentMethods: newPaymentMethods, status } =
-        await fetchPaymentMethods({ limit });
+        await fetchPaymentMethods(session, { limit });
       if (status.type === 'succeeded') {
         setPaymentMethods(newPaymentMethods);
       }
@@ -144,7 +158,7 @@ export function UserContextProvider(props) {
     } else if (getMore) {
       setIsGettingPaymentMethods(true);
       const { paymentMethods: newPaymentMethods, status } =
-        await fetchPaymentMethods({
+        await fetchPaymentMethods(session, {
           limit,
           startingAfter: paymentMethods[paymentMethods.length - 1].id,
         });
@@ -174,6 +188,7 @@ export function UserContextProvider(props) {
     setIsGettingPaymentMethod(true);
     if (!paymentMethodsObject[paymentMethodId]) {
       const { paymentMethod, status } = await fetchPaymentMethod(
+        session,
         paymentMethodId
       );
       if (status.type === 'succeeded') {
@@ -223,6 +238,8 @@ export function UserContextProvider(props) {
     deleteAccount,
     isLoading,
     didDeleteAccount,
+
+    fetchWithAccessToken,
 
     isGettingPaymentMethods,
     paymentMethods,

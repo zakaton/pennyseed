@@ -34,7 +34,7 @@ export default function CampaignForm({
 }) {
   const router = useRouter();
 
-  const { isLoading, user } = useUser();
+  const { isLoading, user, fetchWithAccessToken } = useUser();
   const [canCreateCampaign, setCanCreateCampaign] = useState(false);
   useEffect(() => {
     if (!isLoading) {
@@ -259,7 +259,7 @@ export default function CampaignForm({
                   data.append(key, value);
                 });
                 setIsCreatingCampaign(true);
-                const response = await fetch(form.action, {
+                const response = await fetchWithAccessToken(form.action, {
                   method: form.method,
                   body: data,
                 });

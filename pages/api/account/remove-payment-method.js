@@ -1,6 +1,9 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService } from '../../../utils/supabase';
+import {
+  getSupabaseService,
+  getUserByAccessToken,
+} from '../../../utils/supabase';
 
 export default async function handler(req, res) {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -14,7 +17,7 @@ export default async function handler(req, res) {
     });
 
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return sendError({ message: 'you are not signed in' });
   }

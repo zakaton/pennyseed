@@ -5,7 +5,7 @@ import { useUser } from '../../context/user-context';
 import Notification from '../../components/Notification';
 
 export default function Notifications() {
-  const { user } = useUser();
+  const { user, fetchWithAccessToken } = useUser();
 
   const [isUpdatingNotifications, setIsUpdatingNotifications] = useState(false);
   const [updateNotificationsStatus, setUpdateNotificationsStatus] = useState();
@@ -40,7 +40,7 @@ export default function Notifications() {
           formData.forEach((value, key) => {
             data.append(key, value);
           });
-          const response = await fetch(form.action, {
+          const response = await fetchWithAccessToken(form.action, {
             method: form.method,
             body: data,
           });

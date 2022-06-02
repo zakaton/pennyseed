@@ -2,6 +2,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
+import { useUser } from '../../context/user-context';
 
 export default function DeleteCampaignModal({
   open,
@@ -12,6 +13,8 @@ export default function DeleteCampaignModal({
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [didDelete, setDidDelete] = useState(false);
+
+  const { fetchWithAccessToken } = useUser();
 
   useEffect(() => {
     if (open) {
@@ -101,10 +104,13 @@ export default function DeleteCampaignModal({
                         formData.forEach((value, key) => {
                           data.append(key, value);
                         });
-                        const response = await fetch(form.action, {
-                          method: form.method,
-                          body: data,
-                        });
+                        const response = await fetchWithAccessToken(
+                          form.action,
+                          {
+                            method: form.method,
+                            body: data,
+                          }
+                        );
                         setIsDeleting(false);
                         setDidDelete(true);
                         const { status } = await response.json();
@@ -135,7 +141,7 @@ export default function DeleteCampaignModal({
                   )}
                   <button
                     type="button"
-                    className="inline-flex mt-3 w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
                     onClick={() => setOpen(false)}
                   >
                     Cancel

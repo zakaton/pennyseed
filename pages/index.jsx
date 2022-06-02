@@ -1,4 +1,6 @@
 import Head from 'next/head';
+import { isMobile } from 'react-device-detect';
+import YouTube from 'react-youtube';
 import CampaignForm from '../components/campaign/CampaignForm';
 import MyLink from '../components/MyLink';
 
@@ -62,6 +64,10 @@ export default function Home() {
         </p>
 
         <CampaignForm isExample />
+
+        {false && (
+          <YouTube videoId={isMobile ? '2g811Eo7K8U' : '2g811Eo7K8U'} />
+        )}
 
         <p>
           This project is built using{' '}

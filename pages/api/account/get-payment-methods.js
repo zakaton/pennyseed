@@ -1,7 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import {
+  getSupabaseService,
+  getUserProfile,
+  getUserByAccessToken,
+} from '../../../utils/supabase';
 import { numberOfPaymentMethodsPerPage } from '../../../utils/get-payment-methods';
 import stripPaymentMethod from '../../../utils/strip-payment-method';
 
@@ -18,7 +22,7 @@ export default async function handler(req, res) {
     });
 
   const supabase = getSupabaseService();
-  const { user, error } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user, error } = await getUserByAccessToken(supabase, req);
   if (error) {
     console.error(error);
   }

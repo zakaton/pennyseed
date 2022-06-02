@@ -2,6 +2,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
+import { useUser } from '../../context/user-context';
 
 export default function DeleteUserModal({
   open,
@@ -12,6 +13,7 @@ export default function DeleteUserModal({
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [didDelete, setDidDelete] = useState(false);
+  const { fetchWithAccessToken } = useUser();
 
   useEffect(() => {
     if (open) {
@@ -101,10 +103,13 @@ export default function DeleteUserModal({
                         formData.forEach((value, key) => {
                           data.append(key, value);
                         });
-                        const response = await fetch(form.action, {
-                          method: form.method,
-                          body: data,
-                        });
+                        const response = await fetchWithAccessToken(
+                          form.action,
+                          {
+                            method: form.method,
+                            body: data,
+                          }
+                        );
                         setIsDeleting(false);
                         setDidDelete(true);
                         const { status } = await response.json();

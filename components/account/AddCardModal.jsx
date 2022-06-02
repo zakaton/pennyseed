@@ -4,8 +4,10 @@ import { XIcon, CreditCardIcon } from '@heroicons/react/outline';
 import { Elements } from '@stripe/react-stripe-js';
 import ElementsForm from './ElementsForm';
 import getStripe from '../../utils/get-stripe';
+import { useUser } from '../../context/user-context';
 
 export default function AddCardModal({ open, setOpen }) {
+  const { fetchWithAccessToken } = useUser();
   const [stripePromise] = useState(() => getStripe());
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [error, setError] = useState(null);
@@ -18,7 +20,9 @@ export default function AddCardModal({ open, setOpen }) {
   const [clientSecret, setClientSecret] = useState(null);
   const createSetupIntent = async () => {
     console.log('gonna fetch client secret...');
-    const response = await fetch('/api/account/create-stripe-setup-intent');
+    const response = await fetchWithAccessToken(
+      '/api/account/create-stripe-setup-intent'
+    );
     // eslint-disable-next-line camelcase
     const { client_secret, status } = await response.json();
     if (status.type === 'succeeded') {

@@ -2,6 +2,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/outline';
+import { useUser } from '../../context/user-context';
 
 export default function RemoveCardModal({
   open,
@@ -12,6 +13,7 @@ export default function RemoveCardModal({
 }) {
   const [isRemovingCard, setIsRemovingCard] = useState(false);
   const [didRemoveCard, setDidRemoveCard] = useState(false);
+  const { fetchWithAccessToken } = useUser();
 
   useEffect(() => {
     if (open) {
@@ -112,10 +114,13 @@ export default function RemoveCardModal({
                           data.append(key, value);
                         });
                         setIsRemovingCard(true);
-                        const response = await fetch(form.action, {
-                          method: form.method,
-                          body: data,
-                        });
+                        const response = await fetchWithAccessToken(
+                          form.action,
+                          {
+                            method: form.method,
+                            body: data,
+                          }
+                        );
                         const { status } = await response.json();
                         console.log('status', status);
                         setDidRemoveCard(true);
