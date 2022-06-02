@@ -114,6 +114,12 @@ export function UserContextProvider(props) {
     };
   }, []);
 
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/sign-in');
+    setUser(null);
+  };
+
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (user) {
@@ -123,6 +129,10 @@ export function UserContextProvider(props) {
         .on('UPDATE', (payload) => {
           console.log('updated profile');
           setUser({ ...user, ...payload.new });
+        })
+        .on('DELETE', () => {
+          console.log('deleted account');
+          signOut();
         })
         .subscribe();
       return () => {
@@ -137,12 +147,6 @@ export function UserContextProvider(props) {
       setIsAdmin(user.email?.endsWith('@ukaton.com'));
     }
   }, [user]);
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/sign-in');
-    setUser(null);
-  };
 
   const deleteAccount = async () => {
     await fetchWithAccessToken('/api/account/delete-account');
