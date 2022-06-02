@@ -15,14 +15,10 @@ const warnings = {
       to create a campaign.
     </span>
   ),
-  cantCreateCampaigns: () => (
+  cantCreateCampaigns: ({ stripeLinks }) => (
     <span>
       You need to{' '}
-      <MyLink
-        href="/api/account/stripe-onboarding"
-        target="_blank"
-        rel="noreferrer"
-      >
+      <MyLink href={stripeLinks.onboarding} target="_blank" rel="noreferrer">
         <button type="button" className="font-medium underline">
           setup your Stripe Account
         </button>
@@ -57,7 +53,7 @@ const warnings = {
 };
 
 export default function CreateCampaignWarningBanner({ isCreatingCampaign }) {
-  const { isLoading, user } = useUser();
+  const { isLoading, user, stripeLinks } = useUser();
   const [warning, setWarning] = useState(null);
 
   useEffect(() => {
@@ -89,7 +85,12 @@ export default function CreateCampaignWarningBanner({ isCreatingCampaign }) {
           </div>
           <div className="ml-3">
             <h3 className="text-sm font-medium text-red-800">
-              {Warning && <Warning activeCampaignId={user?.active_campaign} />}
+              {Warning && (
+                <Warning
+                  stripeLinks={stripeLinks}
+                  activeCampaignId={user?.active_campaign}
+                />
+              )}
             </h3>
           </div>
         </div>

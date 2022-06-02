@@ -75,7 +75,7 @@ const orderTypes = [
 
 export default function MyCampaigns() {
   const router = useRouter();
-  const { isLoading, user } = useUser();
+  const { isLoading, user, stripeLinks } = useUser();
 
   const [isGettingCampaigns, setIsGettingCampaigns] = useState(true);
   const [campaigns, setCampaigns] = useState(null);
@@ -427,7 +427,7 @@ export default function MyCampaigns() {
                     <>
                       You need to{' '}
                       <MyLink
-                        href="/api/account/stripe-onboarding"
+                        href={stripeLinks.onboarding}
                         target="_blank"
                         rel="noreferrer"
                       >

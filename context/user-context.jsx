@@ -20,10 +20,20 @@ export function UserContextProvider(props) {
   const [didDeleteAccount, setDidDeleteAccount] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [baseFetchHeaders, setBaseFetchHeaders] = useState({});
+  const [stripeLinks, setStripeLinks] = useState({});
 
   useEffect(() => {
     if (session?.access_token) {
       setBaseFetchHeaders({ [supabaseAuthHeader]: session.access_token });
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (session?.access_token) {
+      setStripeLinks({
+        onboarding: `/api/account/stripe-onboarding?access_token=${session.access_token}`,
+        dashboard: `/api/account/stripe-dashboard?access_token=${session.access_token}`,
+      });
     }
   }, [session]);
 
@@ -240,6 +250,7 @@ export function UserContextProvider(props) {
     didDeleteAccount,
 
     fetchWithAccessToken,
+    stripeLinks,
 
     isGettingPaymentMethods,
     paymentMethods,

@@ -7,7 +7,7 @@ import MyLink from '../../components/MyLink';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
 
 export default function AccountGeneral() {
-  const { user, isLoading } = useUser();
+  const { user, isLoading, stripeLinks } = useUser();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
   return (
@@ -45,7 +45,7 @@ export default function AccountGeneral() {
                     <>
                       no.{' '}
                       <MyLink
-                        href="/api/account/stripe-onboarding"
+                        href={stripeLinks.onboarding}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -69,8 +69,8 @@ export default function AccountGeneral() {
         <MyLink
           href={
             user.has_completed_onboarding
-              ? '/api/account/stripe-dashboard'
-              : '/api/account/stripe-onboarding'
+              ? stripeLinks.dashboard
+              : stripeLinks.onboarding
           }
           target="_blank"
           rel="noreferrer"
