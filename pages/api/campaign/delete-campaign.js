@@ -104,7 +104,7 @@ export default async function handler(req, res) {
 
   const { data: campaign } = await supabase
     .from('campaign')
-    .select('*, created_by(*)')
+    .select('*')
     .match({ id: campaignId })
     .single();
 
