@@ -1,8 +1,13 @@
 import Head from 'next/head';
 import { isMobile } from 'react-device-detect';
 import YouTube from 'react-youtube';
+import { useEffect, useState } from 'react';
 import CampaignForm from '../components/campaign/CampaignForm';
 import MyLink from '../components/MyLink';
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
 
 export default function Home() {
   const YouTubePlayerOptions = {
@@ -12,6 +17,14 @@ export default function Home() {
       modestbranding: 0,
     },
   };
+
+  const [isSSR, setIsSSR] = useState(false);
+  useEffect(() => {
+    setIsSSR(true);
+  }, []);
+
+  const aspectRatio = isMobile ? 'aspect-[1]' : 'aspect-[15/9]';
+
   return (
     <>
       <Head>
@@ -72,14 +85,29 @@ export default function Home() {
 
         <CampaignForm isExample />
 
-        {false && (
+        {isSSR && (
           <>
+            <p className="mb-3">
+              <span className="mt-2 block text-center text-xl font-bold tracking-tight text-gray-900 sm:text-2xl">
+                Creating a Campaign
+              </span>
+            </p>
             <YouTube
+              className="mx-auto"
+              iframeClassName={classNames(aspectRatio, 'mx-auto w-full')}
               title="Creating a Campaign"
               videoId={isMobile ? 'ryElmlpMzJU' : 'Fod9zHVh20U'}
               opts={YouTubePlayerOptions}
             />
+
+            <p className="mb-3">
+              <span className="mt-4 block text-center text-xl font-bold leading-8 tracking-tight text-gray-900 sm:text-2xl">
+                Pledging to a Campaign
+              </span>
+            </p>
             <YouTube
+              className="mx-auto"
+              iframeClassName={classNames(aspectRatio, 'mx-auto w-full')}
               title="Pledging to a Campaign"
               videoId={isMobile ? 'XOHp_syTNZg' : 'mf9FjI6iHOI'}
               opts={YouTubePlayerOptions}
