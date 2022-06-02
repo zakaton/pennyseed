@@ -5,6 +5,13 @@ import CampaignForm from '../components/campaign/CampaignForm';
 import MyLink from '../components/MyLink';
 
 export default function Home() {
+  const YouTubePlayerOptions = {
+    playerVars: {
+      rel: 0,
+      playsinline: 1,
+      modestbranding: 0,
+    },
+  };
   return (
     <>
       <Head>
@@ -66,7 +73,18 @@ export default function Home() {
         <CampaignForm isExample />
 
         {false && (
-          <YouTube videoId={isMobile ? '2g811Eo7K8U' : '2g811Eo7K8U'} />
+          <>
+            <YouTube
+              title="Creating a Campaign"
+              videoId={isMobile ? 'ryElmlpMzJU' : 'Fod9zHVh20U'}
+              opts={YouTubePlayerOptions}
+            />
+            <YouTube
+              title="Pledging to a Campaign"
+              videoId={isMobile ? 'XOHp_syTNZg' : 'mf9FjI6iHOI'}
+              opts={YouTubePlayerOptions}
+            />
+          </>
         )}
 
         <p>

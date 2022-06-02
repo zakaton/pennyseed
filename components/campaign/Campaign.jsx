@@ -154,6 +154,10 @@ export default function Campaign({ campaignId, setCampaignReason }) {
     hypotheticalFinalNumberOfPledgers,
     setHypotheticalFinalNumberOfPledgers,
   ] = useState(0);
+  const [
+    isHypotheticalFinalNumberOfPledgersEmptyString,
+    setIsHypotheticalFinalNumberOfPledgersEmptyString,
+  ] = useState(false);
   useEffect(() => {
     if (campaign) {
       setHypotheticalFinalNumberOfPledgers(campaign.minimum_number_of_pledgers);
@@ -530,14 +534,22 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                             name="hypotheticalFinalNumberOfPledgers"
                             id="hypotheticalFinalNumberOfPledgers"
                             step="1"
-                            value={hypotheticalFinalNumberOfPledgers}
+                            value={
+                              isHypotheticalFinalNumberOfPledgersEmptyString
+                                ? ''
+                                : hypotheticalFinalNumberOfPledgers
+                            }
                             min={0}
                             max={maximumPossibleNumberOfPledgers}
-                            onInput={(e) =>
+                            placeholder={hypotheticalFinalNumberOfPledgers}
+                            onInput={(e) => {
+                              setIsHypotheticalFinalNumberOfPledgersEmptyString(
+                                e.target.value === ''
+                              );
                               setHypotheticalFinalNumberOfPledgers(
                                 Number(e.target.value)
-                              )
-                            }
+                              );
+                            }}
                             className="inline-block rounded-md border-gray-300 px-0 py-0 pl-1 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
                           />{' '}
                           {hypotheticalFinalNumberOfPledgers === 1

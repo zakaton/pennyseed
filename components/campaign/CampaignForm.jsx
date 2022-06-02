@@ -48,12 +48,22 @@ export default function CampaignForm({
   const defaultFundingGoal = 1000;
 
   const [fundingGoal, setFundingGoal] = useState(defaultFundingGoal);
+  const [isFundingGoalEmptyString, setIsFundingGoalEmptyString] =
+    useState(false);
   const [reason, setReason] = useState(reasonPlaceholder);
   const [deadline, setDeadline] = useState(null);
   const [minimumNumberOfPledgers, setMinimumNumberOfPledgers] =
     useState(defaultFundingGoal);
+  const [
+    isMinimumNumberOfPledgersEmptyString,
+    setIsMinimumNumberOfPledgersEmptyString,
+  ] = useState(false);
   const [currentNumberOfPledgers, setCurrentNumberOfPledgers] =
     useState(defaultFundingGoal);
+  const [
+    isCurrentNumberOfPledgersEmptyString,
+    setIsCurrentNumberOfPledgersEmptyString,
+  ] = useState(false);
 
   useEffect(() => {
     const defaultFutureDate = new Date();
@@ -295,10 +305,11 @@ export default function CampaignForm({
                     id="fundingGoal"
                     min={minimumCampaignDollars}
                     max={maximumCampaignDollars}
-                    value={fundingGoal}
+                    value={isFundingGoalEmptyString ? '' : fundingGoal}
                     inputMode="numeric"
                     step="1"
-                    onChange={(e) => {
+                    onInput={(e) => {
+                      setIsFundingGoalEmptyString(e.target.value === '');
                       setFundingGoal(Number(e.target.value));
                     }}
                     className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
@@ -410,12 +421,20 @@ export default function CampaignForm({
                   name="minimumNumberOfPledgers"
                   id="minimumNumberOfPledgers"
                   step="1"
-                  value={minimumNumberOfPledgers}
+                  value={
+                    isMinimumNumberOfPledgersEmptyString
+                      ? ''
+                      : minimumNumberOfPledgers
+                  }
                   min={minimumPossibleNumberOfPledgers}
                   max={maximumPossibleNumberOfPledgers}
-                  onInput={(e) =>
-                    setMinimumNumberOfPledgers(Number(e.target.value))
-                  }
+                  placeholder={minimumNumberOfPledgers}
+                  onInput={(e) => {
+                    setIsMinimumNumberOfPledgersEmptyString(
+                      e.target.value === ''
+                    );
+                    setMinimumNumberOfPledgers(Number(e.target.value));
+                  }}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
                 />
                 <p className="my-0 mt-1 p-0 text-sm italic text-gray-400">
@@ -443,10 +462,18 @@ export default function CampaignForm({
                   min="0"
                   step="1"
                   max={fundingGoal * 2}
-                  value={currentNumberOfPledgers}
-                  onChange={(e) =>
-                    setCurrentNumberOfPledgers(Number(e.target.value))
+                  value={
+                    isCurrentNumberOfPledgersEmptyString
+                      ? ''
+                      : currentNumberOfPledgers
                   }
+                  placeholder={currentNumberOfPledgers}
+                  onInput={(e) => {
+                    setIsCurrentNumberOfPledgersEmptyString(
+                      e.target.value === ''
+                    );
+                    setCurrentNumberOfPledgers(Number(e.target.value));
+                  }}
                   name="currentNumberOfPledgers"
                   id="current-number-of-pledgers"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
