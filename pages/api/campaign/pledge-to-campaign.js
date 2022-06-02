@@ -1,6 +1,10 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import {
+  getSupabaseService,
+  getUserProfile,
+  getUserByAccessToken,
+} from '../../../utils/supabase';
 import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
 import { getMaximumPossibleNumberOfPledgers } from '../../../utils/campaign-utils';
 
@@ -16,7 +20,7 @@ export default async function handler(req, res) {
     });
 
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return sendErrorMessage('You must be signed in to Pledge');
   }

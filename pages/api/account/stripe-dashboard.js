@@ -1,12 +1,16 @@
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
 import absoluteUrl from 'next-absolute-url';
-import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import {
+  getSupabaseService,
+  getUserProfile,
+  getUserByAccessToken,
+} from '../../../utils/supabase';
 
 export default async function handler(req, res) {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-  const supabase = getSupabaseService(req);
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const supabase = getSupabaseService();
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return res.redirect('/account');
   }

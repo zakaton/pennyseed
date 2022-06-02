@@ -5,6 +5,7 @@ import {
   getUserProfile,
   paginationSize,
   isUserAdmin,
+  getUserByAccessToken,
 } from '../../../utils/supabase';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
 import { formatDollars } from '../../../utils/campaign-utils';
@@ -52,7 +53,7 @@ export default async function handler(req, res) {
       },
     });
 
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return sendError({ message: 'you are not signed in' });
   }

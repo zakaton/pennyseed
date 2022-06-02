@@ -1,10 +1,14 @@
 /* eslint-disable consistent-return */
-import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import {
+  getSupabaseService,
+  getUserProfile,
+  getUserByAccessToken,
+} from '../../../utils/supabase';
 import updateCampaignNumberOfPledgers from '../../../utils/update-campaign-number-of-pledgers';
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return res.status(200).json({
       status: {

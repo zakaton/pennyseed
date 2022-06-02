@@ -1,5 +1,9 @@
 /* eslint-disable consistent-return */
-import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import {
+  getSupabaseService,
+  getUserProfile,
+  getUserByAccessToken,
+} from '../../../utils/supabase';
 
 const notificationTypes = [
   'email_campaign_end',
@@ -18,7 +22,7 @@ export default async function handler(req, res) {
     });
 
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return sendError({ message: 'You are not signed in' });
   }

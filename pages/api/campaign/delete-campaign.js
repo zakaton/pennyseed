@@ -5,6 +5,7 @@ import {
   getUserProfile,
   paginationSize,
   isUserAdmin,
+  getUserByAccessToken,
 } from '../../../utils/supabase';
 import sendEmail, { emailAdmin } from '../../../utils/send-email';
 import { formatDollars } from '../../../utils/campaign-utils';
@@ -84,7 +85,7 @@ async function processCampaignEmails({ supabase, campaign }) {
 
 export default async function handler(req, res) {
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return res
       .status(200)

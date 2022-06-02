@@ -1,7 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable consistent-return */
 import Stripe from 'stripe';
-import { getSupabaseService, getUserProfile } from '../../../utils/supabase';
+import {
+  getSupabaseService,
+  getUserProfile,
+  getUserByAccessToken,
+} from '../../../utils/supabase';
 import stripPaymentMethod from '../../../utils/strip-payment-method';
 
 export default async function handler(req, res) {
@@ -17,7 +21,7 @@ export default async function handler(req, res) {
     });
 
   const supabase = getSupabaseService();
-  const { user } = await supabase.auth.api.getUserByCookie(req, res);
+  const { user } = await getUserByAccessToken(supabase, req);
   if (!user) {
     return sendError({ message: 'You are not signed in' });
   }
