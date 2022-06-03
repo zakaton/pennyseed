@@ -1,9 +1,5 @@
 /* eslint-disable consistent-return */
-import {
-  getSupabaseService,
-  getUserProfile,
-  getUserByAccessToken,
-} from '../../../utils/supabase';
+import { getSupabaseService } from '../../../utils/supabase';
 
 import sendEmail from '../../../utils/send-email';
 
