@@ -25,16 +25,17 @@ export default async function sendEmail(...messages) {
   try {
     await mail.send(
       messages.map((message) => ({
+        templateId: process.env.SENDGRID_TEMPLATE_ID,
         ...message,
         dynamicTemplateData: {
           email: message.to,
           subject: message.subject,
           ...message?.dynamicTemplateData,
         },
-        templateId: process.env.SENDGRID_TEMPLATE_ID,
         from: {
           email: notificationsEmail,
           name: 'Pennyseed',
+          ...message?.from,
         },
         replyTo: adminEmail,
       }))
