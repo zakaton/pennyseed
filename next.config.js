@@ -3,9 +3,6 @@ const withPWA = require('next-pwa');
 /** @type {import('next').NextConfig} */
 const nextConfig = withPWA({
   reactStrictMode: false,
-  images: {
-    domains: ['tailwindui.com', 'images.unsplash.com'],
-  },
   pwa: {
     dest: 'public',
     register: true,
