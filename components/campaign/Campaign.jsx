@@ -433,11 +433,11 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                       </span>
                       , where each pledger will pay at most{' '}
                       <span className="font-bold text-green-500">
-                        {formatDollars(minimumPledgeDollarsPlusFees)}
+                        {formatDollars(minimumPledgeDollars)}
                       </span>{' '}
                       (
                       <span className="text-green-500">
-                        {formatDollars(minimumPledgeDollars)}
+                        {formatDollars(minimumPledgeDollarsPlusFees)}
                       </span>{' '}
                       after fees). If fewer people pledge by the deadline then
                       no charges will be made.
@@ -449,11 +449,11 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                       </span>{' '}
                       pledgers, where each pledger would pay only{' '}
                       <span className="font-bold text-green-500">
-                        {formatDollars(maximumPledgeDollarsPlusFees)}
+                        {formatDollars(maximumPledgeDollars)}
                       </span>{' '}
                       (
                       <span className="text-green-500">
-                        {formatDollars(maximumPledgeDollars)}
+                        {formatDollars(maximumPledgeDollarsPlusFees)}
                       </span>{' '}
                       after fees).
                     </p>
@@ -481,11 +481,11 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                           <>
                             each pledger paid{' '}
                             <span className="font-bold text-green-500">
-                              {formatDollars(currentPledgeDollarsPlusFees)}
+                              {formatDollars(currentPledgeDollars)}
                             </span>{' '}
                             (
                             <span className="text-green-500">
-                              {formatDollars(currentPledgeDollars)}
+                              {formatDollars(currentPledgeDollarsPlusFees)}
                             </span>{' '}
                             after fees)
                           </>
@@ -509,11 +509,11 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                             <>
                               each pledger will pay{' '}
                               <span className="font-bold text-green-500">
-                                {formatDollars(currentPledgeDollarsPlusFees)}
+                                {formatDollars(currentPledgeDollars)}
                               </span>{' '}
                               (
                               <span className="text-green-500">
-                                {formatDollars(currentPledgeDollars)}
+                                {formatDollars(currentPledgeDollarsPlusFees)}
                               </span>{' '}
                               after fees)
                             </>
@@ -573,13 +573,13 @@ export default function Campaign({ campaignId, setCampaignReason }) {
                             <>
                               each pledger pays{' '}
                               <span className="font-bold text-green-500">
-                                {formatDollars(
-                                  hypotheticalPledgeDollarsPlusFees
-                                )}
+                                {formatDollars(hypotheticalPledgeDollars)}
                               </span>{' '}
                               (
                               <span className="text-green-500">
-                                {formatDollars(hypotheticalPledgeDollars)}
+                                {formatDollars(
+                                  hypotheticalPledgeDollarsPlusFees
+                                )}
                               </span>{' '}
                               after fees)
                             </>

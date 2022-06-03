@@ -211,11 +211,10 @@ export default function About() {
           <li>
             Create a Campaign specifying the following:
             <ul role="list">
-              <li>Campaign title + description</li>
               <li>Funding Goal</li>
+              <li>Reason</li>
               <li>Deadline</li>
-              <li>Minimum number of pledgers</li>
-              <li>(optional) Maximum number of pledgers</li>
+              <li>Minimum Number of Pledgers</li>
             </ul>
           </li>
           <li>

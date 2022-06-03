@@ -210,10 +210,12 @@ export default function CampaignForm({
             , and{' '}
             {isCampaignSuccessful ? (
               <>
-                each pledger is charged exactly{' '}
+                each pledger is charged{' '}
                 <span className="font-medium text-green-500">
                   {formatDollars(pledgeDollarsPlusFees)}
-                </span>
+                </span>{' '}
+                ({formatDollars(pledgeDollarsMinusStripeFee - pennyseedFee)} +
+                fees)
               </>
             ) : (
               'nothing happens'
@@ -223,11 +225,7 @@ export default function CampaignForm({
 
           {isCampaignSuccessful && (
             <p className="m-0 mb-0 text-sm text-gray-500">
-              This pledge amount results in{' '}
-              <span className="font-medium text-green-500">
-                {formatDollars(pledgeDollarsMinusStripeFee - pennyseedFee)}
-              </span>{' '}
-              after{' '}
+              After{' '}
               <span className="font-medium">
                 <a
                   href="https://stripe.com/pricing"
@@ -243,12 +241,18 @@ export default function CampaignForm({
               and Pennyseed&apos;s 1% fee{' '}
               <span className="font-medium text-red-500">
                 ({formatDollars(pennyseedFee)})
+              </span>{' '}
+              are deducted, this pledge amount ends up being{' '}
+              <span className="font-medium text-green-500">
+                {formatDollars(pledgeDollarsMinusStripeFee - pennyseedFee)}
               </span>
-              , adding up to{' '}
+              , which adds up to{' '}
               <span className="font-medium text-green-500">
                 {formatDollars(netPledgeDollars)}
               </span>{' '}
-              for me, the campaigner
+              ({formatDollars(pledgeDollarsMinusStripeFee - pennyseedFee)} *{' '}
+              {currentNumberOfPledgers.toLocaleString(defaultLocale)}) for me,
+              the campaigner.
             </p>
           )}
         </div>

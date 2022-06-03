@@ -33,10 +33,10 @@ const faqs = [
         </p>
         <p>
           For instance, if you want to raise $1,000 with a minimum of 1,000
-          pledgers, each will pay at most $1 before processing. But if you
-          changed the minimum number of pledgers to 100 after people have
-          pledged, then they&apos;ll pay at most $10, which wouldn&apos;t be
-          fair and wasn&apos;t the deal when they pledged.
+          pledgers, each will pay at most $1 before fees. But if you changed the
+          minimum number of pledgers to 100 after people have pledged, then
+          they&apos;ll pay at most $10, which wouldn&apos;t be fair and
+          wasn&apos;t the deal when they pledged.
         </p>
       </>
     ),
@@ -147,21 +147,17 @@ const faqs = [
           <a href="https://stripe.com/pricing" target="_blank" rel="noreferrer">
             Stripe&apos;s processing fees
           </a>{' '}
-          (2.9% + 30¢ per transaction) we raise the pledge amount a little more
-          so the final payment after fees is what&apos;s expected.
-        </p>
-        <p>
-          We fix this problem by raising the pledge amount so the final amount
-          after fees will equal the ideal pledge amount.
+          (2.9% + 30¢ per transaction), we raise the pledge amount a little more
+          so the final payment after fees are deducted is what&apos;s expected.
         </p>
         <p>
           For example, if 1,000 people pledge to raise a total of $1,000, then
-          each would not pay $1, but around $1.35, which would end up be $1
-          after{' '}
+          each would not pay $1, but around $1.35, resulting in $1 for the
+          campaigner after{' '}
           <a href="https://stripe.com/pricing" target="_blank" rel="noreferrer">
             Stripe&apos;s processing fee
           </a>{' '}
-          ($0.34) and Pennyseed&apos;s 1% fee ($0.01)
+          ($0.34) and Pennyseed&apos;s 1% fee ($0.01) are taken away.
         </p>
       </>
     ),
@@ -204,23 +200,23 @@ const faqs = [
             Stripe&apos;s maximum charge amount
           </a>
           . Therefore, we set the lower limit on the minimum number of pledgers
-          to <span className="underline">(funding goal) / 999,999.99</span>{' '}
+          to <span className="font-medium">(funding goal) / 999,999.99</span>{' '}
           (rounded up), which would be just 1 if the funding goal is less than
           $999,999.99.
         </p>
         <p>
-          Thus, the most you can possibly pay (before processing) is
-          $999,999.99, which is extremely unlikely since the person making the
-          campaign would have to set the minimum number of pledgers to the
-          lowest possible allowed number.
+          Thus, the most you can possibly pay (before fees) is $999,999.99,
+          which is extremely unlikely since the person making the campaign would
+          have to set the minimum number of pledgers to the lowest possible
+          allowed number.
         </p>
         <p>
           For example, if you wanted to raise $1,000,000, the lowest minimum
           number of pledgers 2 pledgers, where if only 2 people pledged
-          they&apos;d each pay $500,000 before processing. Of course you would
-          set the actual minimum number of pledgers to something much higher
-          like 200,000, where if at least 200,000 pledged they&apos;d each pay
-          $5 before processing
+          they&apos;d each pay $500,000 before fees. Of course you would set the
+          actual minimum number of pledgers to something much higher like
+          200,000, where if at least 200,000 pledged they&apos;d each pay $5
+          before fees
         </p>
       </>
     ),
@@ -267,7 +263,7 @@ const faqs = [
           <li>
             Customers can put larger amounts into an digital wallet that we can
             subtract from when they make pledges, e.g. adding $103.30 ($100
-            after processing) to a wallet and pledging $1 100 times (vs pleding
+            before fees) to a wallet and pledging $1 100 times (vs pledging
             $1.34 individual 100 times resulting in $134 total)
           </li>
           <li>
@@ -325,7 +321,7 @@ const faqs = [
           As a result, it is possible that the campaigner may receive less than
           they asked for (minus the number of failed payments multiplied by the
           pledge amount). For instance, if you try to raise $1,000 and 1,000
-          pledge, then each will pay $1 after fees, but if 1 pledger&apos;s
+          pledge, then each will pay $1 before fees, but if 1 pledger&apos;s
           payment method fails, then the campaigner will receive $999.
         </p>
         <p>

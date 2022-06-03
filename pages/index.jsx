@@ -57,7 +57,8 @@ export default function Home() {
             (funding goal) / (minimum number of pledgers)
           </span>
           . Otherwise if you wanted to raise $1,000 and only one person pledged
-          before the deadline, then they&apos;d pay $1,000.
+          before the deadline, then they&apos;d pay $1,000 (which would be
+          ridiculous).
         </p>
 
         <p>
@@ -72,8 +73,8 @@ export default function Home() {
           <span className="inline-block">(2.9% + $0.30)</span> and a 1%
           Pennyseed fee, so the campaigner gets exactly how much they ask for.
           For example, if you successfully raise $1,000 with 1,000 pledgers,
-          each pledger won&apos;t actually pay $1, but will pay $1.35, which is
-          $1.00 after fees ($0.35).
+          each pledger won&apos;t actually pay $1, but will pay $1.35 ($1.00 +
+          fees).
         </p>
 
         <p className="mb-6">
@@ -124,7 +125,7 @@ export default function Home() {
           <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
             Next.js
           </a>{' '}
-          for the frontend and api routes,{' '}
+          for the website,{' '}
           <a href="https://supabase.com/" target="_blank" rel="noreferrer">
             Supabase
           </a>{' '}
@@ -143,7 +144,7 @@ export default function Home() {
             SendGrid
           </a>{' '}
           for emailing campaign updates to users (we don&apos;t email users by
-          default - they have to opt-in). The source code is{' '}
+          default - they have to manually opt-in). The source code is{' '}
           <a
             href="https://github.com/zakaton/pennyseed"
             target="_blank"
