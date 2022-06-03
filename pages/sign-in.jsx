@@ -15,6 +15,7 @@ export default function SignIn() {
 
   const [redirectPathname, setRedirectPathname] = useState();
   useEffect(() => {
+    console.log('redirect_pathname', router.query.redirect_pathname);
     if (router.query.redirect_pathname) {
       setRedirectPathname(router.query.redirect_pathname);
     }
@@ -32,7 +33,8 @@ export default function SignIn() {
     }
     setIsSubmitting(true);
     // eslint-disable-next-line no-unused-vars
-    const { error, data } = await supabase.auth.signIn(
+    console.log();
+    const { error } = await supabase.auth.signIn(
       {
         email,
       },
@@ -44,7 +46,7 @@ export default function SignIn() {
     );
     if (error) {
       // eslint-disable-next-line no-console
-      console.log({ error });
+      console.error(error);
     } else {
       setSubmitted(true);
     }
