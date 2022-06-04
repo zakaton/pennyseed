@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       redirectTo.startsWith(allowedDomain)
     )
   ) {
-    return sendError({ message: `invalid redirectTo url "${redirectTo}"` });
+    return sendError({ message: `invalid redirectTo url "${redirectTo}", ${JSON.stringify(allowedDomains)}` });
   }
   console.log(email, redirectTo);
 
