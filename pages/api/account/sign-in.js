@@ -32,9 +32,7 @@ export default async function handler(req, res) {
     )
   ) {
     return sendError({
-      message: `invalid redirectTo url "${redirectTo}", ${JSON.stringify(
-        allowedDomains
-      )}`,
+      message: `invalid redirectTo url "${redirectTo}"`,
     });
   }
   console.log(email, redirectTo);
