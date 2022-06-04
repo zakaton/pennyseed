@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       },
     });
   if (req.method !== 'POST') {
-    return sendEmail({ message: 'must send a "POST" message' });
+    return sendError({ message: 'must send a "POST" message' });
   }
 
   console.log(JSON.stringify(req.body));
