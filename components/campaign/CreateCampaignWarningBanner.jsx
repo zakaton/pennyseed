@@ -7,7 +7,10 @@ const warnings = {
   notSignedIn: () => (
     <span>
       You must be{' '}
-      <MyLink href="/sign-in">
+      <MyLink
+        href={`/sign-in?redirect_pathname=${window.location.pathname}`}
+        as="/sign-in"
+      >
         <button type="button" className="font-medium underline">
           signed in
         </button>
