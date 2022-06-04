@@ -4,6 +4,7 @@ import { getSupabaseService } from '../../../utils/supabase';
 import sendEmail from '../../../utils/send-email';
 
 const magicLinkEmail = 'magic-link@pennyseed.fund';
+const recoveryEmailLimit = 1000 * 60; // ms
 
 export default async function handler(req, res) {
   const allowedDomains = process.env.MAGIC_LINK_REDIRECT_URLS.split(',');
@@ -38,16 +39,50 @@ export default async function handler(req, res) {
   console.log(email, redirectTo);
 
   const supabase = getSupabaseService();
-  const { data, error } = await supabase.auth.api.generateLink(
+  const { data: profile, error: getProfileError } = await supabase
+    .from('profile')
+    .select('*')
+    .eq('email', email)
+    .maybeSingle();
+
+  if (getProfileError) {
+    console.error(getProfileError);
+    return sendError({ message: getProfileError.message });
+  }
+
+  console.log('profile', profile);
+
+  if (profile) {
+    const { data: user, error: getUserError } =
+      await supabase.auth.api.getUserById(profile.id);
+    if (getUserError) {
+      console.error(getUserError);
+      return sendError({ message: getUserError.message });
+    }
+    console.log('user', user);
+    const currentDate = new Date();
+    const lastTime = new Date(user.recovery_sent_at);
+    const timeSinceLastRecovery = currentDate.getTime() - lastTime.getTime();
+    console.log('timeSinceLastRecovery', timeSinceLastRecovery);
+    if (timeSinceLastRecovery < recoveryEmailLimit) {
+      return sendError({
+        title: 'Magic Link already sent',
+        message:
+          'A link was already emailed to this address less than a minute ago.',
+      });
+    }
+  }
+
+  const { data, generateLinkError } = await supabase.auth.api.generateLink(
     'magiclink',
     email,
     {
       redirectTo,
     }
   );
-  if (error) {
-    console.error(error);
-    return sendError({ message: error.message });
+  if (generateLinkError) {
+    console.error(generateLinkError);
+    return sendError({ message: generateLinkError.message });
   }
 
   await sendEmail({
