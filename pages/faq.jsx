@@ -309,7 +309,7 @@ const faqs = [
   },
   {
     question:
-      "What a campaign succeeds but one of the pledger's payment methods is expired (or otherwise invalid)?",
+      "What if a campaign succeeds but one of the pledger's payment methods is expired (or otherwise invalid)?",
     answer: () => (
       <>
         <p>
