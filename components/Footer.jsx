@@ -121,7 +121,7 @@ export default function Footer() {
             rel="noreferrer"
             className="text-base text-gray-600 underline hover:text-gray-900"
           >
-            Ukaton Inc
+            Ukaton
           </MyLink>
         </p>
       </div>

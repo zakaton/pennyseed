@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { getAccountLayout } from '../../components/layouts/AccountLayout';
 import { useUser } from '../../context/user-context';
 import Notification from '../../components/Notification';
+import { notificationTypes } from '../api/account/set-notifications';
 
 export default function Notifications() {
   const { user, fetchWithAccessToken } = useUser();
@@ -66,85 +67,32 @@ export default function Notifications() {
               By Email
             </legend>
             <div className="mt-4 space-y-4">
-              <div className="flex items-start">
-                <div className="flex h-5 items-center">
-                  <input
-                    id="email_campaign_end"
-                    name="email_campaign_end"
-                    type="checkbox"
-                    defaultChecked={user?.notifications?.includes(
-                      'email_campaign_end'
-                    )}
-                    className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label
-                    htmlFor="email_campaign_end"
-                    className="font-medium text-gray-700"
-                  >
-                    Campaign Ends
-                  </label>
-                  <p className="text-gray-500">
-                    Get notified when a campaign you&apos;ve created or pledged
-                    to ends.
-                  </p>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-start">
+              {notificationTypes.map((notificationType) => (
+                <div key={notificationType.value} className="flex items-start">
                   <div className="flex h-5 items-center">
                     <input
-                      id="email_campaign_end_soon"
-                      name="email_campaign_end_soon"
+                      id={notificationType.value}
+                      name={notificationType.value}
                       type="checkbox"
                       defaultChecked={user?.notifications?.includes(
-                        'email_campaign_end_soon'
+                        notificationType.value
                       )}
                       className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
                     />
                   </div>
                   <div className="ml-3 text-sm">
                     <label
-                      htmlFor="email_campaign_end_soon"
+                      htmlFor={notificationType.value}
                       className="font-medium text-gray-700"
                     >
-                      Day Before Campaign Ends
+                      {notificationType.title}
                     </label>
                     <p className="text-gray-500">
-                      Get notified 24 hours before a campaign you&apos;ve
-                      pledged to ends.
+                      {notificationType.description}
                     </p>
                   </div>
                 </div>
-              </div>
-              <div>
-                <div className="flex items-start">
-                  <div className="flex h-5 items-center">
-                    <input
-                      id="email_campaign_deleted"
-                      name="email_campaign_deleted"
-                      type="checkbox"
-                      defaultChecked={user?.notifications?.includes(
-                        'email_campaign_deleted'
-                      )}
-                      className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="email_campaign_deleted"
-                      className="font-medium text-gray-700"
-                    >
-                      Campaign is Deleted
-                    </label>
-                    <p className="text-gray-500">
-                      Get notified when an active campaign you&apos;ve pledged
-                      to is deleted.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </fieldset>
         </div>

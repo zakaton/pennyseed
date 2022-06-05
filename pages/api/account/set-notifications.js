@@ -5,10 +5,31 @@ import {
   getUserByAccessToken,
 } from '../../../utils/supabase';
 
-const notificationTypes = [
-  'email_campaign_end',
-  'email_campaign_end_soon',
-  'email_campaign_deleted',
+export const notificationTypes = [
+  {
+    value: 'email_campaign_end',
+    title: 'Campaign Ends',
+    description:
+      "Get notified when a campaign you've created or pledged to ends.",
+  },
+  {
+    value: 'email_campaign_end_soon',
+    title: 'Day Before Campaign Ends',
+    description:
+      "Get notified 24 hours before a campaign you've pledged to ends.",
+  },
+  {
+    value: 'email_campaign_deleted',
+    title: 'Campaign is Deleted',
+    description:
+      "Get notified when an active campaign you've pledged to is deleted.",
+  },
+  {
+    value: 'email_pledge_receipt',
+    title: 'Pledge Receipt',
+    description:
+      "Receive a receipt when you're charged for a pledge you've made to a campaign that succeeds.",
+  },
 ];
 
 export default async function handler(req, res) {
@@ -32,9 +53,9 @@ export default async function handler(req, res) {
     return sendError({ message: 'profile not found' });
   }
 
-  const notifications = notificationTypes.filter(
-    (notificationType) => req.body[notificationType] === 'on'
-  );
+  const notifications = notificationTypes
+    .filter((notificationType) => req.body[notificationType.value] === 'on')
+    .map(({ value }) => value);
   await supabase.from('profile').update({ notifications }).eq('id', profile.id);
 
   res.status(200).json({

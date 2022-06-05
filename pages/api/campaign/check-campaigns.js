@@ -30,6 +30,13 @@ async function chargePledge({
       off_session: true,
       payment_method_types: ['card'],
       customer: pledge.profile.stripe_customer,
+      receipt_email: pledge.profile.notifications?.includes(
+        'email_pledge_receipt'
+      )
+        ? pledge.profile.email
+        : null,
+      statement_descriptor: 'Pennyseed Pledge',
+      statement_descriptor_suffix: 'Pledge',
       ...defaultPaymentIntentOptions,
     };
 
