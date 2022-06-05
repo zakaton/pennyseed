@@ -265,7 +265,7 @@ const faqs = [
             Customers can put larger amounts into an digital wallet that we can
             subtract from when they make pledges, e.g. adding $103.30 ($100
             before fees) to the digital wallet and pledging $1 100 times (vs
-            pledging $1.34 individual 100 times resulting in $134 total)
+            pledging $1.34 individually 100 times resulting in $134 total)
           </li>
           <li>
             Providing alternate payment methods that have lower fees (e.g.
