@@ -238,7 +238,8 @@ const faqs = [
         <p>
           Yes. As the pledge amount decreases the larger the bulk of the pledge
           payment due to fees. For instance if you raise $1,000 with 2,000
-          pledgers each will pay $0.84, which becomes $0.50 when fees are added.
+          pledgers each will pay $0.84, which becomes $0.50 when fees are
+          deducted.
         </p>
         <p>
           As inefficient as this may seem, we think it&apos;s way better than
