@@ -34,7 +34,7 @@ async function chargePledge({
         'email_pledge_receipt'
       )
         ? pledge.profile.email
-        : null,
+        : undefined,
       description: `Pennyseed Pledge [${campaign.id}]`,
       statement_descriptor: 'Pennyseed Pledge',
       statement_descriptor_suffix: 'Pledge',
