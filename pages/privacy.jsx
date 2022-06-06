@@ -24,9 +24,9 @@ export default function Privacy() {
         </p>
         <ul>
           <li>
-            Your email address so you can sign in, as well as optionally receive
-            campaign updates (which is disabled by default, you&apos;d need to
-            opt-in to receive emails)
+            Your email address so you can sign in, receive pledge receipts, as
+            well as optionally receive campaign updates (which is disabled by
+            default, you&apos;d need to opt-in to receive emails)
           </li>
           <li>
             Stripe customer information, so you can make payments to campaigns
