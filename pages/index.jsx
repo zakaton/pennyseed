@@ -143,8 +143,9 @@ export default function Home() {
           <a href="https://sendgrid.com/" target="_blank" rel="noreferrer">
             SendGrid
           </a>{' '}
-          for emailing campaign updates to users (we don&apos;t email users by
-          default - they have to manually opt-in). The source code is{' '}
+          for emailing campaign updates to users (by default we only send
+          sign-in links and pledge receipts - you can opt-in to additional
+          notifictions in your account settings). The source code is{' '}
           <a
             href="https://github.com/zakaton/pennyseed"
             target="_blank"
