@@ -395,6 +395,7 @@ export default function CampaignForm({
                 </label>
                 <div className="mt-1">
                   <input
+                    autoComplete="off"
                     required
                     type="text"
                     name="reason"
