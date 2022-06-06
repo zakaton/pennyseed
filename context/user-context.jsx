@@ -114,7 +114,6 @@ export function UserContextProvider(props) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push('/sign-in');
     setUser(null);
   };
 
