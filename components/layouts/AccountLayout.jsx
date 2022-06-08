@@ -83,8 +83,8 @@ export default function AccountLayout({ children }) {
         <Head>
           <title>Account - Pennyseed</title>
         </Head>
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-          <aside className="px-2 sm:px-6 lg:col-span-2 lg:py-0 lg:px-0">
+        <div className="lg:grid lg:grid-cols-7 lg:gap-x-5">
+          <aside className="px-2 sm:px-6 lg:col-span-1 lg:py-0 lg:px-0">
             <nav className="space-y-1">
               {navigation.map((item) => {
                 const current = router.route === item.href;
@@ -118,7 +118,7 @@ export default function AccountLayout({ children }) {
             </nav>
           </aside>
 
-          <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
+          <div className="space-y-6 sm:px-6 lg:col-span-6 lg:px-0">
             <div className="shadow sm:rounded-md">{children}</div>
           </div>
         </div>
