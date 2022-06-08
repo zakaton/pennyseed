@@ -1,5 +1,4 @@
 import { useEffect, useState, createContext, useContext } from 'react';
-import { useRouter } from 'next/router';
 import {
   supabase,
   getUserProfile,
@@ -13,7 +12,6 @@ import {
 export const UserContext = createContext();
 
 export function UserContextProvider(props) {
-  const router = useRouter();
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(supabase.auth.user());
   const [isLoading, setIsLoading] = useState(true);
