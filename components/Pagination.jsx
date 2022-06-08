@@ -231,7 +231,7 @@ export default function Pagination({
               )}
             </span>{' '}
             of <span className="font-medium">{numberOfResults}</span> {name}
-            {numberOfResults === 0 ? '' : 's'}
+            {numberOfResults === 1 ? '' : 's'}
           </p>
         </div>
         {numberOfResults > numberOfResultsPerPage && (
