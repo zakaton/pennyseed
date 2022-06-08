@@ -40,10 +40,24 @@ export default function AccountGeneral() {
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                   {user.can_create_campaigns ? (
-                    'yes'
+                    <>
+                      Yes.{' '}
+                      <MyLink
+                        href={stripeLinks.dashboard}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <button
+                          type="button"
+                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                          Go to Stripe Dashboard
+                        </button>
+                      </MyLink>
+                    </>
                   ) : (
                     <>
-                      no.{' '}
+                      No.{' '}
                       <MyLink
                         href={stripeLinks.onboarding}
                         target="_blank"
