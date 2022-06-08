@@ -3,6 +3,7 @@ import {
   supabase,
   getUserProfile,
   supabaseAuthHeader,
+  isUserAdmin,
 } from '../utils/supabase';
 import {
   fetchPaymentMethods,
@@ -72,7 +73,7 @@ export function UserContextProvider(props) {
   useEffect(() => {
     const session = supabase.auth.session();
     setSession(session);
-    
+
     updateUserProfile();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -139,7 +140,7 @@ export function UserContextProvider(props) {
 
   useEffect(() => {
     if (user) {
-      setIsAdmin(user.email?.endsWith('@ukaton.com'));
+      setIsAdmin(isUserAdmin(user));
     }
   }, [user]);
 
