@@ -30,16 +30,14 @@ async function chargePledge({
       off_session: true,
       payment_method_types: ['card'],
       customer: pledge.profile.stripe_customer,
-      receipt_email: pledge.profile.notifications?.includes(
-        'email_pledge_receipt'
-      )
-        ? pledge.profile.email
-        : undefined,
-      description: `Pennyseed Pledge [${campaign.id}]`,
+      description: `Pennyseed Pledge pennyseed.me/${campaign.id}`,
       statement_descriptor: 'Pennyseed Pledge',
       statement_descriptor_suffix: 'Pledge',
       ...defaultPaymentIntentOptions,
     };
+    if (pledge.profile.notifications?.includes('email_pledge_receipt')) {
+      paymentIntentOptions.receipt_email = pledge.profile.email;
+    }
 
     // https://stripe.com/docs/api/payment_intents/create
     let paymentIntentError;
