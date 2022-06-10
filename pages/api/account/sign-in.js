@@ -68,7 +68,7 @@ export default async function handler(req, res) {
       return sendError({
         title: 'Magic Link already sent',
         message:
-          'A link was already emailed to this address less than a minute ago.',
+          "A link was already emailed to this address less than a minute ago. Check your spam folder if you can't find it.",
       });
     }
   }
