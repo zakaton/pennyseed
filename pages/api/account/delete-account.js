@@ -7,7 +7,7 @@ import {
   isUserAdmin,
   getUserByAccessToken,
 } from '../../../utils/supabase';
-import sendEmail, { emailAdmin } from '../../../utils/send-email';
+import sendEmail from '../../../utils/send-email';
 import { formatDollars } from '../../../utils/campaign-utils';
 
 async function emailPledgers({ supabase, from, to, userToDelete }) {
