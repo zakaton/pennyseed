@@ -279,7 +279,9 @@ export default function AllUsers() {
                 <dl className="grid grid-cols-1 gap-x-4 gap-y-6 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                   <div className="sm:col-span-1">
                     <dt className="text-sm font-medium text-gray-500">Email</dt>
-                    <dd className="mt-1 text-sm text-gray-900">{user.email}</dd>
+                    <dd className="mt-1 break-words text-sm text-gray-900">
+                      {user.email}
+                    </dd>
                   </div>
                   <div className="sm:col-span-1">
                     <dt className="text-sm font-medium text-gray-500">

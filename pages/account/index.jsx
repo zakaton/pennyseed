@@ -30,7 +30,7 @@ export default function AccountGeneral() {
             <dl className="sm:divide-y sm:divide-gray-200">
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
                 <dt className="text-sm font-medium text-gray-500">Email</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <dd className="mt-1 break-words text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                   {user.email}
                 </dd>
               </div>
