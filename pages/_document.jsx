@@ -23,6 +23,11 @@ class MyDocument extends Document {
             name="description"
             content="Pennyseed - A simple crowdfunding platform where the funding goal is divided by the number of pledgers"
           />
+          <meta
+            property="og:title"
+            content="Pennyseed - A simple crowdfunding platform where the funding goal is divided by the number of pledgers"
+          />
+          <meta property="og:image" content="/images/logo.png" />
           <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
         </Head>
         <body>
