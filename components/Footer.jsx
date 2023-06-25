@@ -116,12 +116,12 @@ export default function Footer() {
         <p className="mt-8 text-center text-base text-gray-600">
           Pennyseed is created by{' '}
           <MyLink
-            href="https://www.ukaton.com/"
+            href="https://www.linkedin.com/in/zakaton/"
             target="_blank"
             rel="noreferrer"
             className="text-base text-gray-600 underline hover:text-gray-900"
           >
-            Ukaton
+            Zack Qattan
           </MyLink>
         </p>
       </div>
